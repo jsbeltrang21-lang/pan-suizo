@@ -723,7 +723,8 @@ function pintarEstrella() {
   const pie = b.querySelector(".pie-estrella");
   const pil = document.createElement("span"); pil.className = "pildora";
   pil.innerHTML = `<span></span><b></b>`;
-  pil.querySelector("span").textContent = con ? "Los dos" : (p.opciones ? "Desde" : "Precio");
+  const variaPrecio = p.opciones && new Set(p.opciones.map((o) => o.precio)).size > 1;
+  pil.querySelector("span").textContent = con ? "Los dos" : (variaPrecio ? "Desde" : "Precio");
   pil.querySelector("b").textContent = fmt(precioMin(p) + (con ? precioMin(con) : 0));
   pie.append(pil);
   const ah = ahorroCombo(p);
@@ -865,7 +866,7 @@ function abrirDetalle(id) {
     const m = document.createElement("button"); m.type = "button"; m.className = "mini";
     m.innerHTML = `<span class="cursiva"></span><small></small><span class="mas"></span>`;
     m.querySelector(".cursiva").textContent = c.nombre;
-    m.querySelector("small").textContent = (c.opciones ? "Desde " : "") + fmt(precioMin(c));
+    m.querySelector("small").textContent = (c.opciones && new Set(c.opciones.map((o) => o.precio)).size > 1 ? "Desde " : "") + fmt(precioMin(c));
     const marcar = () => { const n = cantidadDe(cid); m.querySelector(".mas").textContent = n ? `En tu pedido: ${n}` : "Tocar para agregar"; };
     m.addEventListener("click", () => { cambiar(`${cid}|${c.opciones ? 0 : ""}`, 1); marcar(); });
     marcar(); zona.append(m);
