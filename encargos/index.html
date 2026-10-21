@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F0B08">
+<link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../img/icono-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<meta name="robots" content="noindex, nofollow">
+<title>Agenda de encargos Pan Suizo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Agenda de encargos de Pan Suizo: fecha y hora de entrega, abonos y saldos, estados, lista para hornear y avisos por WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* Concepto: el cuaderno de encargos del mostrador, en el celular. Misma identidad que la carta y la caja
+   (rojo y oro del escudo, fondo de horno). Lo urgente arriba (atrasados, hoy, mañana), el dinero siempre a la
+   vista (total, abono, saldo) y una lista consolidada de «para hornear» que se copia o se imprime. */
+:root {
+  --fondo: #0F0B08;
+  --superficie: #1A140F;
+  --velo-sup: rgba(244, 232, 212, .06);
+  --borde: rgba(244, 232, 212, .14);
+  --tinta: #F4E8D4;
+  --tinta-suave: #BBA98F;
+  --tinta-tenue: #8A7A63;
+  --oro: #F2C14E;
+  --oro-relleno: #F2C14E;
+  --sobre-oro: #1C1206;
+  --rojo: #B82227;
+  --sobre-rojo: #FFF6EC;
+  --ok: #86C996;
+  --alerta: #FF8F86;
+  --resplandor: rgba(242, 193, 78, .20);
+  --f-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --f-texto: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --fondo: #F6EEDF; --superficie: #FFFBF4; --velo-sup: rgba(60, 35, 15, .05); --borde: rgba(60, 35, 15, .15);
+    --tinta: #2A1A10; --tinta-suave: #6A5442; --tinta-tenue: #8C7763; --oro: #8F6200; --oro-relleno: #F2C14E;
+    --sobre-oro: #1C1206; --rojo: #A71E21; --sobre-rojo: #FFF6EC; --ok: #1F7A45; --alerta: #B3261E;
+    --resplandor: rgba(242, 193, 78, .35); color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --fondo: #F6EEDF; --superficie: #FFFBF4; --velo-sup: rgba(60, 35, 15, .05); --borde: rgba(60, 35, 15, .15);
+  --tinta: #2A1A10; --tinta-suave: #6A5442; --tinta-tenue: #8C7763; --oro: #8F6200; --oro-relleno: #F2C14E;
+  --sobre-oro: #1C1206; --rojo: #A71E21; --sobre-rojo: #FFF6EC; --ok: #1F7A45; --alerta: #B3261E;
+  --resplandor: rgba(242, 193, 78, .35); color-scheme: light;
+}
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fondo); color: var(--tinta); font-family: var(--f-texto); font-size: 15px; line-height: 1.45; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--oro); outline-offset: 2px; }
+.envoltura { max-width: 720px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px 40px; display: grid; gap: 16px; }
+.cursiva { font-family: var(--f-display); font-style: italic; font-weight: 700; }
+.ceja { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); margin: 0; }
+.num { font-variant-numeric: tabular-nums; }
+
+.cab { display: flex; align-items: center; gap: 12px; }
+.cab svg { width: 42px; height: 42px; flex: none; }
+.cab h1 { margin: 0; font-size: 28px; line-height: 1; }
+.cab p { margin: 2px 0 0; font-size: 12px; color: var(--tinta-suave); }
+.pestanas { display: flex; gap: 6px; padding: 4px; border: 1px solid var(--borde); border-radius: 999px; background: var(--velo-sup); }
+.pestanas button { flex: 1; border: 0; background: transparent; border-radius: 999px; padding: 9px 6px; font-weight: 700; font-size: 13px; color: var(--tinta-suave); }
+.pestanas button[aria-selected="true"] { background: var(--oro-relleno); color: var(--sobre-oro); }
+
+.cifras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cifra { border: 1px solid var(--borde); border-radius: 16px; padding: 12px; background: var(--superficie); min-width: 0; }
+.cifra b { display: block; font-size: clamp(16px, 4.8vw, 24px); white-space: nowrap; font-variant-numeric: tabular-nums; line-height: 1.1; overflow-wrap: anywhere; }
+.cifra span { font-size: 12px; color: var(--tinta-suave); }
+.cifra.alerta b { color: var(--alerta); }
+
+.aviso { padding: 12px 14px; border-radius: 14px; border: 1px dashed color-mix(in srgb, var(--oro) 60%, transparent); font-size: 13px; color: var(--tinta-suave); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 12px 18px; font-weight: 700; text-decoration: none; text-align: center; }
+.btn-gigante { width: 100%; padding: 16px; font-size: 17px; }
+.btn-rojo { background: var(--rojo); color: var(--sobre-rojo); }
+.btn-oro { background: var(--oro-relleno); color: var(--sobre-oro); }
+.btn-linea { background: transparent; border: 1px solid var(--borde); color: var(--tinta); }
+.btn-chico { padding: 8px 14px; font-size: 13px; }
+.fila-botones { display: flex; flex-wrap: wrap; gap: 8px; }
+.fila-botones > * { flex: 1 1 140px; }
+.nota { font-size: 12.5px; color: var(--tinta-tenue); margin: 0; }
+.ok { color: var(--ok); font-weight: 700; margin: 0; }
+.error { color: var(--alerta); margin: 0; font-size: 13.5px; }
+.vacio { color: var(--tinta-tenue); font-size: 13.5px; margin: 0; }
+
+/* ---------- agenda ---------- */
+.grupo { display: grid; gap: 8px; }
+.grupo h3 { margin: 8px 0 0; font-size: 22px; display: flex; align-items: baseline; gap: 8px; }
+.grupo h3 small { font-family: var(--f-texto); font-style: normal; font-weight: 500; font-size: 12.5px; color: var(--tinta-suave); }
+.grupo.atrasado h3 { color: var(--alerta); }
+.encargo { border: 1px solid var(--borde); border-radius: 16px; background: var(--superficie); overflow: hidden; }
+.encargo.atrasado { border-color: color-mix(in srgb, var(--alerta) 60%, transparent); }
+.encargo > button.resumen { display: grid; grid-template-columns: 58px 1fr auto; gap: 2px 12px; align-items: start; text-align: left; width: 100%; padding: 12px 14px; border: 0; background: transparent; }
+.resumen .hora { grid-row: span 3; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 17px; color: var(--oro); line-height: 1.2; }
+.resumen .hora small { display: block; font-size: 10.5px; font-weight: 500; color: var(--tinta-tenue); letter-spacing: .04em; }
+.resumen .quien { font-weight: 700; }
+.resumen .que { font-size: 13.5px; color: var(--tinta-suave); grid-column: 2; }
+.resumen .plata { grid-column: 2; font-size: 12.5px; color: var(--tinta-tenue); font-variant-numeric: tabular-nums; }
+.resumen .plata b { color: var(--tinta); }
+.resumen .plata b.debe { color: var(--alerta); }
+.resumen .plata b.pagado { color: var(--ok); }
+.resumen .estado { grid-column: 3; grid-row: 1; }
+.chip { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+.chip.pendiente { border: 1px solid var(--borde); color: var(--tinta-suave); }
+.chip.horno { background: var(--rojo); color: var(--sobre-rojo); }
+.chip.listo { background: var(--oro-relleno); color: var(--sobre-oro); }
+.chip.entregado { border: 1px solid var(--ok); color: var(--ok); }
+.chip.cancelado { border: 1px solid var(--tinta-tenue); color: var(--tinta-tenue); text-decoration: line-through; }
+.chip.ejemplo { border: 1px dashed var(--borde); color: var(--tinta-tenue); margin-left: 6px; vertical-align: 2px; }
+.detalle { border-top: 1px solid var(--borde); padding: 14px; display: grid; gap: 12px; background: radial-gradient(90% 70% at 100% 0%, var(--resplandor), transparent 60%); }
+.detalle dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 13.5px; }
+.detalle dt { color: var(--tinta-tenue); }
+.detalle dd { margin: 0; overflow-wrap: anywhere; }
+.pasos { display: flex; gap: 4px; }
+.pasos button { flex: 1; border: 1px solid var(--borde); background: transparent; border-radius: 10px; padding: 8px 4px; font-size: 12px; font-weight: 700; color: var(--tinta-suave); }
+.pasos button[aria-pressed="true"] { background: var(--oro-relleno); color: var(--sobre-oro); border-color: transparent; }
+.pago { display: flex; gap: 8px; flex-wrap: wrap; }
+.pago input, .pago select { flex: 1 1 110px; min-width: 0; padding: 10px; border-radius: 12px; border: 1px solid var(--borde); background: var(--fondo); }
+.pagos { margin: 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--tinta-suave); display: grid; gap: 2px; }
+
+/* ---------- formulario ---------- */
+form.panel, .panel { border: 1px solid var(--borde); border-radius: 20px; padding: 18px; background: var(--superficie); display: grid; gap: 12px; }
+.panel h2 { margin: 0; font-size: 26px; }
+.campo { display: grid; gap: 6px; min-width: 0; }
+.campo label, .campo .etq { font-size: 13px; font-weight: 700; }
+.campo input, .campo select, .campo textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--borde); background: var(--fondo); }
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dos > * { min-width: 0; }
+.item { display: grid; grid-template-columns: 64px 1fr 40px; gap: 6px; }
+.item input { padding: 10px; border-radius: 12px; border: 1px solid var(--borde); background: var(--fondo); min-width: 0; }
+.item button { border: 1px solid var(--borde); background: transparent; border-radius: 12px; color: var(--tinta-suave); font-size: 18px; line-height: 1; }
+.segmento { display: flex; gap: 6px; }
+.segmento label { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border: 1px solid var(--borde); border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; }
+.segmento input { accent-color: var(--rojo); margin: 0; }
+.cuentas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 12.5px; color: var(--tinta-suave); }
+.cuentas b { display: block; font-size: 17px; color: var(--tinta); font-variant-numeric: tabular-nums; }
+
+/* ---------- para hornear ---------- */
+.tabla { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.tabla th, .tabla td { padding: 9px 6px; border-bottom: 1px solid var(--borde); text-align: left; vertical-align: top; }
+.tabla th { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-tenue); font-weight: 700; }
+.tabla td.cant { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--oro); width: 64px; text-align: right; }
+.buscar input { width: 100%; padding: 12px; border-radius: 14px; border: 1px solid var(--borde); background: var(--superficie); font-size: 16px; }
+
+@media print {
+  body { background: #fff; color: #000; }
+  .no-imprimir, .cab p, .pestanas, .cifras, .aviso { display: none !important; }
+  .panel { border: 0; padding: 0; background: none; }
+  .tabla td.cant { color: #000; }
+}
+</style>
+</head>
+<body>
+
+<div class="envoltura">
+  <header class="cab">
+    <svg viewBox="0 0 48 48" role="img" aria-label="Escudo de Pan Suizo">
+      <circle cx="24" cy="24" r="24" fill="#A71E21"/>
+      <path d="M14 13.5l4 3.2 6-6.7 6 6.7 4-3.2v13c0 6.6-4.5 11.3-10 13.6C18.5 37.8 14 33.1 14 26.5z" fill="none" stroke="#FCD150" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M24 12v27.5M14.6 23.5h18.8" stroke="#FCD150" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div><h1 class="cursiva">Agenda de encargos</h1><p>Pan Suizo · entregas, abonos y lista para hornear</p></div>
+  </header>
+
+  <nav class="pestanas" role="tablist" aria-label="Secciones">
+    <button type="button" role="tab" id="p-agenda" aria-selected="true" aria-controls="v-agenda">Agenda</button>
+    <button type="button" role="tab" id="p-hornear" aria-selected="false" aria-controls="v-hornear">Hornear</button>
+    <button type="button" role="tab" id="p-historial" aria-selected="false" aria-controls="v-historial">Historial</button>
+    <button type="button" role="tab" id="p-ajustes" aria-selected="false" aria-controls="v-ajustes">Ajustes</button>
+  </nav>
+
+  <div class="cifras" aria-label="Resumen">
+    <div class="cifra" id="cf-pend"><b id="c-pend">0</b><span>encargos por entregar</span></div>
+    <div class="cifra"><b id="c-manana">0</b><span>para mañana</span></div>
+    <div class="cifra"><b id="c-saldo">$ 0</b><span>saldo por cobrar</span></div>
+  </div>
+
+  <div class="aviso" id="aviso-ejemplos" hidden>
+    <span>Los encargos marcados como <b>ejemplo</b> son de prueba (nombres, productos y valores inventados) para que veas cómo funciona.</span>
+    <button type="button" class="btn btn-linea btn-chico" id="borrar-ejemplos">Quitar los ejemplos y empezar</button>
+  </div>
+
+  <!-- ================= AGENDA ================= -->
+  <section id="v-agenda" role="tabpanel" aria-labelledby="p-agenda" style="display:grid;gap:14px">
+    <button type="button" class="btn btn-rojo btn-gigante" id="nuevo">+ Nuevo encargo</button>
+
+    <form class="panel" id="form" hidden novalidate>
+      <h2 class="cursiva" id="form-titulo">Nuevo encargo</h2>
+      <div class="dos">
+        <div class="campo"><label for="e-nombre">Cliente</label><input id="e-nombre" autocomplete="off" required></div>
+        <div class="campo"><label for="e-cel">Celular (WhatsApp)</label><input id="e-cel" type="tel" inputmode="numeric" placeholder="3XX XXX XXXX" autocomplete="off"></div>
+      </div>
+      <div class="campo">
+        <span class="etq">Productos</span>
+        <div id="items" style="display:grid;gap:6px"></div>
+        <button type="button" class="btn btn-linea btn-chico" id="mas-item" style="justify-self:start">+ Otro producto</button>
+        <datalist id="sugerencias"></datalist>
+      </div>
+      <div class="dos">
+        <div class="campo"><label for="e-fecha">Fecha de entrega</label><input id="e-fecha" type="date" required></div>
+        <div class="campo"><label for="e-hora">Hora</label><input id="e-hora" type="time" step="900" required></div>
+      </div>
+      <p class="nota" id="aviso-anticipacion" hidden></p>
+      <div class="campo">
+        <span class="etq">Entrega</span>
+        <div class="segmento">
+          <label><input type="radio" name="entrega" value="recoger" checked> En el local</label>
+          <label><input type="radio" name="entrega" value="domicilio"> Domicilio</label>
+        </div>
+      </div>
+      <div class="campo" id="campo-dir" hidden><label for="e-dir">Dirección del domicilio</label><input id="e-dir" autocomplete="off"></div>
+      <div class="dos">
+        <div class="campo"><label for="e-total">Valor total ($)</label><input id="e-total" type="number" inputmode="numeric" min="0" step="100"></div>
+        <div class="campo" id="campo-abono"><label for="e-abono">Abono recibido hoy ($)</label><input id="e-abono" type="number" inputmode="numeric" min="0" step="100"></div>
+      </div>
+      <div class="campo" id="campo-medio"><label for="e-medio">¿Cómo pagó el abono?</label>
+        <select id="e-medio"><option>Efectivo</option><option>Nequi</option><option>Daviplata</option><option>Bre-B</option><option>Transferencia</option><option>Tarjeta</option><option>Otro</option></select>
+      </div>
+      <p class="nota" id="sugerencia-abono"></p>
+      <div class="campo"><label for="e-notas">Notas (sabor, mensaje de la torta, alergias…)</label><textarea id="e-notas" rows="2"></textarea></div>
+      <p class="error" id="form-error" hidden></p>
+      <div class="fila-botones">
+        <button type="submit" class="btn btn-oro">Guardar encargo</button>
+        <button type="button" class="btn btn-linea" id="cancelar-form">Cancelar</button>
+      </div>
+    </form>
+
+    <div id="agenda" style="display:grid;gap:10px"></div>
+  </section>
+
+  <!-- ================= PARA HORNEAR ================= -->
+  <section id="v-hornear" role="tabpanel" aria-labelledby="p-hornear" hidden style="display:grid;gap:14px">
+    <div class="panel">
+      <div class="no-imprimir dos" style="align-items:end">
+        <div class="campo"><label for="h-fecha">Encargos del día</label><input id="h-fecha" type="date"></div>
+        <div class="fila-botones"><button type="button" class="btn btn-linea btn-chico" id="h-hoy">Hoy</button><button type="button" class="btn btn-linea btn-chico" id="h-manana">Mañana</button></div>
+      </div>
+      <h2 class="cursiva" id="h-titulo">Para hornear</h2>
+      <table class="tabla" id="h-tabla"><thead><tr><th>Producto</th><th style="text-align:right">Cant.</th></tr></thead><tbody></tbody></table>
+      <p class="vacio" id="h-vacio" hidden>No hay encargos activos para ese día.</p>
+      <div id="h-detalle" style="display:grid;gap:6px"></div>
+      <div class="fila-botones no-imprimir">
+        <button type="button" class="btn btn-oro" id="h-copiar">Copiar la lista</button>
+        <button type="button" class="btn btn-linea" id="h-imprimir">Imprimir</button>
+      </div>
+      <p class="ok" id="h-copiado" hidden>Lista copiada. Pégala en WhatsApp o en una nota.</p>
+      <p class="nota no-imprimir">Suma solo los encargos que no están entregados ni cancelados. Lo que se vende en vitrina va aparte.</p>
+    </div>
+  </section>
+
+  <!-- ================= HISTORIAL ================= -->
+  <section id="v-historial" role="tabpanel" aria-labelledby="p-historial" hidden style="display:grid;gap:10px">
+    <div class="buscar"><label for="buscar" hidden>Buscar</label><input id="buscar" type="search" placeholder="Buscar por cliente, celular o producto" autocomplete="off"></div>
+    <div id="historial" style="display:grid;gap:10px"></div>
+  </section>
+
+  <!-- ================= AJUSTES ================= -->
+  <section id="v-ajustes" role="tabpanel" aria-labelledby="p-ajustes" hidden style="display:grid;gap:14px">
+    <form class="panel" id="form-ajustes">
+      <h2 class="cursiva">Ajustes</h2>
+      <div class="dos">
+        <div class="campo"><label for="a-abono">Abono sugerido (%)</label><input id="a-abono" type="number" min="0" max="100" step="5"></div>
+        <div class="campo"><label for="a-dias">Días mínimos de anticipación</label><input id="a-dias" type="number" min="0" max="14"></div>
+      </div>
+      <div class="campo"><label for="a-recoger">Dónde se recoge (para los mensajes)</label><input id="a-recoger"></div>
+      <p class="nota">Por confirmar con la dueña: el abono que pide y con cuántos días recibe encargos. Muchas pastelerías pequeñas piden el 50 % y 2 o 3 días para tortas.</p>
+      <button type="submit" class="btn btn-oro">Guardar ajustes</button>
+      <p class="ok" id="a-guardado" hidden>Guardado.</p>
+    </form>
+    <div class="panel">
+      <h2 class="cursiva">Copia de seguridad</h2>
+      <p class="nota">Los encargos se guardan solo en este celular o computador. Descarga una copia cada semana; si cambias de equipo, cárgala en el nuevo.</p>
+      <div class="fila-botones">
+        <button type="button" class="btn btn-linea" id="exportar">Descargar copia</button>
+        <label class="btn btn-linea" for="importar">Cargar copia</label>
+        <input id="importar" type="file" accept="application/json,.json" hidden>
+      </div>
+      <p class="nota" id="copia-estado" aria-live="polite"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+/* Agenda de encargos de Pan Suizo.
+   Los datos se guardan en este navegador (localStorage, clave "pan-suizo-encargos-v1") y se respaldan con
+   «Descargar copia». Fechas y horas son locales (AAAA-MM-DD y HH:MM): nunca se convierten a UTC, para que un
+   encargo de las 7 p. m. no salte al día siguiente. */
+const CLAVE = "pan-suizo-encargos-v1";
+const NEGOCIO = "Pan Suizo";
+const AJUSTES_INICIALES = { abonoPct: 50, diasMin: 2, recoger: "Cra 69 # 25-11, Ciudad Salitre" };
+const ESTADOS = [["pendiente", "Pendiente"], ["horno", "En horno"], ["listo", "Listo"], ["entregado", "Entregado"]];
+const ACTIVOS = new Set(["pendiente", "horno", "listo"]);
+const SUGERENCIAS = ["Torta (libra)", "Torta (media libra)", "Ponqué", "Pan Calentano", "Pan Hojaldrado", "Almojábana", "Pandebono", "Tamal", "Bandeja de pasabocas"];
+
+const $ = (s) => document.querySelector(s);
+const pesos = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
+const fmt = (n) => pesos.format(n || 0).replace(/\s/g, " ");
+const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const sinTildes = (t) => String(t).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const dosDig = (n) => String(n).padStart(2, "0");
+const fechaLocal = (d) => `${d.getFullYear()}-${dosDig(d.getMonth() + 1)}-${dosDig(d.getDate())}`;
+const masDias = (iso, n) => { const [y, m, d] = iso.split("-").map(Number); return fechaLocal(new Date(y, m - 1, d + n)); };
+const hoy = () => fechaLocal(new Date());
+const aFecha = (iso) => { const [y, m, d] = iso.split("-").map(Number); return new Date(y, m - 1, d); };
+const diaLargo = (iso) => aFecha(iso).toLocaleDateString("es-CO", { weekday: "long", day: "numeric", month: "long" });
+const hora12 = (h) => { const [H, M] = h.split(":").map(Number); return `${H % 12 || 12}:${dosDig(M)} ${H < 12 ? "a. m." : "p. m."}`; };
+const pagado = (e) => e.pagos.reduce((s, p) => s + p.monto, 0);
+const saldo = (e) => Math.max(0, (e.total || 0) - pagado(e));
+const atrasado = (e) => ACTIVOS.has(e.estado) && `${e.fecha}T${e.hora}` < `${hoy()}T${dosDig(new Date().getHours())}:${dosDig(new Date().getMinutes())}`;
+const textoItems = (e) => e.items.map((i) => `${i.cant} × ${i.producto}`).join(", ");
+const celBonito = (c) => c.replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3");
+
+function ejemplos() {
+  const h = hoy(), ahora = new Date().toISOString();
+  const e = (id, nombre, cel, items, fecha, hora, entrega, dir, total, abono, estado, notas) =>
+    ({ id, ejemplo: true, nombre, cel, items, fecha, hora, entrega, dir, total, pagos: abono ? [{ monto: abono, medio: "Nequi", fecha: ahora }] : [], estado, notas, creado: ahora });
+  return [
+    e("ej1", "Marta (ejemplo)", "3000000001", [{ cant: 1, producto: "Torta (libra)" }], h, "16:00", "recoger", "", 60000, 30000, "horno", "Ejemplo · Mensaje: «Feliz cumpleaños, Ana»"),
+    e("ej2", "Oficina Calle 26 (ejemplo)", "3000000002", [{ cant: 40, producto: "Almojábana" }, { cant: 40, producto: "Pandebono" }], masDias(h, 1), "07:30", "domicilio", "Ejemplo: Av. Calle 26 # 69-00", 120000, 60000, "pendiente", "Ejemplo · Entregar en recepción"),
+    e("ej3", "Don Luis (ejemplo)", "3000000003", [{ cant: 2, producto: "Torta (media libra)" }], masDias(h, 3), "10:00", "recoger", "", 70000, 0, "pendiente", ""),
+    e("ej4", "Carolina (ejemplo)", "3000000004", [{ cant: 30, producto: "Pan Calentano" }], masDias(h, -1), "09:00", "recoger", "", 24000, 24000, "entregado", ""),
+  ];
+}
+
+let datos = { encargos: ejemplos(), ajustes: { ...AJUSTES_INICIALES } };
+try { const g = JSON.parse(localStorage.getItem(CLAVE) || "null"); if (g && Array.isArray(g.encargos)) datos = { encargos: g.encargos, ajustes: { ...AJUSTES_INICIALES, ...(g.ajustes || {}) } }; } catch (err) { /* sin almacenamiento: queda en memoria */ }
+function guardar() { try { localStorage.setItem(CLAVE, JSON.stringify(datos)); } catch (err) { /* sin almacenamiento */ } pintarTodo(); }
+const A = () => datos.ajustes;
+let abierto = null;      // id del encargo desplegado
+let editando = null;     // id del encargo en el formulario (null = nuevo)
+
+/* ---------- mensajes de WhatsApp (sobre el propio encargo del cliente) ---------- */
+function lineaEntrega(e) { return e.entrega === "domicilio" ? `domicilio a: ${e.dir}` : `para recoger en ${NEGOCIO} (${A().recoger})`; }
+function lineaPlata(e) { return e.total ? `Total: ${fmt(e.total)} · Abonado: ${fmt(pagado(e))} · Saldo: ${fmt(saldo(e))}.` : ""; }
+const MENSAJES = {
+  confirmar: (e) => [`Hola ${e.nombre}, le confirmamos su encargo en ${NEGOCIO}:`, ...e.items.map((i) => `• ${i.cant} × ${i.producto}`), e.notas ? `Nota: ${e.notas}` : "", `Entrega: ${diaLargo(e.fecha)} a las ${hora12(e.hora)}, ${lineaEntrega(e)}.`, lineaPlata(e), "¡Gracias por su pedido!"],
+  recordar: (e) => [`Hola ${e.nombre}, le recordamos su encargo en ${NEGOCIO} (${textoItems(e)}) para el ${diaLargo(e.fecha)} a las ${hora12(e.hora)}, ${lineaEntrega(e)}.`, saldo(e) ? `Saldo pendiente: ${fmt(saldo(e))}.` : "Ya está pagado en su totalidad.", "¡Lo esperamos!"],
+  listo: (e) => [`Hola ${e.nombre}, ¡su encargo ya está listo! (${textoItems(e)})`, e.entrega === "domicilio" ? "En un momento sale el domicilio." : `Puede pasar por él a ${NEGOCIO}, ${A().recoger}.`, saldo(e) ? `Saldo pendiente: ${fmt(saldo(e))}.` : ""],
+};
+const wa = (e, tipo) => `https://wa.me/57${e.cel}?text=${encodeURIComponent(MENSAJES[tipo](e).filter(Boolean).join("\n"))}`;
+
+/* ---------- cifras ---------- */
+function pintarCifras() {
+  const act = datos.encargos.filter((e) => ACTIVOS.has(e.estado));
+  $("#c-pend").textContent = act.length;
+  $("#c-manana").textContent = act.filter((e) => e.fecha === masDias(hoy(), 1)).length;
+  $("#c-saldo").textContent = fmt(act.reduce((s, e) => s + saldo(e), 0));
+  $("#cf-pend").classList.toggle("alerta", act.some(atrasado));
+  $("#aviso-ejemplos").hidden = !datos.encargos.some((e) => e.ejemplo);
+}
+
+/* ---------- tarjeta de encargo ---------- */
+function tarjeta(e, conFecha) {
+  const art = document.createElement("article");
+  art.className = "encargo" + (atrasado(e) ? " atrasado" : "");
+  const s = saldo(e), est = e.estado === "cancelado" ? ["cancelado", "Cancelado"] : ESTADOS.find(([k]) => k === e.estado);
+  const fechaCorta = aFecha(e.fecha).toLocaleDateString("es-CO", { day: "numeric", month: "short" });
+  art.innerHTML = `
+    <button type="button" class="resumen" aria-expanded="${abierto === e.id}">
+      <span class="hora">${esc(hora12(e.hora).replace(/ (a|p)\. m\./, ""))}<small>${conFecha ? esc(fechaCorta) : (+e.hora.slice(0, 2) < 12 ? "a. m." : "p. m.")}</small></span>
+      <span class="quien">${esc(e.nombre)}${e.ejemplo ? '<span class="chip ejemplo">ejemplo</span>' : ""}</span>
+      <span class="estado"><span class="chip ${est[0]}">${est[1]}</span></span>
+      <span class="que">${esc(textoItems(e))}${e.entrega === "domicilio" ? " · domicilio" : ""}</span>
+      <span class="plata">${e.total ? `Total <b>${fmt(e.total)}</b> · saldo <b class="${s ? "debe" : "pagado"}">${s ? fmt(s) : "pagado"}</b>` : "Sin valor registrado"}</span>
+    </button>`;
+  art.querySelector(".resumen").addEventListener("click", () => { abierto = abierto === e.id ? null : e.id; pintarTodo(); });
+  if (abierto === e.id) art.append(detalle(e));
+  return art;
+}
+
+function detalle(e) {
+  const d = document.createElement("div"); d.className = "detalle";
+  const celOk = /^3\d{9}$/.test(e.cel || "");
+  const activo = ACTIVOS.has(e.estado);
+  d.innerHTML = `
+    <dl>
+      <dt>Entrega</dt><dd>${esc(diaLargo(e.fecha))}, ${esc(hora12(e.hora))}${atrasado(e) ? ' · <b style="color:var(--alerta)">atrasado</b>' : ""}</dd>
+      <dt>Dónde</dt><dd>${e.entrega === "domicilio" ? "Domicilio: " + esc(e.dir) : "Recoge en el local"}</dd>
+      <dt>Celular</dt><dd>${e.cel ? esc(celBonito(e.cel)) : "—"}</dd>
+      ${e.notas ? `<dt>Notas</dt><dd>${esc(e.notas)}</dd>` : ""}
+      <dt>Dinero</dt><dd>Total ${fmt(e.total)} · abonado ${fmt(pagado(e))} · <b>saldo ${fmt(saldo(e))}</b></dd>
+    </dl>
+    ${e.pagos.length ? `<ul class="pagos">${e.pagos.map((p) => `<li>${fmt(p.monto)} · ${esc(p.medio)} · ${esc(new Date(p.fecha).toLocaleString("es-CO", { dateStyle: "medium", timeStyle: "short" }))}</li>`).join("")}</ul>` : ""}
+    ${activo || e.estado === "entregado" ? `<div class="pasos" role="group" aria-label="Estado">${ESTADOS.map(([k, t]) => `<button type="button" data-estado="${k}" aria-pressed="${e.estado === k}">${t}</button>`).join("")}</div>` : ""}
+    ${saldo(e) > 0 && e.estado !== "cancelado" ? `<div class="pago"><input type="number" inputmode="numeric" min="0" step="100" placeholder="Pago recibido $" aria-label="Pago recibido"><select aria-label="Medio de pago"><option>Efectivo</option><option>Nequi</option><option>Daviplata</option><option>Bre-B</option><option>Transferencia</option><option>Tarjeta</option><option>Otro</option></select><button type="button" class="btn btn-oro btn-chico" data-accion="pagar">Registrar pago</button><button type="button" class="btn btn-linea btn-chico" data-accion="saldar">Pagó todo (${fmt(saldo(e))})</button></div>` : ""}
+    <div class="fila-botones">
+      ${celOk && e.estado !== "cancelado" ? `
+        <a class="btn btn-linea btn-chico" target="_blank" rel="noopener" href="${wa(e, "confirmar")}">WhatsApp: confirmar</a>
+        ${activo ? `<a class="btn btn-linea btn-chico" target="_blank" rel="noopener" href="${wa(e, "recordar")}">WhatsApp: recordar</a>
+        <a class="btn btn-linea btn-chico" target="_blank" rel="noopener" href="${wa(e, "listo")}">WhatsApp: ya está listo</a>` : ""}` : ""}
+      <button type="button" class="btn btn-linea btn-chico" data-accion="calendario">Al calendario</button>
+      <button type="button" class="btn btn-linea btn-chico" data-accion="editar">Editar</button>
+      ${activo ? '<button type="button" class="btn btn-linea btn-chico" data-accion="cancelar">Cancelar encargo</button>' : ""}
+      ${e.estado === "cancelado" ? '<button type="button" class="btn btn-linea btn-chico" data-accion="reactivar">Reactivar</button>' : ""}
+    </div>
+    ${!celOk ? '<p class="nota">Sin celular válido: no se pueden armar los mensajes de WhatsApp.</p>' : ""}
+    <p class="error" data-error hidden></p>`;
+  d.querySelectorAll("[data-estado]").forEach((b) => b.addEventListener("click", () => { e.estado = b.dataset.estado; guardar(); }));
+  const err = d.querySelector("[data-error]");
+  const accion = (k, f) => { const b = d.querySelector(`[data-accion="${k}"]`); if (b) b.addEventListener("click", f); };
+  accion("pagar", () => {
+    const v = Math.round(+d.querySelector(".pago input").value);
+    if (!(v > 0)) { err.textContent = "Escribe el valor del pago."; err.hidden = false; return; }
+    if (v > saldo(e)) { err.textContent = `El pago es mayor que el saldo (${fmt(saldo(e))}).`; err.hidden = false; return; }
+    e.pagos.push({ monto: v, medio: d.querySelector(".pago select").value, fecha: new Date().toISOString() }); guardar();
+  });
+  accion("saldar", () => { e.pagos.push({ monto: saldo(e), medio: d.querySelector(".pago select").value, fecha: new Date().toISOString() }); guardar(); });
+  accion("cancelar", () => { if (confirm(`¿Cancelar el encargo de ${e.nombre}? Queda en el historial.`)) { e.estado = "cancelado"; guardar(); } });
+  accion("reactivar", () => { e.estado = "pendiente"; guardar(); });
+  accion("editar", () => abrirForm(e));
+  accion("calendario", () => descargarICS(e));
+  return d;
+}
+
+/* ---------- agenda: atrasados, hoy, mañana y siguientes ---------- */
+function pintarAgenda() {
+  const cont = $("#agenda"); cont.innerHTML = "";
+  const act = datos.encargos.filter((e) => ACTIVOS.has(e.estado)).sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
+  if (!act.length) { const p = document.createElement("p"); p.className = "vacio"; p.textContent = "No hay encargos por entregar. Toca «+ Nuevo encargo» para anotar el primero."; cont.append(p); return; }
+  const h = hoy(), m = masDias(h, 1), grupos = new Map();
+  const titulo = (e) => {
+    if (atrasado(e) && e.fecha < h) return ["Atrasados", "no se han entregado", "atrasado"];
+    if (e.fecha === h) return ["Hoy", diaLargo(h), ""];
+    if (e.fecha === m) return ["Mañana", diaLargo(m), ""];
+    const t = diaLargo(e.fecha); return [t.charAt(0).toUpperCase() + t.slice(1), "", ""];
+  };
+  act.forEach((e) => { const [t, sub, cl] = titulo(e); if (!grupos.has(t)) grupos.set(t, { sub, cl, lista: [] }); grupos.get(t).lista.push(e); });
+  grupos.forEach((g, t) => {
+    const sec = document.createElement("section"); sec.className = "grupo " + g.cl;
+    const n = g.lista.length;
+    sec.innerHTML = `<h3 class="cursiva">${esc(t)} <small>${esc(g.sub)}${g.sub ? " · " : ""}${n} ${n === 1 ? "encargo" : "encargos"}</small></h3>`;
+    g.lista.forEach((e) => sec.append(tarjeta(e, g.cl === "atrasado")));
+    cont.append(sec);
+  });
+}
+
+/* ---------- historial ---------- */
+function pintarHistorial() {
+  const cont = $("#historial"); cont.innerHTML = "";
+  const q = sinTildes($("#buscar").value.trim());
+  const lista = datos.encargos
+    .filter((e) => !q || sinTildes(`${e.nombre} ${e.cel} ${textoItems(e)} ${e.notas}`).includes(q))
+    .sort((a, b) => (b.fecha + b.hora).localeCompare(a.fecha + a.hora));
+  if (!lista.length) { const p = document.createElement("p"); p.className = "vacio"; p.textContent = q ? "Nada coincide con esa búsqueda." : "Todavía no hay encargos."; cont.append(p); return; }
+  lista.slice(0, 200).forEach((e) => cont.append(tarjeta(e, true)));
+}
+
+/* ---------- para hornear: suma por producto ---------- */
+function consolidado(fecha) {
+  const lista = datos.encargos.filter((e) => e.fecha === fecha && ACTIVOS.has(e.estado)).sort((a, b) => a.hora.localeCompare(b.hora));
+  const suma = new Map();
+  lista.forEach((e) => e.items.forEach((i) => { const k = i.producto.trim(); const clave = sinTildes(k); const prev = suma.get(clave); suma.set(clave, { producto: prev ? prev.producto : k, cant: (prev ? prev.cant : 0) + i.cant }); }));
+  return { lista, filas: [...suma.values()].sort((a, b) => a.producto.localeCompare(b.producto, "es")) };
+}
+function pintarHornear() {
+  const f = $("#h-fecha").value || masDias(hoy(), 1); $("#h-fecha").value = f;
+  const { lista, filas } = consolidado(f);
+  $("#h-titulo").textContent = `Para hornear · ${diaLargo(f)}`;
+  $("#h-tabla tbody").innerHTML = filas.map((r) => `<tr><td>${esc(r.producto)}</td><td class="cant">${r.cant}</td></tr>`).join("");
+  $("#h-tabla").hidden = !filas.length; $("#h-vacio").hidden = !!filas.length;
+  $("#h-detalle").innerHTML = lista.map((e) => `<p class="nota"><b>${esc(hora12(e.hora))}</b> · ${esc(e.nombre)} · ${esc(textoItems(e))}${e.notas ? " · " + esc(e.notas) : ""}${e.entrega === "domicilio" ? " · domicilio" : ""}</p>`).join("");
+  $("#h-copiado").hidden = true;
+}
+function textoHornear() {
+  const f = $("#h-fecha").value, { lista, filas } = consolidado(f);
+  return [`${NEGOCIO} · para hornear el ${diaLargo(f)}`, ...filas.map((r) => `${r.cant} × ${r.producto}`), "", "Encargos:",
+    ...lista.map((e) => `${hora12(e.hora)} · ${e.nombre} · ${textoItems(e)}${e.notas ? " · " + e.notas : ""}`)].join("\n");
+}
+$("#h-fecha").addEventListener("change", pintarHornear);
+$("#h-hoy").addEventListener("click", () => { $("#h-fecha").value = hoy(); pintarHornear(); });
+$("#h-manana").addEventListener("click", () => { $("#h-fecha").value = masDias(hoy(), 1); pintarHornear(); });
+$("#h-imprimir").addEventListener("click", () => window.print());
+$("#h-copiar").addEventListener("click", async () => {
+  const t = textoHornear();
+  try { await navigator.clipboard.writeText(t); }
+  catch (err) { const ta = document.createElement("textarea"); ta.value = t; document.body.append(ta); ta.select(); try { document.execCommand("copy"); } catch (e2) { /* sin portapapeles */ } ta.remove(); }
+  $("#h-copiado").hidden = false;
+});
+
+/* ---------- calendario (.ics, hora local) ---------- */
+function descargarICS(e) {
+  const plano = (t) => String(t).replace(/\\/g, "\\\\").replace(/([,;])/g, "\\$1").replace(/\n/g, "\\n");
+  const [H, M] = e.hora.split(":").map(Number), fin = new Date(aFecha(e.fecha).setHours(H, M + 30));
+  const marca = (fecha, h, m) => `${fecha.replace(/-/g, "")}T${dosDig(h)}${dosDig(m)}00`;
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Pan Suizo//Agenda de encargos//ES", "BEGIN:VEVENT",
+    `UID:${e.id}@pan-suizo-encargos`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").slice(0, 15)}Z`,
+    `DTSTART:${marca(e.fecha, H, M)}`, `DTEND:${marca(fechaLocal(fin), fin.getHours(), fin.getMinutes())}`,
+    `SUMMARY:${plano(`Encargo ${e.nombre}: ${textoItems(e)}`)}`,
+    `DESCRIPTION:${plano([lineaEntrega(e), lineaPlata(e), e.notas].filter(Boolean).join("\n"))}`,
+    "BEGIN:VALARM", "TRIGGER:-PT12H", "ACTION:DISPLAY", `DESCRIPTION:${plano(`Mañana: encargo de ${e.nombre}`)}`, "END:VALARM",
+    "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+  a.download = `encargo-${e.fecha}-${sinTildes(e.nombre).replace(/[^a-z0-9]+/g, "-")}.ics`; document.body.append(a); a.click(); a.remove();
+}
+
+/* ---------- formulario ---------- */
+$("#sugerencias").innerHTML = SUGERENCIAS.map((s) => `<option value="${esc(s)}">`).join("");
+function filaItem(cant, producto) {
+  const f = document.createElement("div"); f.className = "item";
+  f.innerHTML = `<input type="number" inputmode="numeric" min="1" step="1" aria-label="Cantidad" value="${esc(cant)}"><input list="sugerencias" aria-label="Producto" placeholder="Producto" value="${esc(producto)}"><button type="button" aria-label="Quitar producto">×</button>`;
+  f.querySelector("button").addEventListener("click", () => { if ($("#items").children.length > 1) f.remove(); else { f.querySelectorAll("input")[1].value = ""; } });
+  $("#items").append(f);
+}
+$("#mas-item").addEventListener("click", () => { filaItem(1, ""); $("#items").lastElementChild.querySelectorAll("input")[1].focus(); });
+const entregaSel = () => document.querySelector('input[name="entrega"]:checked').value;
+document.querySelectorAll('input[name="entrega"]').forEach((r) => r.addEventListener("change", () => { $("#campo-dir").hidden = entregaSel() !== "domicilio"; }));
+
+function revisarAnticipacion() {
+  const f = $("#e-fecha").value, av = $("#aviso-anticipacion");
+  if (!f || editando) { av.hidden = true; return; }
+  const dias = Math.round((aFecha(f) - aFecha(hoy())) / 864e5);
+  av.hidden = !(dias < A().diasMin);
+  av.textContent = dias < 0 ? "Esa fecha ya pasó." : `Ojo: ${dias === 1 ? "falta 1 día" : `faltan ${dias} días`} y la anticipación mínima es de ${A().diasMin}. Confirma que se alcanza a hacer.`;
+}
+function sugerirAbono() {
+  const t = Math.round(+$("#e-total").value);
+  $("#sugerencia-abono").textContent = t > 0 && !editando ? `Abono sugerido (${A().abonoPct} %): ${fmt(Math.round(t * A().abonoPct / 100 / 100) * 100)}.` : "";
+}
+$("#e-fecha").addEventListener("change", revisarAnticipacion);
+$("#e-total").addEventListener("input", sugerirAbono);
+
+function abrirForm(e) {
+  editando = e ? e.id : null;
+  $("#form-titulo").textContent = e ? `Editar encargo de ${e.nombre}` : "Nuevo encargo";
+  $("#e-nombre").value = e ? e.nombre : ""; $("#e-cel").value = e ? e.cel : "";
+  $("#items").innerHTML = ""; (e ? e.items : [{ cant: 1, producto: "" }]).forEach((i) => filaItem(i.cant, i.producto));
+  $("#e-fecha").value = e ? e.fecha : masDias(hoy(), A().diasMin); $("#e-hora").value = e ? e.hora : "10:00";
+  document.querySelector(`input[name="entrega"][value="${e ? e.entrega : "recoger"}"]`).checked = true;
+  $("#campo-dir").hidden = !(e && e.entrega === "domicilio"); $("#e-dir").value = e ? e.dir : "";
+  $("#e-total").value = e && e.total ? e.total : ""; $("#e-abono").value = "";
+  // Al editar, los pagos se registran desde la tarjeta (quedan con fecha y medio); el formulario no los toca.
+  $("#campo-abono").hidden = $("#campo-medio").hidden = !!e;
+  $("#e-notas").value = e ? e.notas : ""; $("#form-error").hidden = true;
+  revisarAnticipacion(); sugerirAbono();
+  $("#form").hidden = false; $("#nuevo").hidden = true; mostrar("agenda");
+  $("#form").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  $("#e-nombre").focus({ preventScroll: true });
+}
+function cerrarForm() { $("#form").hidden = true; $("#nuevo").hidden = false; editando = null; }
+$("#nuevo").addEventListener("click", () => abrirForm(null));
+$("#cancelar-form").addEventListener("click", cerrarForm);
+
+$("#form").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const nombre = $("#e-nombre").value.trim().replace(/\s+/g, " ");
+  const cel = $("#e-cel").value.replace(/\D/g, "").replace(/^57(?=3\d{9}$)/, "");
+  const items = [...$("#items").children].map((f) => { const [c, p] = f.querySelectorAll("input"); return { cant: Math.round(+c.value), producto: p.value.trim().replace(/\s+/g, " ") }; }).filter((i) => i.producto);
+  const fecha = $("#e-fecha").value, hora = $("#e-hora").value, entrega = entregaSel(), dir = $("#e-dir").value.trim();
+  const total = Math.max(0, Math.round(+$("#e-total").value || 0)), abono = Math.max(0, Math.round(+$("#e-abono").value || 0));
+  const err = !nombre ? "Escribe el nombre del cliente."
+    : cel && !/^3\d{9}$/.test(cel) ? "El celular debe tener 10 dígitos y empezar por 3 (o déjalo vacío)."
+    : !items.length ? "Escribe al menos un producto."
+    : items.some((i) => !(i.cant >= 1)) ? "Cada producto necesita una cantidad de 1 o más."
+    : !fecha ? "Elige la fecha de entrega." : !hora ? "Elige la hora de entrega."
+    : entrega === "domicilio" && !dir ? "Escribe la dirección del domicilio."
+    : !editando && abono > total ? "El abono no puede ser mayor que el valor total."
+    : editando && total && total < pagado(datos.encargos.find((x) => x.id === editando)) ? "El total no puede ser menor que lo ya abonado."
+    : "";
+  if (err) { $("#form-error").textContent = err; $("#form-error").hidden = false; return; }
+  if (editando) {
+    const e = datos.encargos.find((x) => x.id === editando);
+    Object.assign(e, { nombre, cel, items, fecha, hora, entrega, dir: entrega === "domicilio" ? dir : "", total, notas: $("#e-notas").value.trim() });
+    abierto = e.id;
+  } else {
+    const ahora = new Date().toISOString();
+    const e = { id: "e" + Date.now().toString(36), nombre, cel, items, fecha, hora, entrega, dir: entrega === "domicilio" ? dir : "", total,
+      pagos: abono ? [{ monto: abono, medio: $("#e-medio").value, fecha: ahora }] : [], estado: "pendiente", notas: $("#e-notas").value.trim(), creado: ahora };
+    datos.encargos.push(e); abierto = e.id;
+  }
+  cerrarForm(); guardar();
+});
+
+/* ---------- ajustes y copia ---------- */
+function pintarAjustes() { $("#a-abono").value = A().abonoPct; $("#a-dias").value = A().diasMin; $("#a-recoger").value = A().recoger; }
+$("#form-ajustes").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const n = (id, min, max, def) => { const v = Math.round(+$(id).value); return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : def; };
+  Object.assign(datos.ajustes, { abonoPct: n("#a-abono", 0, 100, 50), diasMin: n("#a-dias", 0, 14, 2), recoger: $("#a-recoger").value.trim() || AJUSTES_INICIALES.recoger });
+  guardar(); pintarAjustes(); $("#a-guardado").hidden = false; setTimeout(() => { $("#a-guardado").hidden = true; }, 2500);
+});
+$("#exportar").addEventListener("click", () => {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(datos, null, 2)], { type: "application/json" }));
+  a.download = `encargos-pan-suizo-${hoy()}.json`; document.body.append(a); a.click(); a.remove();
+  $("#copia-estado").textContent = `Copia preparada: encargos-pan-suizo-${hoy()}.json (${datos.encargos.length} encargos).`;
+});
+$("#importar").addEventListener("change", async (ev) => {
+  const f = ev.target.files[0]; if (!f) return;
+  try {
+    const g = JSON.parse(await f.text());
+    if (!g || !Array.isArray(g.encargos) || g.encargos.some((e) => !e.id || !e.fecha || !e.hora || !Array.isArray(e.items) || !Array.isArray(e.pagos))) throw new Error("formato");
+    datos = { encargos: g.encargos, ajustes: { ...AJUSTES_INICIALES, ...(g.ajustes || {}) } };
+    abierto = null; guardar(); pintarAjustes();
+    $("#copia-estado").textContent = `Copia cargada: ${datos.encargos.length} encargos.`;
+  } catch (err) { $("#copia-estado").textContent = "Ese archivo no es una copia de la agenda. Elige el .json que descargaste con «Descargar copia»."; }
+  ev.target.value = "";
+});
+$("#borrar-ejemplos").addEventListener("click", () => { datos.encargos = datos.encargos.filter((e) => !e.ejemplo); abierto = null; guardar(); });
+
+/* ---------- pestañas ---------- */
+let vista = "agenda";
+function mostrar(v) {
+  vista = v;
+  ["agenda", "hornear", "historial", "ajustes"].forEach((k) => { $("#v-" + k).hidden = k !== v; $("#p-" + k).setAttribute("aria-selected", String(k === v)); });
+  pintarTodo();
+  if (v === "ajustes") pintarAjustes();
+}
+["agenda", "hornear", "historial", "ajustes"].forEach((k) => $("#p-" + k).addEventListener("click", () => mostrar(k)));
+$("#buscar").addEventListener("input", pintarHistorial);
+function pintarTodo() {
+  pintarCifras();
+  if (vista === "agenda") pintarAgenda();
+  if (vista === "hornear") pintarHornear();
+  if (vista === "historial") pintarHistorial();
+}
+
+pintarTodo();
+// Al pasar la medianoche o la hora de un encargo, se recalculan «hoy», «mañana» y los atrasados.
+// No repinta mientras alguien escribe (formulario abierto o un pago a medio digitar).
+setInterval(() => { if ($("#form").hidden && !document.activeElement.matches("input, select, textarea")) pintarTodo(); }, 60000);
+</script>
+
+</body>
+</html>
