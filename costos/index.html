@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F0B08">
+<link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../img/icono-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<meta name="robots" content="noindex, nofollow">
+<title>Costos de recetas Pan Suizo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Calculadora de costos de Pan Suizo: costo por unidad de cada receta (insumos, merma, horno, trabajo, empaque) y precio sugerido con margen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* Concepto: la libreta de costos de la panadería, en el celular. Misma identidad que la carta, la caja y la agenda
+   (rojo y oro del escudo, fondo de horno). Cada receta responde tres preguntas: cuánto me cuesta una unidad,
+   cuánto gano con el precio de hoy y a cuánto debería venderla. Los insumos se escriben una vez y todas las
+   recetas se recalculan cuando cambia un precio (por ejemplo, el bulto de harina). */
+:root {
+  --fondo: #0F0B08;
+  --superficie: #1A140F;
+  --velo-sup: rgba(244, 232, 212, .06);
+  --borde: rgba(244, 232, 212, .14);
+  --tinta: #F4E8D4;
+  --tinta-suave: #BBA98F;
+  --tinta-tenue: #8A7A63;
+  --oro: #F2C14E;
+  --oro-relleno: #F2C14E;
+  --sobre-oro: #1C1206;
+  --rojo: #B82227;
+  --sobre-rojo: #FFF6EC;
+  --ok: #86C996;
+  --alerta: #FF8F86;
+  --resplandor: rgba(242, 193, 78, .20);
+  --f-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --f-texto: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --fondo: #F6EEDF; --superficie: #FFFBF4; --velo-sup: rgba(60, 35, 15, .05); --borde: rgba(60, 35, 15, .15);
+    --tinta: #2A1A10; --tinta-suave: #6A5442; --tinta-tenue: #8C7763; --oro: #8F6200; --oro-relleno: #F2C14E;
+    --sobre-oro: #1C1206; --rojo: #A71E21; --sobre-rojo: #FFF6EC; --ok: #1F7A45; --alerta: #B3261E;
+    --resplandor: rgba(242, 193, 78, .35); color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --fondo: #F6EEDF; --superficie: #FFFBF4; --velo-sup: rgba(60, 35, 15, .05); --borde: rgba(60, 35, 15, .15);
+  --tinta: #2A1A10; --tinta-suave: #6A5442; --tinta-tenue: #8C7763; --oro: #8F6200; --oro-relleno: #F2C14E;
+  --sobre-oro: #1C1206; --rojo: #A71E21; --sobre-rojo: #FFF6EC; --ok: #1F7A45; --alerta: #B3261E;
+  --resplandor: rgba(242, 193, 78, .35); color-scheme: light;
+}
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fondo); color: var(--tinta); font-family: var(--f-texto); font-size: 15px; line-height: 1.45; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--oro); outline-offset: 2px; }
+.envoltura { max-width: 720px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px 40px; display: grid; gap: 16px; }
+.cursiva { font-family: var(--f-display); font-style: italic; font-weight: 700; }
+.num { font-variant-numeric: tabular-nums; }
+
+.cab { display: flex; align-items: center; gap: 12px; }
+.cab svg { width: 42px; height: 42px; flex: none; }
+.cab h1 { margin: 0; font-size: 28px; line-height: 1; }
+.cab p { margin: 2px 0 0; font-size: 12px; color: var(--tinta-suave); }
+.pestanas { display: flex; gap: 6px; padding: 4px; border: 1px solid var(--borde); border-radius: 999px; background: var(--velo-sup); }
+.pestanas button { flex: 1; border: 0; background: transparent; border-radius: 999px; padding: 9px 6px; font-weight: 700; font-size: 13px; color: var(--tinta-suave); }
+.pestanas button[aria-selected="true"] { background: var(--oro-relleno); color: var(--sobre-oro); }
+
+.cifras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cifra { border: 1px solid var(--borde); border-radius: 16px; padding: 12px; background: var(--superficie); min-width: 0; }
+.cifra b { display: block; font-size: clamp(16px, 4.8vw, 24px); white-space: nowrap; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.cifra span { font-size: 12px; color: var(--tinta-suave); }
+.cifra.alerta b { color: var(--alerta); }
+
+.aviso { padding: 12px 14px; border-radius: 14px; border: 1px dashed color-mix(in srgb, var(--oro) 60%, transparent); font-size: 13px; color: var(--tinta-suave); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 12px 18px; font-weight: 700; text-decoration: none; text-align: center; }
+.btn-gigante { width: 100%; padding: 16px; font-size: 17px; }
+.btn-rojo { background: var(--rojo); color: var(--sobre-rojo); }
+.btn-oro { background: var(--oro-relleno); color: var(--sobre-oro); }
+.btn-linea { background: transparent; border: 1px solid var(--borde); color: var(--tinta); }
+.btn-chico { padding: 8px 14px; font-size: 13px; }
+.fila-botones { display: flex; flex-wrap: wrap; gap: 8px; }
+.fila-botones > * { flex: 1 1 120px; }
+.nota { font-size: 12.5px; color: var(--tinta-tenue); margin: 0; }
+.ok { color: var(--ok); font-weight: 700; margin: 0; }
+.error { color: var(--alerta); margin: 0; font-size: 13.5px; }
+.vacio { color: var(--tinta-tenue); font-size: 13.5px; margin: 0; }
+
+/* ---------- recetas ---------- */
+.simular { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13.5px; color: var(--tinta-suave); }
+.simular input { width: 84px; padding: 9px 10px; border-radius: 12px; border: 1px solid var(--borde); background: var(--superficie); }
+.receta { border: 1px solid var(--borde); border-radius: 16px; background: var(--superficie); overflow: hidden; }
+.receta.pierde { border-color: color-mix(in srgb, var(--alerta) 60%, transparent); }
+.receta > button.resumen { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: start; text-align: left; width: 100%; padding: 12px 14px; border: 0; background: transparent; }
+.resumen .nombre { font-weight: 700; }
+.resumen .linea { grid-column: 1; font-size: 13px; color: var(--tinta-suave); font-variant-numeric: tabular-nums; }
+.resumen .linea b { color: var(--tinta); }
+.resumen .estado { grid-column: 2; grid-row: 1 / span 2; text-align: right; }
+.resumen .estado b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.resumen .estado small { font-size: 11px; color: var(--tinta-tenue); }
+.chip { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+.chip.sano { border: 1px solid var(--ok); color: var(--ok); }
+.chip.bajo { background: var(--oro-relleno); color: var(--sobre-oro); }
+.chip.pierde { background: var(--rojo); color: var(--sobre-rojo); }
+.chip.sinprecio { border: 1px solid var(--borde); color: var(--tinta-suave); }
+.chip.ejemplo { border: 1px dashed var(--borde); color: var(--tinta-tenue); margin-left: 6px; vertical-align: 2px; }
+.detalle { border-top: 1px solid var(--borde); padding: 14px; display: grid; gap: 12px; background: radial-gradient(90% 70% at 100% 0%, var(--resplandor), transparent 60%); }
+.tabla { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tabla th, .tabla td { padding: 7px 4px; border-bottom: 1px solid var(--borde); text-align: left; vertical-align: top; }
+.tabla th { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-tenue); font-weight: 700; }
+.tabla td.v, .tabla th.v { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tabla tr.total td { font-weight: 700; color: var(--oro); border-bottom: 0; }
+.tabla tr.sub td { color: var(--tinta-suave); }
+.precios { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.precio { border: 1px solid var(--borde); border-radius: 14px; padding: 10px 12px; min-width: 0; }
+.precio span { display: block; font-size: 12px; color: var(--tinta-suave); }
+.precio b { font-size: 20px; font-variant-numeric: tabular-nums; }
+.precio small { display: block; font-size: 12px; color: var(--tinta-tenue); }
+.precio.destacado { border-color: transparent; background: var(--oro-relleno); color: var(--sobre-oro); }
+.precio.destacado span, .precio.destacado small { color: var(--sobre-oro); opacity: .8; }
+
+/* ---------- formularios ---------- */
+form.panel, .panel { border: 1px solid var(--borde); border-radius: 20px; padding: 18px; background: var(--superficie); display: grid; gap: 12px; }
+.panel h2 { margin: 0; font-size: 26px; }
+.campo { display: grid; gap: 6px; min-width: 0; align-content: start; }
+.campo label, .campo .etq { font-size: 13px; font-weight: 700; }
+.campo input, .campo select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--borde); background: var(--fondo); }
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dos > * { min-width: 0; }
+.ingr { display: grid; grid-template-columns: 1fr 92px 40px 40px; gap: 6px; align-items: center; }
+.ingr select, .ingr input { padding: 10px; border-radius: 12px; border: 1px solid var(--borde); background: var(--fondo); min-width: 0; }
+.ingr .u { font-size: 12.5px; color: var(--tinta-suave); }
+.ingr button { height: 40px; border: 1px solid var(--borde); background: transparent; border-radius: 12px; color: var(--tinta-suave); font-size: 18px; line-height: 1; }
+
+/* ---------- insumos ---------- */
+.insumo { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; border: 1px solid var(--borde); border-radius: 16px; background: var(--superficie); padding: 12px 14px; text-align: left; width: 100%; }
+.insumo .nombre { font-weight: 700; }
+.insumo .linea { grid-column: 1; font-size: 13px; color: var(--tinta-suave); font-variant-numeric: tabular-nums; }
+.insumo .v { grid-column: 2; grid-row: 1 / span 2; text-align: right; font-variant-numeric: tabular-nums; }
+.insumo .v b { display: block; font-size: 17px; }
+.insumo .v small { font-size: 11px; color: var(--tinta-tenue); }
+
+@media (max-width: 380px) {
+  .cifras { gap: 6px; }
+  .cifra { padding: 10px 8px; }
+}
+@media print {
+  body { background: #fff; color: #000; }
+  .no-imprimir, .cab p, .pestanas, .cifras, .aviso, .simular { display: none !important; }
+  .receta, .panel { border: 0; background: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="envoltura">
+  <header class="cab">
+    <svg viewBox="0 0 48 48" role="img" aria-label="Escudo de Pan Suizo">
+      <circle cx="24" cy="24" r="24" fill="#A71E21"/>
+      <path d="M14 13.5l4 3.2 6-6.7 6 6.7 4-3.2v13c0 6.6-4.5 11.3-10 13.6C18.5 37.8 14 33.1 14 26.5z" fill="none" stroke="#FCD150" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M24 12v27.5M14.6 23.5h18.8" stroke="#FCD150" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div><h1 class="cursiva">Costos de recetas</h1><p>Pan Suizo · costo por unidad y precio sugerido</p></div>
+  </header>
+
+  <nav class="pestanas" role="tablist" aria-label="Secciones">
+    <button type="button" role="tab" id="p-recetas" aria-selected="true" aria-controls="v-recetas">Recetas</button>
+    <button type="button" role="tab" id="p-insumos" aria-selected="false" aria-controls="v-insumos">Insumos</button>
+    <button type="button" role="tab" id="p-ajustes" aria-selected="false" aria-controls="v-ajustes">Ajustes</button>
+  </nav>
+
+  <div class="cifras" aria-label="Resumen">
+    <div class="cifra"><b id="c-recetas">0</b><span>recetas</span></div>
+    <div class="cifra" id="cf-bajo"><b id="c-bajo">0</b><span>bajo el margen objetivo</span></div>
+    <div class="cifra" id="cf-pierde"><b id="c-pierde">0</b><span>se venden a pérdida</span></div>
+  </div>
+
+  <div class="aviso" id="aviso-ejemplos" hidden>
+    <span>Lo marcado como <b>ejemplo</b> es de prueba: las recetas, cantidades, precios de insumos y costos de horno y trabajo son inventados para que veas cómo funciona. Solo el precio de venta viene de la carta de Rappi (21/10/2026).</span>
+    <button type="button" class="btn btn-linea btn-chico" id="borrar-ejemplos">Quitar los ejemplos y empezar</button>
+  </div>
+
+  <!-- ================= RECETAS ================= -->
+  <section id="v-recetas" role="tabpanel" aria-labelledby="p-recetas" style="display:grid;gap:14px">
+    <button type="button" class="btn btn-rojo btn-gigante" id="nueva-receta">+ Nueva receta</button>
+
+    <form class="panel" id="form-receta" hidden novalidate>
+      <h2 class="cursiva" id="fr-titulo">Nueva receta</h2>
+      <div class="campo"><label for="r-nombre">Producto</label><input id="r-nombre" list="productos-carta" autocomplete="off" placeholder="Ej.: Pan blandito"><datalist id="productos-carta"></datalist></div>
+      <div class="dos">
+        <div class="campo"><label for="r-rinde">Unidades que salen de una tanda</label><input id="r-rinde" type="number" inputmode="numeric" min="1" step="1"></div>
+        <div class="campo"><label for="r-merma">Merma (%)</label><input id="r-merma" type="number" inputmode="decimal" min="0" max="90" step="1"></div>
+      </div>
+      <p class="nota">Merma: lo que se quema, se cae, se regala o no se vende. Si de 100 panes se pierden 5, es el 5 %.</p>
+      <div class="campo">
+        <span class="etq">Ingredientes de una tanda</span>
+        <div id="ingredientes" style="display:grid;gap:6px"></div>
+        <button type="button" class="btn btn-linea btn-chico" id="mas-ingr" style="justify-self:start">+ Otro ingrediente</button>
+        <p class="nota" id="sin-insumos" hidden>Primero agrega los insumos (harina, azúcar…) en la pestaña Insumos.</p>
+      </div>
+      <div class="dos">
+        <div class="campo"><label for="r-horno">Minutos de horno por tanda</label><input id="r-horno" type="number" inputmode="numeric" min="0" step="1"></div>
+        <div class="campo"><label for="r-trabajo">Minutos de trabajo por tanda</label><input id="r-trabajo" type="number" inputmode="numeric" min="0" step="1"></div>
+      </div>
+      <div class="dos">
+        <div class="campo"><label for="r-empaque">Empaque por unidad ($)</label><input id="r-empaque" type="number" inputmode="numeric" min="0" step="10"></div>
+        <div class="campo"><label for="r-margen">Margen objetivo (%)</label><input id="r-margen" type="number" inputmode="numeric" min="0" max="95" step="1"></div>
+      </div>
+      <div class="campo"><label for="r-precio">Precio de venta actual por unidad ($, opcional)</label><input id="r-precio" type="number" inputmode="numeric" min="0" step="50"></div>
+      <p class="nota" id="r-precio-nota"></p>
+      <p class="error" id="fr-error" hidden></p>
+      <div class="fila-botones">
+        <button type="submit" class="btn btn-oro">Guardar receta</button>
+        <button type="button" class="btn btn-linea" id="cancelar-receta">Cancelar</button>
+      </div>
+    </form>
+
+    <label class="simular no-imprimir" for="alza">¿Y si los insumos suben? <input id="alza" type="number" inputmode="numeric" min="-50" max="200" step="5" value="0"> % <span id="alza-nota"></span></label>
+    <div id="recetas" style="display:grid;gap:10px"></div>
+  </section>
+
+  <!-- ================= INSUMOS ================= -->
+  <section id="v-insumos" role="tabpanel" aria-labelledby="p-insumos" hidden style="display:grid;gap:14px">
+    <button type="button" class="btn btn-rojo btn-gigante" id="nuevo-insumo">+ Nuevo insumo</button>
+
+    <form class="panel" id="form-insumo" hidden novalidate>
+      <h2 class="cursiva" id="fi-titulo">Nuevo insumo</h2>
+      <div class="campo"><label for="i-nombre">Nombre</label><input id="i-nombre" autocomplete="off" placeholder="Ej.: Harina de trigo"></div>
+      <div class="dos">
+        <div class="campo"><label for="i-cant">Viene en presentación de</label><input id="i-cant" type="number" inputmode="decimal" min="0" step="any" placeholder="Ej.: 50"></div>
+        <div class="campo"><label for="i-unidad">Unidad</label>
+          <select id="i-unidad"><option value="kg">kilos (kg)</option><option value="g">gramos (g)</option><option value="l">litros (l)</option><option value="ml">mililitros (ml)</option><option value="und">unidades</option></select>
+        </div>
+      </div>
+      <div class="campo"><label for="i-precio">Lo que cuesta esa presentación ($)</label><input id="i-precio" type="number" inputmode="numeric" min="0" step="100" placeholder="Ej.: precio del bulto"></div>
+      <p class="nota" id="i-calculo"></p>
+      <p class="error" id="fi-error" hidden></p>
+      <div class="fila-botones">
+        <button type="submit" class="btn btn-oro">Guardar insumo</button>
+        <button type="button" class="btn btn-linea" id="cancelar-insumo">Cancelar</button>
+        <button type="button" class="btn btn-linea" id="eliminar-insumo" hidden>Eliminar</button>
+      </div>
+    </form>
+
+    <div id="insumos" style="display:grid;gap:8px"></div>
+    <p class="nota">Toca un insumo para cambiar su precio. Cuando sube la harina o el huevo, todas las recetas se recalculan solas.</p>
+  </section>
+
+  <!-- ================= AJUSTES ================= -->
+  <section id="v-ajustes" role="tabpanel" aria-labelledby="p-ajustes" hidden style="display:grid;gap:14px">
+    <form class="panel" id="form-ajustes">
+      <h2 class="cursiva">Ajustes</h2>
+      <div class="dos">
+        <div class="campo"><label for="a-horno">Costo de una hora de horno ($)</label><input id="a-horno" type="number" inputmode="numeric" min="0" step="100"></div>
+        <div class="campo"><label for="a-trabajo">Costo de una hora de trabajo ($)</label><input id="a-trabajo" type="number" inputmode="numeric" min="0" step="100"></div>
+      </div>
+      <p class="nota">Hora de horno: gas y luz del horno encendido. Una forma de sacarla: lo que sube el recibo de gas en un mes ÷ las horas que estuvo prendido. Hora de trabajo: lo que cuesta una persona (sueldo y prestaciones) ÷ horas trabajadas en el mes.</p>
+      <div class="dos">
+        <div class="campo"><label for="a-ind">Gastos fijos (% sobre el costo)</label><input id="a-ind" type="number" inputmode="numeric" min="0" max="200" step="1"></div>
+        <div class="campo"><label for="a-margen">Margen objetivo por defecto (%)</label><input id="a-margen" type="number" inputmode="numeric" min="0" max="95" step="1"></div>
+      </div>
+      <p class="nota">Gastos fijos: arriendo, servicios del local, contador… repartidos como un porcentaje del costo de producción.</p>
+      <div class="dos">
+        <div class="campo"><label for="a-redondeo">Redondear precios a</label>
+          <select id="a-redondeo"><option value="50">$ 50</option><option value="100">$ 100</option><option value="500">$ 500</option></select>
+        </div>
+        <div class="campo"><label for="a-comision">Comisión de la app de domicilios (%)</label><input id="a-comision" type="number" inputmode="numeric" min="0" max="60" step="1"></div>
+      </div>
+      <p class="nota">La comisión es la de su contrato con la app (no se encontró una cifra pública confiable). Con 0 % no se muestra el precio para la app.</p>
+      <button type="submit" class="btn btn-oro">Guardar ajustes</button>
+      <p class="ok" id="a-guardado" hidden>Guardado.</p>
+    </form>
+    <div class="panel">
+      <h2 class="cursiva">Cómo se calcula</h2>
+      <p class="nota" style="font-size:13.5px;color:var(--tinta-suave)">
+        Costo de la tanda = ingredientes + horno + trabajo.<br>
+        Unidades vendibles = unidades de la tanda × (1 − merma).<br>
+        Costo por unidad = costo de la tanda ÷ unidades vendibles, más gastos fijos y empaque.<br>
+        Precio sugerido = costo por unidad ÷ (1 − margen), redondeado hacia arriba.<br>
+        El margen es sobre el precio de venta: con 60 %, de cada $ 1.000 vendidos quedan $ 600 después de pagar el costo.
+      </p>
+    </div>
+    <div class="panel">
+      <h2 class="cursiva">Copia de seguridad</h2>
+      <p class="nota">Las recetas se guardan solo en este celular o computador. Descarga una copia después de cambios grandes; si cambias de equipo, cárgala en el nuevo.</p>
+      <div class="fila-botones">
+        <button type="button" class="btn btn-linea" id="exportar">Descargar copia</button>
+        <label class="btn btn-linea" for="importar">Cargar copia</label>
+        <input id="importar" type="file" accept="application/json,.json" hidden>
+      </div>
+      <p class="nota" id="copia-estado" aria-live="polite"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+/* Calculadora de costos de Pan Suizo.
+   Los datos se guardan en este navegador (localStorage, clave "pan-suizo-costos-v1") y se respaldan con
+   «Descargar copia». Los insumos guardan su precio por unidad base (gramo, mililitro o unidad); las recetas
+   guardan cantidades en esa misma unidad, así que cambiar un precio recalcula todo. */
+const CLAVE = "pan-suizo-costos-v1";
+const AJUSTES_INICIALES = { horaHorno: 3000, horaTrabajo: 9000, indirectosPct: 10, margenPct: 60, redondeo: 100, comisionPct: 0 };
+// unidad elegida en el formulario → unidad base guardada y factor
+const UNIDADES = { kg: ["g", 1000], g: ["g", 1], l: ["ml", 1000], ml: ["ml", 1], und: ["und", 1] };
+const NOMBRE_BASE = { g: "g", ml: "ml", und: "und" };
+// Precios de la carta (Rappi, verificados el 21/10/2026) para comparar; la dueña puede cambiar el de cada receta.
+const CARTA = { "Pan blandito": 800, "Pan rollito": 800, "Pan francés": 800, "Pan calentano": 800, "Pan hojaldrado": 800,
+  "Mogolla integral": 800, "Almojábana": 4800, "Buñuelo": 4800, "Pan de queso": 7500, "Pan aliñado": 7500, "Pan grande": 7500,
+  "Baguette": 7000, "Pan de molde integral": 7000, "Roscón": 1200, "Mantecada personal": 4800, "Mantecada Jr": 14500,
+  "Galleta mariposa": 5500, "Galleta ojona": 4800, "Galleta payaso": 3600 };
+
+const $ = (s) => document.querySelector(s);
+const pesos = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
+const fmt = (n) => pesos.format(Math.round(n || 0)).replace(/\s/g, " ");
+const dec = (n, d = 1) => new Intl.NumberFormat("es-CO", { maximumFractionDigits: d }).format(n);
+const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const sinTildes = (t) => String(t).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+const dosDig = (n) => String(n).padStart(2, "0");
+const hoy = () => { const d = new Date(); return `${d.getFullYear()}-${dosDig(d.getMonth() + 1)}-${dosDig(d.getDate())}`; };
+const nuevoId = (p) => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+const precioCarta = (nombre) => { const k = Object.keys(CARTA).find((n) => sinTildes(n) === sinTildes(nombre)); return k ? CARTA[k] : 0; };
+const fechaBonita = (iso) => iso.split("-").reverse().join("/");
+
+function ejemplos() {
+  const f = hoy();
+  // Insumos: precio por presentación inventado («ejemplo»), salvo la harina, que usa el promedio nacional por kilo
+  // de agronegocios.co (25/07/2026, $ 3.116/kg) × 50 kg. Hay que reemplazarlos por los de la factura del proveedor.
+  const i = (id, nombre, base, presentacion, precio) => ({ id, ejemplo: true, nombre, base, presentacion, precio, actualizado: f });
+  const insumos = [
+    i("ej-harina", "Harina de trigo (bulto 50 kg)", "g", 50000, 155800),
+    i("ej-azucar", "Azúcar", "g", 1000, 4500),
+    i("ej-marg", "Margarina", "g", 500, 9000),
+    i("ej-huevo", "Huevos (cubeta)", "und", 30, 18000),
+    i("ej-lev", "Levadura", "g", 500, 12000),
+    i("ej-sal", "Sal", "g", 1000, 2000),
+    i("ej-leche", "Leche", "ml", 1000, 4000),
+    i("ej-cuajada", "Cuajada", "g", 1000, 22000),
+    i("ej-maiz", "Harina de maíz precocida", "g", 1000, 6000),
+  ];
+  const r = (id, nombre, rinde, mermaPct, minHorno, minTrabajo, empaque, ingredientes) =>
+    ({ id, ejemplo: true, nombre, rinde, mermaPct, minHorno, minTrabajo, empaque, margenPct: null, precio: precioCarta(nombre),
+       ingredientes: ingredientes.map(([insumo, cant]) => ({ insumo, cant })) });
+  const recetas = [
+    r("ejr1", "Pan blandito", 80, 5, 20, 60, 0,
+      [["ej-harina", 2000], ["ej-azucar", 300], ["ej-marg", 300], ["ej-huevo", 4], ["ej-lev", 40], ["ej-sal", 30], ["ej-leche", 800]]),
+    r("ejr2", "Almojábana", 20, 5, 25, 40, 0,
+      [["ej-cuajada", 1000], ["ej-maiz", 250], ["ej-huevo", 2], ["ej-marg", 50], ["ej-azucar", 30], ["ej-sal", 5]]),
+  ];
+  return { insumos, recetas };
+}
+
+let datos = { ...ejemplos(), ajustes: { ...AJUSTES_INICIALES } };
+try {
+  const g = JSON.parse(localStorage.getItem(CLAVE) || "null");
+  if (g && Array.isArray(g.insumos) && Array.isArray(g.recetas)) datos = { insumos: g.insumos, recetas: g.recetas, ajustes: { ...AJUSTES_INICIALES, ...(g.ajustes || {}) } };
+} catch (err) { /* sin almacenamiento: queda en memoria */ }
+function guardar() { try { localStorage.setItem(CLAVE, JSON.stringify(datos)); } catch (err) { /* sin almacenamiento */ } pintarTodo(); }
+const A = () => datos.ajustes;
+const insumo = (id) => datos.insumos.find((x) => x.id === id);
+const porBase = (ins) => (ins.presentacion > 0 ? ins.precio / ins.presentacion : 0);
+const usos = (id) => datos.recetas.filter((r) => r.ingredientes.some((l) => l.insumo === id));
+let abierta = null;       // id de la receta desplegada
+let editReceta = null;    // id de la receta en el formulario (null = nueva)
+let editInsumo = null;
+let alza = 0;             // simulación: % de alza de todos los insumos (no se guarda)
+
+/* ---------- cálculo ---------- */
+function redondearArriba(v) { const p = +A().redondeo || 100; return Math.ceil(v / p - 1e-9) * p; }
+function calcular(r) {
+  const k = 1 + alza / 100;
+  const lineas = r.ingredientes.map((l) => { const ins = insumo(l.insumo); return { ...l, ins, costo: ins ? l.cant * porBase(ins) * k : 0 }; });
+  const ingredientes = lineas.reduce((s, l) => s + l.costo, 0);
+  const horno = (r.minHorno || 0) / 60 * A().horaHorno;
+  const trabajo = (r.minTrabajo || 0) / 60 * A().horaTrabajo;
+  const tanda = ingredientes + horno + trabajo;
+  const vendibles = r.rinde * (1 - (r.mermaPct || 0) / 100);
+  const directo = vendibles > 0 ? tanda / vendibles : 0;
+  const fijos = directo * A().indirectosPct / 100;
+  const unidad = directo + fijos + (r.empaque || 0);
+  const objetivo = r.margenPct ?? A().margenPct;
+  const sugerido = objetivo < 100 ? redondearArriba(unidad / (1 - objetivo / 100)) : 0;
+  const precio = r.precio || 0;
+  const margen = precio ? (precio - unidad) / precio * 100 : null;
+  const materia = precio && vendibles > 0 ? ingredientes / vendibles / precio * 100 : null;
+  const com = A().comisionPct;
+  const precioApp = precio && com > 0 && com < 100 ? redondearArriba(precio / (1 - com / 100)) : 0;
+  const estado = margen === null ? "sinprecio" : margen < 0 ? "pierde" : margen < objetivo - 0.5 ? "bajo" : "sano";
+  return { lineas, ingredientes, horno, trabajo, tanda, vendibles, directo, fijos, unidad, objetivo, sugerido, precio, margen, materia, precioApp, estado };
+}
+const ETIQUETA = { sano: "Sano", bajo: "Bajo el objetivo", pierde: "Pierde", sinprecio: "Sin precio" };
+const cant = (l) => `${dec(l.cant, 2)} ${l.ins ? NOMBRE_BASE[l.ins.base] : ""}`;
+
+/* ---------- recetas ---------- */
+function pintarCifras() {
+  const c = datos.recetas.map(calcular);
+  $("#c-recetas").textContent = datos.recetas.length;
+  $("#c-bajo").textContent = c.filter((x) => x.estado === "bajo").length;
+  $("#c-pierde").textContent = c.filter((x) => x.estado === "pierde").length;
+  $("#cf-pierde").classList.toggle("alerta", c.some((x) => x.estado === "pierde"));
+  $("#aviso-ejemplos").hidden = !datos.recetas.some((r) => r.ejemplo) && !datos.insumos.some((i) => i.ejemplo);
+}
+
+function fichaTexto(r, c) {
+  return [
+    `${r.nombre}${r.ejemplo ? " (ejemplo: valores inventados)" : ""}: costo por unidad ${fmt(c.unidad)}${alza ? ` (con insumos ${alza > 0 ? "+" : ""}${alza} %)` : ""}`,
+    `Tanda de ${r.rinde} (${dec(c.vendibles)} vendibles, merma ${dec(r.mermaPct || 0)} %)`,
+    `Ingredientes ${fmt(c.ingredientes)} · horno ${fmt(c.horno)} · trabajo ${fmt(c.trabajo)}`,
+    ...c.lineas.map((l) => `  - ${l.ins ? l.ins.nombre : "¿insumo borrado?"}: ${cant(l)} = ${fmt(l.costo)}`),
+    c.precio ? `Precio actual ${fmt(c.precio)} · margen ${dec(c.margen, 0)} % · ganancia ${fmt(c.precio - c.unidad)} por unidad` : "Sin precio de venta registrado",
+    `Precio sugerido (margen ${dec(c.objetivo, 0)} %): ${fmt(c.sugerido)}`,
+  ].join("\n");
+}
+
+function pintarRecetas() {
+  const cont = $("#recetas");
+  $("#alza-nota").textContent = alza ? "simulación: no cambia los precios guardados" : "";
+  if (!datos.recetas.length) { cont.innerHTML = `<p class="vacio">Todavía no hay recetas. Empieza por la que más vendes.</p>`; return; }
+  const lista = datos.recetas.map((r) => ({ r, c: calcular(r) }));
+  const orden = { pierde: 0, bajo: 1, sinprecio: 2, sano: 3 };
+  lista.sort((a, b) => orden[a.c.estado] - orden[b.c.estado] || a.r.nombre.localeCompare(b.r.nombre, "es"));
+  cont.innerHTML = lista.map(({ r, c }) => {
+    const abiertaAqui = abierta === r.id;
+    return `<article class="receta ${c.estado === "pierde" ? "pierde" : ""}" data-id="${esc(r.id)}">
+      <button type="button" class="resumen" aria-expanded="${abiertaAqui}">
+        <span class="nombre">${esc(r.nombre)}${r.ejemplo ? '<span class="chip ejemplo">ejemplo</span>' : ""}</span>
+        <span class="estado"><b>${fmt(c.unidad)}</b><small>cuesta cada una</small></span>
+        <span class="linea">${c.precio ? `Se vende a <b>${fmt(c.precio)}</b> · margen <b>${dec(c.margen, 0)} %</b>` : "Sin precio de venta"} · <span class="chip ${c.estado}">${ETIQUETA[c.estado]}</span></span>
+      </button>
+      ${abiertaAqui ? detalleReceta(r, c) : ""}
+    </article>`;
+  }).join("");
+}
+
+function detalleReceta(r, c) {
+  const filas = c.lineas.map((l) => `<tr><td>${l.ins ? esc(l.ins.nombre) : "¿insumo borrado?"}</td><td class="v">${esc(cant(l))}</td><td class="v">${fmt(l.costo)}</td></tr>`).join("");
+  const ganancia = c.precio ? c.precio - c.unidad : 0;
+  return `<div class="detalle">
+    <table class="tabla">
+      <thead><tr><th>Una tanda</th><th class="v">Cantidad</th><th class="v">Costo</th></tr></thead>
+      <tbody>${filas}
+        <tr class="sub"><td colspan="2">Ingredientes</td><td class="v">${fmt(c.ingredientes)}</td></tr>
+        <tr class="sub"><td colspan="2">Horno (${dec(r.minHorno || 0, 0)} min)</td><td class="v">${fmt(c.horno)}</td></tr>
+        <tr class="sub"><td colspan="2">Trabajo (${dec(r.minTrabajo || 0, 0)} min)</td><td class="v">${fmt(c.trabajo)}</td></tr>
+        <tr class="sub"><td colspan="2"><b>Costo de la tanda</b></td><td class="v"><b>${fmt(c.tanda)}</b></td></tr>
+        <tr class="sub"><td colspan="2">÷ ${dec(c.vendibles)} vendibles (salen ${r.rinde}, merma ${dec(r.mermaPct || 0)} %)</td><td class="v">${fmt(c.directo)}</td></tr>
+        <tr class="sub"><td colspan="2">Gastos fijos (${dec(A().indirectosPct, 0)} %)</td><td class="v">${fmt(c.fijos)}</td></tr>
+        ${r.empaque ? `<tr class="sub"><td colspan="2">Empaque</td><td class="v">${fmt(r.empaque)}</td></tr>` : ""}
+        <tr class="total"><td colspan="2">Costo por unidad</td><td class="v">${fmt(c.unidad)}</td></tr>
+      </tbody>
+    </table>
+    <div class="precios">
+      <div class="precio"><span>Precio actual</span><b>${c.precio ? fmt(c.precio) : "—"}</b><small>${c.precio ? `gana ${fmt(ganancia)} por unidad · ${fmt(ganancia * c.vendibles)} por tanda` : "escríbelo en «Editar»"}</small></div>
+      <div class="precio destacado"><span>Precio sugerido</span><b>${fmt(c.sugerido)}</b><small>con margen de ${dec(c.objetivo, 0)} %</small></div>
+      ${c.materia !== null ? `<div class="precio"><span>Ingredientes / precio</span><b>${dec(c.materia, 0)} %</b><small>de cada venta se va en materia prima</small></div>` : ""}
+      ${c.precioApp ? `<div class="precio"><span>Precio en la app</span><b>${fmt(c.precioApp)}</b><small>para ganar lo mismo con ${dec(A().comisionPct, 0)} % de comisión</small></div>` : ""}
+    </div>
+    ${c.estado === "pierde" ? `<p class="error">Con el precio actual cada unidad deja ${fmt(-ganancia)} de pérdida. Revisa las cantidades y los precios de los insumos antes de decidir.</p>` : ""}
+    <div class="fila-botones no-imprimir">
+      <button type="button" class="btn btn-oro btn-chico" data-accion="editar">Editar</button>
+      <button type="button" class="btn btn-linea btn-chico" data-accion="copiar">Copiar ficha</button>
+      <button type="button" class="btn btn-linea btn-chico" data-accion="duplicar">Duplicar</button>
+      <button type="button" class="btn btn-linea btn-chico" data-accion="eliminar">Eliminar</button>
+    </div>
+    <p class="ok" data-copiado hidden>Ficha copiada. Pégala en WhatsApp o en una nota.</p>
+  </div>`;
+}
+
+$("#recetas").addEventListener("click", async (ev) => {
+  const art = ev.target.closest(".receta"); if (!art) return;
+  const r = datos.recetas.find((x) => x.id === art.dataset.id); if (!r) return;
+  if (ev.target.closest("button.resumen")) { abierta = abierta === r.id ? null : r.id; pintarRecetas(); return; }
+  const b = ev.target.closest("button[data-accion]"); if (!b) return;
+  const accion = b.dataset.accion;
+  if (accion === "editar") abrirFormReceta(r);
+  if (accion === "duplicar") {
+    const copia = { ...structuredClone(r), id: nuevoId("r"), ejemplo: false, nombre: r.nombre + " (copia)" };
+    datos.recetas.push(copia); abierta = copia.id; guardar();
+  }
+  if (accion === "eliminar") {
+    if (b.dataset.seguro) { datos.recetas = datos.recetas.filter((x) => x.id !== r.id); abierta = null; guardar(); }
+    else { b.dataset.seguro = "1"; b.textContent = "¿Seguro? Toca otra vez"; b.classList.replace("btn-linea", "btn-rojo"); }
+  }
+  if (accion === "copiar") {
+    const texto = fichaTexto(r, calcular(r));
+    try { await navigator.clipboard.writeText(texto); art.querySelector("[data-copiado]").hidden = false; }
+    catch (err) { window.prompt("Copia la ficha:", texto); }
+  }
+});
+$("#alza").addEventListener("input", () => { const v = +$("#alza").value; alza = Number.isFinite(v) ? Math.max(-50, Math.min(200, v)) : 0; pintarTodo(); });
+
+/* ---------- formulario de receta ---------- */
+function opcionesInsumos(sel) {
+  return datos.insumos.slice().sort((a, b) => a.nombre.localeCompare(b.nombre, "es"))
+    .map((i) => `<option value="${esc(i.id)}" ${i.id === sel ? "selected" : ""}>${esc(i.nombre)}</option>`).join("");
+}
+function filaIngrediente(l = {}) {
+  const div = document.createElement("div"); div.className = "ingr";
+  div.innerHTML = `<select aria-label="Insumo">${opcionesInsumos(l.insumo)}</select>
+    <input type="number" inputmode="decimal" min="0" step="any" aria-label="Cantidad" value="${l.cant ?? ""}">
+    <span class="u"></span><button type="button" aria-label="Quitar ingrediente">×</button>`;
+  const unidad = () => { const i = insumo(div.querySelector("select").value); div.querySelector(".u").textContent = i ? NOMBRE_BASE[i.base] : ""; };
+  div.querySelector("select").addEventListener("change", unidad);
+  div.querySelector("button").addEventListener("click", () => div.remove());
+  unidad();
+  $("#ingredientes").append(div);
+}
+function abrirFormReceta(r) {
+  editReceta = r ? r.id : null;
+  $("#fr-titulo").textContent = r ? "Editar receta" : "Nueva receta";
+  $("#r-nombre").value = r ? r.nombre : "";
+  $("#r-rinde").value = r ? r.rinde : "";
+  $("#r-merma").value = r ? r.mermaPct : 5;
+  $("#r-horno").value = r ? r.minHorno : "";
+  $("#r-trabajo").value = r ? r.minTrabajo : "";
+  $("#r-empaque").value = r ? r.empaque || "" : "";
+  $("#r-margen").value = r ? r.margenPct ?? "" : "";
+  $("#r-margen").placeholder = `${A().margenPct} (por defecto)`;
+  $("#r-precio").value = r ? r.precio || "" : "";
+  $("#ingredientes").innerHTML = "";
+  (r ? r.ingredientes : [{}, {}]).forEach(filaIngrediente);
+  $("#sin-insumos").hidden = datos.insumos.length > 0;
+  $("#fr-error").hidden = true;
+  notaPrecio();
+  $("#form-receta").hidden = false; $("#nueva-receta").hidden = true;
+  $("#r-nombre").focus();
+}
+function cerrarFormReceta() { $("#form-receta").hidden = true; $("#nueva-receta").hidden = false; editReceta = null; }
+function notaPrecio() {
+  const p = precioCarta($("#r-nombre").value);
+  $("#r-precio-nota").textContent = p ? `En la carta (Rappi, 21/10/2026) cuesta ${fmt(p)}. En el local puede ser otro.` : "";
+}
+$("#r-nombre").addEventListener("input", () => {
+  notaPrecio();
+  const p = precioCarta($("#r-nombre").value);
+  if (p && !$("#r-precio").value) $("#r-precio").value = p;
+});
+$("#nueva-receta").addEventListener("click", () => abrirFormReceta(null));
+$("#cancelar-receta").addEventListener("click", cerrarFormReceta);
+$("#mas-ingr").addEventListener("click", () => filaIngrediente());
+$("#form-receta").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const err = $("#fr-error"); err.hidden = true;
+  const falla = (t) => { err.textContent = t; err.hidden = false; };
+  const num = (id) => { const v = $(id).value.trim(); return v === "" ? null : +v; };
+  const nombre = $("#r-nombre").value.trim();
+  const rinde = num("#r-rinde"), merma = num("#r-merma") ?? 0, margen = num("#r-margen");
+  const ingredientes = [...document.querySelectorAll("#ingredientes .ingr")]
+    .map((d) => ({ insumo: d.querySelector("select").value, cant: +d.querySelector("input").value }))
+    .filter((l) => l.insumo && l.cant > 0);
+  if (!nombre) return falla("Escribe el nombre del producto.");
+  if (!(rinde >= 1)) return falla("Escribe cuántas unidades salen de una tanda.");
+  if (!(merma >= 0 && merma < 90)) return falla("La merma debe estar entre 0 y 90 %.");
+  if (!ingredientes.length) return falla("Agrega al menos un ingrediente con su cantidad.");
+  if (margen !== null && !(margen >= 0 && margen <= 95)) return falla("El margen objetivo debe estar entre 0 y 95 %.");
+  for (const id of ["#r-horno", "#r-trabajo", "#r-empaque", "#r-precio"]) if ((num(id) ?? 0) < 0) return falla("Los valores no pueden ser negativos.");
+  const r = { nombre, rinde: Math.round(rinde), mermaPct: merma, minHorno: num("#r-horno") ?? 0, minTrabajo: num("#r-trabajo") ?? 0,
+    empaque: num("#r-empaque") ?? 0, margenPct: margen, precio: num("#r-precio") ?? 0, ingredientes };
+  if (editReceta) { const v = datos.recetas.find((x) => x.id === editReceta); Object.assign(v, r, { ejemplo: false }); abierta = v.id; }
+  else { const n = { id: nuevoId("r"), ...r }; datos.recetas.push(n); abierta = n.id; }
+  cerrarFormReceta(); guardar();
+});
+
+/* ---------- insumos ---------- */
+function presentacionBonita(i) {
+  if (i.base === "und") return `${dec(i.presentacion, 2)} und`;
+  return i.presentacion >= 1000 ? `${dec(i.presentacion / 1000, 3)} ${i.base === "g" ? "kg" : "l"}` : `${dec(i.presentacion, 2)} ${i.base}`;
+}
+function precioReferencia(i) {
+  return i.base === "und" ? [porBase(i), "por unidad"] : [porBase(i) * 1000, i.base === "g" ? "por kilo" : "por litro"];
+}
+function pintarInsumos() {
+  const cont = $("#insumos");
+  if (!datos.insumos.length) { cont.innerHTML = `<p class="vacio">Todavía no hay insumos. Empieza por la harina, el azúcar y la margarina.</p>`; return; }
+  cont.innerHTML = datos.insumos.slice().sort((a, b) => a.nombre.localeCompare(b.nombre, "es")).map((i) => {
+    const [v, por] = precioReferencia(i), n = usos(i.id).length;
+    return `<button type="button" class="insumo" data-id="${esc(i.id)}">
+      <span class="nombre">${esc(i.nombre)}${i.ejemplo ? '<span class="chip ejemplo">ejemplo</span>' : ""}</span>
+      <span class="v"><b>${fmt(v)}</b><small>${por}</small></span>
+      <span class="linea">${fmt(i.precio)} por ${presentacionBonita(i)} · en ${n} receta${n === 1 ? "" : "s"}${i.actualizado && !i.ejemplo ? ` · precio del ${esc(fechaBonita(i.actualizado))}` : ""}</span>
+    </button>`;
+  }).join("");
+}
+$("#insumos").addEventListener("click", (ev) => { const b = ev.target.closest(".insumo"); if (b) abrirFormInsumo(insumo(b.dataset.id)); });
+function abrirFormInsumo(i) {
+  editInsumo = i ? i.id : null;
+  $("#fi-titulo").textContent = i ? "Editar insumo" : "Nuevo insumo";
+  $("#i-nombre").value = i ? i.nombre : "";
+  let unidad = "kg", cantidad = "";
+  if (i) {
+    if (i.base === "und") { unidad = "und"; cantidad = i.presentacion; }
+    else if (i.presentacion >= 1000) { unidad = i.base === "g" ? "kg" : "l"; cantidad = i.presentacion / 1000; }
+    else { unidad = i.base; cantidad = i.presentacion; }
+  }
+  $("#i-unidad").value = unidad; $("#i-cant").value = cantidad;
+  $("#i-precio").value = i ? i.precio : "";
+  // Un insumo usado en recetas no puede cambiar de tipo de unidad (las cantidades quedarían mal).
+  const usado = i ? usos(i.id).length : 0;
+  [...$("#i-unidad").options].forEach((o) => { o.disabled = !!(usado && UNIDADES[o.value][0] !== i.base); });
+  $("#eliminar-insumo").hidden = !i;
+  $("#eliminar-insumo").textContent = "Eliminar"; delete $("#eliminar-insumo").dataset.seguro;
+  $("#eliminar-insumo").classList.replace("btn-rojo", "btn-linea");
+  $("#fi-error").hidden = true;
+  calculoInsumo();
+  $("#form-insumo").hidden = false; $("#nuevo-insumo").hidden = true;
+  $("#form-insumo").scrollIntoView({ block: "start", behavior: "smooth" });
+  $("#i-nombre").focus({ preventScroll: true });
+}
+function cerrarFormInsumo() { $("#form-insumo").hidden = true; $("#nuevo-insumo").hidden = false; editInsumo = null; }
+function leerInsumo() {
+  const [base, factor] = UNIDADES[$("#i-unidad").value];
+  return { base, presentacion: +$("#i-cant").value * factor, precio: +$("#i-precio").value };
+}
+function calculoInsumo() {
+  const i = leerInsumo();
+  if (!(i.presentacion > 0 && i.precio > 0)) { $("#i-calculo").textContent = ""; return; }
+  const [v, por] = precioReferencia(i);
+  $("#i-calculo").textContent = `Sale a ${fmt(v)} ${por}${i.base === "und" ? "" : ` (${dec(porBase(i), 2)} $ por ${i.base})`}.`;
+}
+["#i-cant", "#i-precio", "#i-unidad"].forEach((s) => $(s).addEventListener("input", calculoInsumo));
+$("#nuevo-insumo").addEventListener("click", () => abrirFormInsumo(null));
+$("#cancelar-insumo").addEventListener("click", cerrarFormInsumo);
+$("#form-insumo").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const err = $("#fi-error"); err.hidden = true;
+  const falla = (t) => { err.textContent = t; err.hidden = false; };
+  const nombre = $("#i-nombre").value.trim(), i = leerInsumo();
+  if (!nombre) return falla("Escribe el nombre del insumo.");
+  if (!(i.presentacion > 0)) return falla("Escribe de cuánto es la presentación (por ejemplo, 50 kg).");
+  if (!(i.precio > 0)) return falla("Escribe lo que cuesta esa presentación.");
+  if (datos.insumos.some((x) => x.id !== editInsumo && sinTildes(x.nombre) === sinTildes(nombre))) return falla("Ya hay un insumo con ese nombre.");
+  if (editInsumo) {
+    const v = insumo(editInsumo);
+    const cambioPrecio = v.precio !== i.precio || v.presentacion !== i.presentacion;
+    Object.assign(v, { nombre, ...i }, cambioPrecio ? { actualizado: hoy(), ejemplo: false } : {});
+  } else datos.insumos.push({ id: nuevoId("i"), nombre, ...i, actualizado: hoy() });
+  cerrarFormInsumo(); guardar();
+});
+$("#eliminar-insumo").addEventListener("click", (ev) => {
+  const b = ev.currentTarget, n = usos(editInsumo);
+  if (n.length) { $("#fi-error").textContent = `No se puede eliminar: se usa en ${n.map((r) => r.nombre).join(", ")}. Quítalo primero de esas recetas.`; $("#fi-error").hidden = false; return; }
+  if (!b.dataset.seguro) { b.dataset.seguro = "1"; b.textContent = "¿Seguro? Toca otra vez"; b.classList.replace("btn-linea", "btn-rojo"); return; }
+  datos.insumos = datos.insumos.filter((x) => x.id !== editInsumo); cerrarFormInsumo(); guardar();
+});
+
+/* ---------- ajustes y copia ---------- */
+function pintarAjustes() {
+  $("#a-horno").value = A().horaHorno; $("#a-trabajo").value = A().horaTrabajo; $("#a-ind").value = A().indirectosPct;
+  $("#a-margen").value = A().margenPct; $("#a-redondeo").value = String(A().redondeo); $("#a-comision").value = A().comisionPct;
+}
+$("#form-ajustes").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const n = (id, min, max, def) => { const v = +$(id).value; return $(id).value !== "" && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : def; };
+  Object.assign(datos.ajustes, {
+    horaHorno: n("#a-horno", 0, 1e6, AJUSTES_INICIALES.horaHorno), horaTrabajo: n("#a-trabajo", 0, 1e6, AJUSTES_INICIALES.horaTrabajo),
+    indirectosPct: n("#a-ind", 0, 200, AJUSTES_INICIALES.indirectosPct), margenPct: n("#a-margen", 0, 95, AJUSTES_INICIALES.margenPct),
+    redondeo: +$("#a-redondeo").value || 100, comisionPct: n("#a-comision", 0, 60, 0),
+  });
+  guardar(); pintarAjustes(); $("#a-guardado").hidden = false; setTimeout(() => { $("#a-guardado").hidden = true; }, 2500);
+});
+$("#exportar").addEventListener("click", () => {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(datos, null, 2)], { type: "application/json" }));
+  a.download = `costos-pan-suizo-${hoy()}.json`; document.body.append(a); a.click(); a.remove();
+  $("#copia-estado").textContent = `Copia preparada: costos-pan-suizo-${hoy()}.json (${datos.recetas.length} recetas, ${datos.insumos.length} insumos).`;
+});
+$("#importar").addEventListener("change", async (ev) => {
+  const f = ev.target.files[0]; if (!f) return;
+  try {
+    const g = JSON.parse(await f.text());
+    const ok = g && Array.isArray(g.insumos) && Array.isArray(g.recetas)
+      && g.insumos.every((i) => i.id && i.nombre && UNIDADES[i.base] && i.presentacion > 0 && i.precio >= 0)
+      && g.recetas.every((r) => r.id && r.nombre && r.rinde >= 1 && Array.isArray(r.ingredientes));
+    if (!ok) throw new Error("formato");
+    datos = { insumos: g.insumos, recetas: g.recetas, ajustes: { ...AJUSTES_INICIALES, ...(g.ajustes || {}) } };
+    abierta = null; guardar(); pintarAjustes();
+    $("#copia-estado").textContent = `Copia cargada: ${datos.recetas.length} recetas y ${datos.insumos.length} insumos.`;
+  } catch (err) { $("#copia-estado").textContent = "Ese archivo no es una copia de los costos. Elige el .json que descargaste con «Descargar copia»."; }
+  ev.target.value = "";
+});
+$("#borrar-ejemplos").addEventListener("click", () => {
+  datos.recetas = datos.recetas.filter((r) => !r.ejemplo);
+  // un insumo de ejemplo se queda si una receta propia lo usa
+  datos.insumos = datos.insumos.filter((i) => !i.ejemplo || usos(i.id).length);
+  abierta = null; guardar();
+});
+
+/* ---------- pestañas ---------- */
+let vista = "recetas";
+function mostrar(v) {
+  vista = v;
+  ["recetas", "insumos", "ajustes"].forEach((k) => { $("#v-" + k).hidden = k !== v; $("#p-" + k).setAttribute("aria-selected", String(k === v)); });
+  pintarTodo();
+  if (v === "ajustes") pintarAjustes();
+}
+["recetas", "insumos", "ajustes"].forEach((k) => $("#p-" + k).addEventListener("click", () => mostrar(k)));
+function pintarTodo() {
+  pintarCifras();
+  if (vista === "recetas") pintarRecetas();
+  if (vista === "insumos") pintarInsumos();
+}
+
+$("#productos-carta").innerHTML = Object.keys(CARTA).map((n) => `<option value="${esc(n)}">`).join("");
+pintarTodo();
+</script>
+
+</body>
+</html>

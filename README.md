@@ -8,5 +8,6 @@ Sitio público de Pan Suizo, panadería en Ciudad Salitre (Cra 69 # 25-11, Bogot
 | `/qr/` | Cartel y tarjetas de mesa con el código QR, listos para imprimir. |
 | `/caja/` | Caja del Club Pan Suizo (uso interno): sellos, premios y avisos. Los datos quedan en el celular donde se usa. |
 | `/encargos/` | Agenda de encargos (uso interno). Los datos quedan en el celular donde se usa. |
+| `/costos/` | Costos de recetas y precio sugerido (uso interno). Los datos quedan en el celular donde se usa. |
 
 Este repositorio se genera automáticamente con `construir_sitio.py`; no se edita a mano.
