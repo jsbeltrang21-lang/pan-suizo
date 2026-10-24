@@ -333,8 +333,13 @@ form.tarjeta-form, .panel { border: 1px solid var(--borde); border-radius: 20px;
    Nada se envía solo: los mensajes se abren en WhatsApp y una persona los envía. */
 
 /* Configuración web de Firebase (no es una clave secreta: la seguridad la ponen las reglas del servidor).
-   La pega John al activar el registro seguro; mientras sea null, la caja funciona en modo de prueba. */
-const FIREBASE = null;
+   Proyecto pan-suizo-club (plan Spark, sin costo), activado el 23/10/2026. Con FIREBASE = null la caja vuelve al modo de prueba. */
+const FIREBASE = {
+  apiKey: "AIzaSyBpWf3qhy0IftpWxXWeQHEV7jtEXi426sg",
+  authDomain: "pan-suizo-club.firebaseapp.com",
+  projectId: "pan-suizo-club",
+  appId: "1:885224577829:web:6c2625756ef8774f0c58cc",
+};
 const VERSION_FIREBASE = "12.19.0";
 
 /* Reglas que dio la dueña el 23/10/2026: 20 desayunos → 1 gratis; 20 almuerzos → 1 gratis.
