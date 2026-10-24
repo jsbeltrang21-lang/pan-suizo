@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F0B08">
+<link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../img/icono-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<meta name="robots" content="noindex, nofollow">
+<title>Guía de Pan Suizo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Cómo funcionan la carta, la caja del club, los pedidos a proveedores y los encargos de Pan Suizo: flujos de entrada y salida, cobros seguros y manejo de la página.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* Concepto: el manual de la panadería, para leer en el celular o imprimir y pegar junto a la caja.
+   Misma identidad que la carta. Cada sección responde una pregunta concreta y dice quién hace qué. */
+:root {
+  --fondo: #0F0B08;
+  --superficie: #1A140F;
+  --borde: rgba(244, 232, 212, .14);
+  --tinta: #F4E8D4;
+  --tinta-suave: #BBA98F;
+  --tinta-tenue: #8A7A63;
+  --oro: #F2C14E;
+  --rojo: #B82227;
+  --sobre-rojo: #FFF6EC;
+  --ok: #86C996;
+  --alerta: #FF8F86;
+  --f-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --f-texto: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --fondo: #F6EEDF; --superficie: #FFFBF4; --borde: rgba(60, 35, 15, .15); --tinta: #2A1A10; --tinta-suave: #6A5442;
+    --tinta-tenue: #8C7763; --oro: #8F6200; --rojo: #A71E21; --ok: #1F7A45; --alerta: #B3261E; color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --fondo: #F6EEDF; --superficie: #FFFBF4; --borde: rgba(60, 35, 15, .15); --tinta: #2A1A10; --tinta-suave: #6A5442;
+  --tinta-tenue: #8C7763; --oro: #8F6200; --rojo: #A71E21; --ok: #1F7A45; --alerta: #B3261E; color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fondo); color: var(--tinta); font-family: var(--f-texto); font-size: 16px; line-height: 1.55; }
+a { color: var(--oro); }
+.envoltura { max-width: 760px; margin: 0 auto; padding: 18px max(16px, env(safe-area-inset-right, 0px)) 56px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 22px; }
+.cursiva { font-family: var(--f-display); font-style: italic; font-weight: 700; }
+.cab { display: flex; gap: 14px; align-items: center; }
+.cab svg { width: 52px; height: 52px; flex: none; }
+.cab h1 { margin: 0; font-size: 38px; line-height: 1; }
+.cab p { margin: 4px 0 0; color: var(--tinta-suave); font-size: 14px; }
+.indice { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.indice a { display: inline-block; text-decoration: none; color: var(--tinta); border: 1px solid var(--borde); border-radius: 999px; padding: 7px 13px; font-size: 13.5px; font-weight: 600; }
+section { border: 1px solid var(--borde); border-radius: 22px; background: var(--superficie); padding: 20px; display: grid; gap: 12px; scroll-margin-top: 12px; }
+section > h2 { margin: 0; font-size: 32px; line-height: 1.05; }
+.ceja { margin: 0; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); }
+h3 { margin: 6px 0 0; font-size: 22px; font-family: var(--f-display); font-style: italic; }
+p { margin: 0; }
+ol, ul { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+.sencillo { border-left: 3px solid var(--oro); padding: 8px 0 8px 14px; color: var(--tinta-suave); font-size: 15px; }
+.sencillo b { color: var(--tinta); }
+.ojo { border-left: 3px solid var(--alerta); padding: 8px 0 8px 14px; }
+.tabla-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 8px; border-top: 1px solid var(--borde); }
+th { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-tenue); }
+code { font-size: 13.5px; background: rgba(127, 127, 127, .14); padding: 1px 5px; border-radius: 6px; }
+.flujo { width: 100%; min-width: 640px; height: auto; display: block; }
+.nota-flujo { font-size: 12.5px; color: var(--tinta-tenue); }
+@media (min-width: 700px) { .nota-flujo { display: none; } }
+.flujo text { font-family: var(--f-texto); fill: var(--tinta); }
+.flujo .t-chico { font-size: 11px; fill: var(--tinta-suave); }
+.flujo .caja { fill: none; stroke: var(--borde); stroke-width: 1.5; }
+.flujo .caja-oro { fill: none; stroke: var(--oro); stroke-width: 1.5; }
+.flujo .caja-roja { fill: var(--rojo); }
+.flujo .t-sobre-rojo { fill: var(--sobre-rojo); font-weight: 700; }
+.flujo .flecha { stroke: var(--tinta-tenue); stroke-width: 1.5; fill: none; }
+.flujo .punta { fill: var(--tinta-tenue); }
+.pasos-grandes { counter-reset: p; list-style: none; padding: 0; display: grid; gap: 12px; }
+.pasos-grandes li { counter-increment: p; display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: start; }
+.pasos-grandes li::before { content: counter(p); width: 40px; height: 40px; border-radius: 50%; background: var(--rojo); color: var(--sobre-rojo); display: grid; place-items: center; font: italic 700 22px var(--f-display); }
+.pasos-grandes b { display: block; font-size: 17px; }
+.fuentes { font-size: 13px; color: var(--tinta-tenue); }
+.imprimir { justify-self: start; border: 0; border-radius: 999px; padding: 10px 18px; font: 700 14px var(--f-texto); background: var(--rojo); color: var(--sobre-rojo); cursor: pointer; }
+@media print {
+  :root { --fondo: #fff; --superficie: #fff; --tinta: #1C1206; --tinta-suave: #4A3A2C; --tinta-tenue: #6A5442; --oro: #8F6200; --borde: #CDBFA9; color-scheme: light; }
+  .indice, .imprimir { display: none; }
+  section { break-inside: avoid-page; border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="envoltura">
+  <header class="cab">
+    <svg viewBox="0 0 48 48" role="img" aria-label="Escudo de Pan Suizo">
+      <circle cx="24" cy="24" r="24" fill="#A71E21"/>
+      <path d="M14 13.5l4 3.2 6-6.7 6 6.7 4-3.2v13c0 6.6-4.5 11.3-10 13.6C18.5 37.8 14 33.1 14 26.5z" fill="none" stroke="#FCD150" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M24 12v27.5M14.6 23.5h18.8" stroke="#FCD150" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div><h1 class="cursiva">Cómo funciona todo</h1><p>Guía de Pan Suizo para John y su mamá · 23 de octubre de 2026</p></div>
+  </header>
+  <ul class="indice" aria-label="Contenido">
+    <li><a href="#mapa">Las herramientas</a></li><li><a href="#clientes">Pedidos de clientes</a></li><li><a href="#cobrar">Cobrar seguro</a></li>
+    <li><a href="#proveedores">Proveedores</a></li><li><a href="#sellos">Poner sellos</a></li><li><a href="#seguridad">Por qué es seguro</a></li>
+    <li><a href="#pagina">La página y GitHub</a></li><li><a href="#rutina">Tu rutina</a></li><li><a href="#activar">Activar el registro</a></li>
+  </ul>
+  <button type="button" class="imprimir" onclick="window.print()">Imprimir esta guía</button>
+
+  <!-- ============ 1 ============ -->
+  <section id="mapa" aria-labelledby="t-mapa">
+    <p class="ceja">1 · El mapa</p>
+    <h2 class="cursiva" id="t-mapa">Cada herramienta tiene un solo trabajo</h2>
+    <div class="tabla-scroll"><table>
+      <thead><tr><th>Herramienta</th><th>Para quién</th><th>Qué hace</th><th>Dónde quedan los datos</th></tr></thead>
+      <tbody>
+        <tr><td><b>La carta</b><br><a href="../">/pan-suizo/</a></td><td>Clientes (con el QR)</td><td>Muestra productos, precios, el almuerzo del día, horario y el club. <b>No vende:</b> la compra es en la caja.</td><td>No guarda nada de nadie</td></tr>
+        <tr><td><b>Caja del club</b><br><a href="../caja/">/caja/</a></td><td>Tu mamá y quien atienda</td><td>Inscribe clientes y pone sellos de desayunos y almuerzos.</td><td>Registro seguro de Google (cuando se active; mientras tanto, en el celular)</td></tr>
+        <tr><td><b>Pedidos</b><br><a href="../pedidos/">/pedidos/</a></td><td>Tu mamá</td><td>Le dice qué pedir hoy a cada proveedor, qué quedó pendiente y el almuerzo del día.</td><td>En su celular</td></tr>
+        <tr><td><b>Encargos</b><br><a href="../encargos/">/encargos/</a></td><td>Tu mamá</td><td>Tortas y pedidos por teléfono: qué, para cuándo, abono y saldo.</td><td>En su celular</td></tr>
+        <tr><td><b>Costos</b><br><a href="../costos/">/costos/</a></td><td>John y tu mamá</td><td>Cuánto cuesta hacer cada producto y qué precio deja ganancia.</td><td>En el celular donde se use</td></tr>
+        <tr><td><b>GitHub</b></td><td>John</td><td>Guarda los archivos de la página y la publica gratis.</td><td>github.com/jsbeltrang21-lang/pan-suizo (público)</td></tr>
+        <tr><td><b>Rutina diaria</b></td><td>John</td><td>Cada mañana revisa que la página esté en línea, compara los precios de Rappi, investiga y deja un informe.</td><td>Carpeta <code>bitacora/</code> del PC</td></tr>
+      </tbody>
+    </table></div>
+    <p class="sencillo"><b>En sencillo:</b> la carta es la vitrina; la caja es la libreta de sellos; «Pedidos» es la lista de la nevera; GitHub es la bodega donde se guarda la vitrina.</p>
+  </section>
+
+  <!-- ============ 2 ============ -->
+  <section id="clientes" aria-labelledby="t-clientes">
+    <p class="ceja">2 · Entrada y salida de pedidos de clientes</p>
+    <h2 class="cursiva" id="t-clientes">Todo pedido entra, se anota, se cobra y sale</h2>
+    <div class="tabla-scroll" tabindex="0" aria-label="Diagrama del flujo (desliza para verlo completo)">
+    <svg class="flujo" viewBox="0 0 720 300" role="img" aria-labelledby="t-flujo d-flujo">
+      <title id="t-flujo">Flujo de un pedido</title>
+      <desc id="d-flujo">Los pedidos entran por el mostrador, por teléfono o WhatsApp, por Rappi o como encargo. Se anotan si no son de mostrador, se cobra verificando el pago, se prepara, se entrega y, si es desayuno o almuerzo, se pone el sello.</desc>
+      <defs><marker id="pt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="punta" d="M0 0L10 5L0 10z"/></marker></defs>
+      <text x="10" y="18" class="t-chico">ENTRA</text>
+      <rect class="caja" x="10" y="30" width="165" height="48" rx="12"/><text x="22" y="52">Mostrador</text><text x="22" y="69" class="t-chico">lo normal</text>
+      <rect class="caja" x="10" y="90" width="165" height="48" rx="12"/><text x="22" y="112">Teléfono / WhatsApp</text><text x="22" y="129" class="t-chico">domicilio o para recoger</text>
+      <rect class="caja" x="10" y="150" width="165" height="48" rx="12"/><text x="22" y="172">Encargo</text><text x="22" y="189" class="t-chico">tortas, pedidos grandes</text>
+      <rect class="caja" x="10" y="210" width="165" height="48" rx="12"/><text x="22" y="232">Rappi</text><text x="22" y="249" class="t-chico">llega a la tablet</text>
+      <rect class="caja-oro" x="205" y="90" width="120" height="108" rx="12"/><text x="217" y="122">Anotar</text><text x="217" y="142" class="t-chico">en «Encargos»:</text><text x="217" y="157" class="t-chico">quién, qué, cuándo,</text><text x="217" y="172" class="t-chico">cuánto y cómo paga</text>
+      <rect class="caja-oro" x="365" y="60" width="120" height="168" rx="12"/><text x="377" y="92">Cobrar</text><text x="377" y="112" class="t-chico">efectivo, o</text><text x="377" y="127" class="t-chico">ver la plata en</text><text x="377" y="142" class="t-chico">la app del banco</text><text x="377" y="162" class="t-chico">(nunca solo</text><text x="377" y="177" class="t-chico">la captura)</text>
+      <rect class="caja" x="525" y="60" width="90" height="72" rx="12"/><text x="537" y="92">Preparar</text><text x="537" y="110" class="t-chico">y empacar</text>
+      <rect class="caja" x="525" y="156" width="90" height="72" rx="12"/><text x="537" y="188">Entregar</text><text x="537" y="206" class="t-chico">o despachar</text>
+      <rect class="caja-roja" x="640" y="156" width="72" height="72" rx="12"/><text x="650" y="188" class="t-sobre-rojo">Sello</text><text x="650" y="206" class="t-sobre-rojo" style="font-size:11px">si aplica</text>
+      <text x="10" y="290" class="t-chico">SALE</text>
+      <path class="flecha" marker-end="url(#pt)" d="M175 54h190"/>
+      <path class="flecha" marker-end="url(#pt)" d="M175 114h30"/>
+      <path class="flecha" marker-end="url(#pt)" d="M175 174h30"/>
+      <path class="flecha" marker-end="url(#pt)" d="M325 144h40"/>
+      <path class="flecha" marker-end="url(#pt)" d="M175 234h440v-6"/>
+      <path class="flecha" marker-end="url(#pt)" d="M485 96h40"/>
+      <path class="flecha" marker-end="url(#pt)" d="M570 132v24"/>
+      <path class="flecha" marker-end="url(#pt)" d="M615 192h25"/>
+    </svg>
+    </div>
+    <p class="nota-flujo">En el celular, desliza el dibujo hacia los lados.</p>
+    <h3>En el mostrador (lo normal)</h3>
+    <ol><li>El cliente mira la carta en su celular o en la vitrina y pide en la caja.</li><li>Cobras como siempre.</li><li>Si compró un desayuno o un almuerzo y está en el club, le pones el sello (sección 5).</li></ol>
+    <h3>Por teléfono o WhatsApp</h3>
+    <ol>
+      <li><b>Anótalo en «Encargos»</b> antes de colgar: nombre, celular, qué pidió, para qué hora, total y cómo va a pagar. Así nada se olvida y sabes qué está pagado.</li>
+      <li><b>Si paga por transferencia:</b> no despaches ni entregues hasta ver la plata en tu app (sección 3). Solo entonces toca «Registrar pago» (o «Pagó todo») en ese encargo, con el medio de pago.</li>
+      <li><b>Si paga en efectivo contra entrega:</b> quien lleva el domicilio cobra y trae el dinero; regístralo como pagado al recibirlo.</li>
+      <li>Si es desayuno o almuerzo de alguien del club, el sello se pone cuando lo pagó (no cuando lo pidió).</li>
+    </ol>
+    <h3>Encargos (tortas, pedidos grandes)</h3>
+    <ol><li>Anótalo con fecha de entrega.</li><li>Pide un abono (la agenda propone 50 %) y verifícalo igual que una transferencia.</li><li>El día de la entrega cobra el saldo y márcalo entregado. La agenda te muestra la lista «para hornear mañana».</li></ol>
+    <h3>Rappi</h3>
+    <p>Rappi cobra al cliente y le paga a la panadería según su contrato; no hay que anotarlo en la caja ni ponerle sello (no sabemos quién es el cliente).</p>
+    <p class="sencillo"><b>En sencillo:</b> lo que no es de mostrador se escribe en «Encargos». Lo que no está cobrado no sale.</p>
+  </section>
+
+  <!-- ============ 3 ============ -->
+  <section id="cobrar" aria-labelledby="t-cobrar">
+    <p class="ceja">3 · Cobrar sin que la estafen</p>
+    <h2 class="cursiva" id="t-cobrar">La plata cuenta cuando está en tu app, no en una foto</h2>
+    <ul>
+      <li><b>Nunca entregues con solo una captura o un mensaje.</b> Hay aplicaciones que fabrican comprobantes de Nequi que parecen reales. Abre tu app y mira que el dinero entró: valor, hora y nombre.</li>
+      <li><b>Nequi tiene «Comprobar un pago»:</b> escaneas el código QR del comprobante y te dice si el pago es real. Ese código dura pocos minutos, pero se puede volver a consultar desde los movimientos.</li>
+      <li><b>Bre-B (transferencias inmediatas del Banco de la República):</b> el dinero llega en segundos, a cualquier hora y cualquier día. Si a los pocos minutos no aparece, el pago no se hizo.</li>
+      <li><b>«Te consigné de más, devuélveme la diferencia»:</b> es una estafa conocida. No devuelvas nada por tu cuenta: dile a la persona que lo reclame a su banco o a Nequi, que son quienes reversan los pagos.</li>
+      <li>Nadie del banco te pide claves ni códigos por llamada, mensaje o correo.</li>
+    </ul>
+    <p class="ojo">Para la caja del club vale lo mismo: <b>el sello se pone cuando el cliente ya pagó.</b></p>
+  </section>
+
+  <!-- ============ 4 ============ -->
+  <section id="proveedores" aria-labelledby="t-proveedores">
+    <p class="ceja">4 · Entrada y salida con los proveedores</p>
+    <h2 class="cursiva" id="t-proveedores">Pedir a tiempo y revisar lo que llega</h2>
+    <ol class="pasos-grandes">
+      <li><div><b>En la mañana, abre «Pedidos»</b>Te muestra solo lo que toca hoy (carnes y gaseosas casi a diario; Alpina, levadura, verduras, grasa, bolsas y harina en sus días), lo que quedó pendiente de ayer y lo que se acabó. Tocas cada producto al pedirlo.</div></li>
+      <li><div><b>Si algo se acaba en el día</b>Toca «Se acabó» (desechables) o anótalo en «Otra cosa que falta». Aparece arriba hasta que lo pidas.</div></li>
+      <li><div><b>Cuando llega el pedido</b>Cuenta contra la factura (cantidades y precios), mira las fechas de vencimiento de los lácteos y que lleguen fríos. Guarda las facturas: sirven para «Costos» y para el contador.</div></li>
+    </ol>
+    <p>Para que no se le olvide, en «Pedidos» hay un botón que crea un aviso diario en Google Calendar a la hora que ella elija; el aviso abre la lista.</p>
+    <p class="sencillo"><b>Ojo:</b> los días de Alpina, levadura, verduras, grasa, bolsas y harina son una propuesta. Se cambian una sola vez en «Pedidos → Ajustes».</p>
+  </section>
+
+  <!-- ============ 5 ============ -->
+  <section id="sellos" aria-labelledby="t-sellos">
+    <p class="ceja">5 · Para tu mamá</p>
+    <h2 class="cursiva" id="t-sellos">Poner un sello en tres toques</h2>
+    <ol class="pasos-grandes">
+      <li><div><b>Busca al cliente</b>Escribe los últimos números de su celular o su nombre y tócalo. Si no está, toca «Nuevo», escribe nombre y celular, léele la autorización y marca la casilla.</div></li>
+      <li><div><b>Toca el botón rojo de lo que compró</b>«Poner sello de desayuno» o «Poner sello de almuerzo». Sale un aviso verde: «Sello puesto: 8 de 20».</div></li>
+      <li><div><b>Listo</b>Si te equivocaste, toca «Deshacer» en el aviso verde. Cuando la tarjeta llega a 20, el botón se vuelve dorado: «Entregar 1 desayuno gratis». Lo tocas cuando se lo entregas y la tarjeta vuelve a 0.</div></li>
+    </ol>
+    <ul>
+      <li>Solo se puede un sello por día en cada tarjeta. Si el botón dice «Ya tiene el sello de hoy», no es un error.</li>
+      <li>El sello se pone cuando el cliente pagó. Si alguien pide sellos «de los días que no vine», la respuesta es no.</li>
+      <li>No le prestes el celular con la caja abierta a nadie.</li>
+    </ul>
+  </section>
+
+  <!-- ============ 6 ============ -->
+  <section id="seguridad" aria-labelledby="t-seguridad">
+    <p class="ceja">6 · Para John</p>
+    <h2 class="cursiva" id="t-seguridad">Por qué nadie puede hacer trampa con los sellos</h2>
+    <div class="tabla-scroll"><table>
+      <thead><tr><th>Riesgo</th><th>Qué lo impide</th></tr></thead>
+      <tbody>
+        <tr><td>Un cliente se pone sellos él mismo</td><td>El cliente no tiene acceso a nada: no hay tarjeta de papel que falsificar ni página del cliente. Solo escriben las cuentas de Google que tú autorices, y eso lo revisa el servidor de Google con las reglas, no la página.</td></tr>
+        <tr><td>Alguien abre <code>/caja/</code> desde su celular</td><td>Le pide entrar con Google y, si su correo no está autorizado, ve «sin permiso». Queda anotado en «Intentos de entrar sin permiso».</td></tr>
+        <tr><td>Muchos sellos en un día para llenar rápido la tarjeta</td><td>Cada sello lleva el día en su identificador; el servidor rechaza un segundo sello del mismo día en la misma tarjeta, y no acepta días futuros ni de hace más de dos días.</td></tr>
+        <tr><td>Alguien borra lo que hizo</td><td>Los sellos y premios no se pueden cambiar ni borrar; solo anular, y la anulación queda con quién, cuándo y por qué. El personal solo anula sus propios sellos del mismo día.</td></tr>
+        <tr><td>Se pierde o roban el celular de la caja</td><td>Los datos no están en el celular sino en el registro de Google. Desde «Control» desactivas esa cuenta y deja de funcionar al instante.</td></tr>
+        <tr><td>Un empleado regala premios</td><td>Todo premio aparece en «Control → Revisar» con quién lo registró. También avisa de sellos fuera de horario, días que no cuadran y muchas anulaciones.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="sencillo"><b>En sencillo:</b> es como una libreta que solo pueden escribir tú y tu mamá, escrita con tinta que no se borra, en la que cada renglón dice quién lo escribió y a qué hora.</p>
+    <p><b>Datos personales (Ley 1581 de 2012):</b> se guarda lo mínimo (nombre, celular y, si quiere, el cumpleaños) con la autorización del cliente, y se borra si lo pide (solo el administrador puede borrar). El registro queda en servidores de Google en Estados Unidos, país que la SIC incluyó en su lista de nivel adecuado de protección (Circular Externa 005 de 2017). Esto es información, no asesoría legal: si el club crece, confírmalo con un abogado.</p>
+    <p><b>Revisión semanal (5 minutos):</b> abre «Control», mira «Revisar» e «Intentos», y descarga las dos copias para Excel.</p>
+  </section>
+
+  <!-- ============ 7 ============ -->
+  <section id="pagina" aria-labelledby="t-pagina">
+    <p class="ceja">7 · Para John</p>
+    <h2 class="cursiva" id="t-pagina">Cómo se maneja la página (y qué es GitHub)</h2>
+    <ul>
+      <li><b>GitHub</b> es una bodega de archivos en internet. La página son unos archivos HTML guardados en tu repositorio <a href="https://github.com/jsbeltrang21-lang/pan-suizo">jsbeltrang21-lang/pan-suizo</a>.</li>
+      <li><b>GitHub Pages</b> es el servicio gratuito que toma esos archivos y los muestra en <a href="https://jsbeltrang21-lang.github.io/pan-suizo/">jsbeltrang21-lang.github.io/pan-suizo</a>. Cada vez que se suben archivos nuevos, en 1 o 2 minutos la página cambia.</li>
+      <li><b>Los archivos de verdad están en tu PC</b> (<code>panaderia/pan_suizo/</code>). El sitio se arma con <code>py construir_sitio.py</code>, que genera la carpeta <code>sitio/</code>, y se sube con <code>git push</code>. Por eso <b>no se edita nada a mano en GitHub</b>: el siguiente armado lo borraría.</li>
+    </ul>
+    <h3>Para cambiar un precio o un producto</h3>
+    <ol><li>Me dices el cambio en una sesión de Claude (o lo anotas en <code>panaderia/datos_negocio.md</code> y la rutina lo prepara).</li><li>Se edita la fuente, se arma el sitio y se revisa.</li><li>Se publica con tu aprobación (git push). La rutina diaria prepara cambios, pero nunca publica sola.</li></ol>
+    <h3>Lo que sí puedes hacer tú en github.com</h3>
+    <ul>
+      <li><b>Ver el historial:</b> pestaña «Commits». Cada publicación tiene fecha y descripción; cualquiera se puede revertir.</li>
+      <li><b>Ver si se publicó:</b> pestaña «Actions» (cada publicación es un «pages build and deployment» en verde) o «Settings → Pages».</li>
+      <li><b>Apagar la página</b> en una emergencia: «Settings → Pages → Unpublish site».</li>
+    </ul>
+    <p class="sencillo"><b>Ojo:</b> el repositorio es público (así es gratis): cualquiera puede ver los archivos de la página. Por eso ahí nunca van datos de clientes, claves ni el correo del administrador. Los datos del club van en el registro de Google, protegido por las reglas.</p>
+  </section>
+
+  <!-- ============ 8 ============ -->
+  <section id="rutina" aria-labelledby="t-rutina">
+    <p class="ceja">8 · Para John</p>
+    <h2 class="cursiva" id="t-rutina">Tu rutina con la página</h2>
+    <p>Poco tiempo, pero constante. Toca cada botón una vez desde tu celular y Google Calendar te lo recuerda solo (revisa que diga «Todos los días», «Cada semana» o «Cada mes» y toca «Guardar»).</p>
+    <h3>Cada día · 2 minutos · 8:00 a. m.</h3>
+    <ul>
+      <li>Lee el informe de la rutina (carpeta <code>bitacora/</code> del PC, o pídele a Claude «¿qué dice el informe de hoy?»): ¿la página está en línea?, ¿cambió algún precio en Rappi?, ¿hay algo que aprobar?</li>
+      <li>Si tu mamá te contó un precio o un dato nuevo, anótalo en <code>panaderia/datos_negocio.md</code> o en <code>precios_tienda.csv</code>.</li>
+    </ul>
+    <p><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Pan+Suizo+%C2%B7+informe+de+la+rutina+%282+min%29&amp;dates=20261024T130000Z%2F20261024T131000Z&amp;ctz=America%2FBogota&amp;details=Lee+el+informe+del+d%C3%ADa+en+la+carpeta+bitacora+del+PC+%28o+p%C3%ADdeselo+a+Claude%29.+Qu%C3%A9+revisar%3A+https%3A%2F%2Fjsbeltrang21-lang.github.io%2Fpan-suizo%2Fguia%2F%23rutina&amp;recur=RRULE%3AFREQ%3DDAILY" target="_blank" rel="noopener">Crear el recordatorio diario</a></p>
+    <h3>Cada domingo · 15 minutos · 7:00 p. m.</h3>
+    <ol>
+      <li><b>Caja → Control → Revisar:</b> premios entregados, sellos fuera de horario, anulaciones. ¿Todo cuadra con lo que dice tu mamá?</li>
+      <li><b>Intentos de entrar sin permiso:</b> si aparece alguien que no conoces, no hagas nada más que avisarme; ya está bloqueado.</li>
+      <li><b>Copias para Excel:</b> descarga clientes y movimientos y guárdalos en tu Drive.</li>
+      <li><b>Pedidos:</b> pregúntale a tu mamá si la lista le sirvió y si cambió algún proveedor o día.</li>
+      <li><b>La carta:</b> ábrela en el celular. ¿El almuerzo de la semana es el que de verdad se sirve?</li>
+    </ol>
+    <p><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Pan+Suizo+%C2%B7+revisi%C3%B3n+semanal+%2815+min%29&amp;dates=20261026T000000Z%2F20261026T002000Z&amp;ctz=America%2FBogota&amp;details=Caja+%E2%86%92+Control%3A+Revisar%2C+intentos+y+copias+para+Excel.+Precios+y+datos+de+tu+mam%C3%A1.+Lista%3A+https%3A%2F%2Fjsbeltrang21-lang.github.io%2Fpan-suizo%2Fguia%2F%23rutina&amp;recur=RRULE%3AFREQ%3DWEEKLY%3BBYDAY%3DSU" target="_blank" rel="noopener">Crear el recordatorio semanal</a></p>
+    <h3>El primer lunes de cada mes · 30 minutos</h3>
+    <ul>
+      <li>Precios de tienda: ¿subió algo? Actualiza <code>precios_tienda.csv</code> y pide publicar el cambio.</li>
+      <li>Perfil de Google de la panadería: horario, fotos y enlace a la carta.</li>
+      <li>Carteles y tarjetas con el QR: ¿siguen limpios y a la vista?</li>
+      <li>Cuántos clientes nuevos tuvo el club y cuántos premios se entregaron (en las copias para Excel).</li>
+    </ul>
+    <p><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Pan+Suizo+%C2%B7+revisi%C3%B3n+del+mes+%2830+min%29&amp;dates=20261103T000000Z%2F20261103T003000Z&amp;ctz=America%2FBogota&amp;details=Precios+de+tienda%2C+Google%2C+carteles+y+copias.+Lista%3A+https%3A%2F%2Fjsbeltrang21-lang.github.io%2Fpan-suizo%2Fguia%2F%23rutina&amp;recur=RRULE%3AFREQ%3DMONTHLY%3BBYDAY%3D1MO" target="_blank" rel="noopener">Crear el recordatorio mensual</a></p>
+    <p class="sencillo"><b>Para tenerla siempre a mano:</b> abre esta guía en tu celular y en el menú del navegador toca «Agregar a la pantalla principal». Lo mismo con la caja y con «Pedidos» en el celular de tu mamá.</p>
+  </section>
+
+  <!-- ============ 9 ============ -->
+  <section id="activar" aria-labelledby="t-activar">
+    <p class="ceja">9 · Una sola vez · John · unos 15 minutos</p>
+    <h2 class="cursiva" id="t-activar">Activar el registro seguro del club</h2>
+    <p>Usa Firebase, un servicio de Google con plan gratuito (Spark): no pide tarjeta y da 50.000 lecturas y 20.000 escrituras al día, mucho más de lo que usa una panadería. Si en algún paso aparece «actualizar a Blaze» o te pide una tarjeta, detente: no hace falta.</p>
+    <ol class="pasos-grandes">
+      <li><div><b>Crea el proyecto</b>En <a href="https://console.firebase.google.com">console.firebase.google.com</a>, con tu cuenta de Google: «Crear proyecto», nombre <code>pan-suizo-club</code>, sin Google Analytics.</div></li>
+      <li><div><b>Activa el inicio de sesión con Google</b>Authentication → Comenzar → Google → Habilitar. Luego Configuración → Dominios autorizados → agrega <code>jsbeltrang21-lang.github.io</code>.</div></li>
+      <li><div><b>Crea la base de datos</b>Firestore Database → Crear → ubicación en Estados Unidos (por ejemplo <code>nam5</code>) → modo de producción.</div></li>
+      <li><div><b>Pega las reglas</b>En Firestore → Reglas, pega el archivo <code>firebase/firestore.rules</code> con tu Gmail en lugar de <code>CORREO_ADMIN</code> y publícalas.</div></li>
+      <li><div><b>Registra la app web</b>Configuración del proyecto → Tus apps → Web. Copia el bloque <code>firebaseConfig</code> (no es secreto) y pásamelo: lo pongo en la caja, la armo y la publicamos.</div></li>
+      <li><div><b>Dale acceso a tu mamá</b>Entra a <code>/caja/</code> con tu cuenta, ve a «Control» y agrega su Gmail. Ella entra una vez en su celular y queda abierta.</div></li>
+    </ol>
+    <p>Después probamos juntos que un correo sin permiso no pueda entrar, que no se puedan poner dos sellos el mismo día y que nadie pueda borrar un sello.</p>
+  </section>
+
+  <p class="fuentes">Fuentes: <a href="https://firebase.google.com/docs/projects/billing/firebase-pricing-plans">planes de Firebase</a> ·
+    <a href="https://www.publimetro.co/noticias/2025/09/16/le-pagaron-con-nequi-asi-puede-saber-en-30-segundos-si-el-comprobante-es-real-o-falso/">Publimetro: comprobar un pago de Nequi</a> ·
+    <a href="https://www.noticiascaracol.com/economia/aplicacion-que-suplanta-nequi-genera-comprobantes-de-pago-falsos-que-parecen-reales-cuidado-so35">Noticias Caracol: apps que fabrican comprobantes</a> ·
+    <a href="https://www.banrep.gov.co/es/bre-b/preguntas-frecuentes">Banco de la República: preguntas sobre Bre-B</a> ·
+    <a href="https://www.eluniversal.com.co/colombia/2025/03/12/te-transfirieron-por-nequi-la-app-advierte-sobre-nueva-estafa-y-como-no-caer/">El Universal: estafa de la transferencia «por error»</a> ·
+    <a href="https://www.hklaw.com/en/insights/publications/2017/08/cambios-en-la-transferencia-de-datos-personales-a">Holland &amp; Knight: Circular 005 de 2017 de la SIC</a> ·
+    <a href="https://normograma.dian.gov.co/dian/compilacion/docs/ley_2300_2023.htm">Ley 2300 de 2023</a>.</p>
+</div>
+
+</body>
+</html>

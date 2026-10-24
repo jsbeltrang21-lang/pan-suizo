@@ -1,7 +1,7 @@
 {
   "name": "Pan Suizo · Carta",
   "short_name": "Pan Suizo",
-  "description": "Carta de Pan Suizo, panadería en Ciudad Salitre (Cra 69 # 25-11, Bogotá): desayunos, pan del horno, dulces y bebidas. Pide por WhatsApp y recoge sin hacer fila.",
+  "description": "Carta de Pan Suizo, panadería en Ciudad Salitre (Cra 69 # 25-11, Bogotá): desayunos, almuerzo del día, pan del horno, dulces y bebidas, con precios y horario.",
   "lang": "es-CO",
   "start_url": "./",
   "scope": "./",

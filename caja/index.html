@@ -10,15 +10,15 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Caja del Club Pan Suizo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Herramienta de caja para el club de clientes fieles de Pan Suizo: sellos, premios con raspa y descubre y avisos por WhatsApp.">
+<meta name="description" content="Caja del club de clientes fieles de Pan Suizo: tarjetas de desayunos y almuerzos, sellos con registro seguro y avisos por WhatsApp.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <style>
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 /* Concepto: la caja registradora del horno. Misma identidad que la carta (rojo y oro del escudo, fondo de horno),
-   pero pensada para usarse de pie en el mostrador: botones grandes, una acción principal por pantalla
-   (poner sello) y el estado de cada cliente a la vista (sellos, días sin venir, premio listo). */
+   pensada para usarse de pie en el mostrador: buscar al cliente, un botón grande por tarjeta y nada más.
+   Cada sello queda escrito con quién lo puso y cuándo, y no se puede borrar: solo anular, y eso también queda. */
 :root {
   --fondo: #0F0B08;
   --superficie: #1A140F;
@@ -55,21 +55,24 @@
 }
 [hidden] { display: none !important; }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--fondo); color: var(--tinta); font-family: var(--f-texto); font-size: 15px; line-height: 1.45; }
+body { margin: 0; background: var(--fondo); color: var(--tinta); font-family: var(--f-texto); font-size: 16px; line-height: 1.45; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 :focus-visible { outline: 2px solid var(--oro); outline-offset: 2px; }
 .envoltura { max-width: 720px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px 40px; display: grid; gap: 16px; }
 .cursiva { font-family: var(--f-display); font-style: italic; font-weight: 700; }
 .ceja { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); margin: 0; }
-.num { font-variant-numeric: tabular-nums; }
 
 .cab { display: flex; align-items: center; gap: 12px; }
 .cab svg { width: 42px; height: 42px; flex: none; }
 .cab h1 { margin: 0; font-size: 28px; line-height: 1; }
-.cab p { margin: 2px 0 0; font-size: 12px; color: var(--tinta-suave); }
+.cab p { margin: 2px 0 0; font-size: 12.5px; color: var(--tinta-suave); }
+.sesion { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--borde); font-size: 13px; color: var(--tinta-suave); }
+.sesion.segura { border-color: color-mix(in srgb, var(--ok) 55%, transparent); }
+.sesion.prueba { border-style: dashed; border-color: color-mix(in srgb, var(--oro) 60%, transparent); }
+.sesion b { color: var(--tinta); }
 .pestanas { display: flex; gap: 6px; padding: 4px; border: 1px solid var(--borde); border-radius: 999px; background: var(--velo-sup); }
-.pestanas button { flex: 1; border: 0; background: transparent; border-radius: 999px; padding: 9px 8px; font-weight: 700; font-size: 13.5px; color: var(--tinta-suave); }
+.pestanas button { flex: 1; border: 0; background: transparent; border-radius: 999px; padding: 10px 8px; font-weight: 700; font-size: 14px; color: var(--tinta-suave); }
 .pestanas button[aria-selected="true"] { background: var(--oro-relleno); color: var(--sobre-oro); }
 
 .cifras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -77,77 +80,90 @@ button { cursor: pointer; }
 .cifra b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .cifra span { font-size: 12px; color: var(--tinta-suave); }
 
-.aviso { padding: 12px 14px; border-radius: 14px; border: 1px dashed color-mix(in srgb, var(--oro) 60%, transparent); font-size: 13px; color: var(--tinta-suave); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
-
 .buscar { display: flex; gap: 8px; }
-.buscar input { flex: 1; min-width: 0; padding: 14px; border-radius: 14px; border: 1px solid var(--borde); background: var(--superficie); font-size: 16px; }
+.buscar input { flex: 1; min-width: 0; padding: 15px; border-radius: 14px; border: 1px solid var(--borde); background: var(--superficie); font-size: 17px; }
 .resultados { display: grid; gap: 8px; }
-.fila-cliente { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; text-align: left; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--borde); background: var(--superficie); width: 100%; }
-.fila-cliente .n { font-weight: 700; }
-.fila-cliente .d { font-size: 12.5px; color: var(--tinta-suave); grid-column: 1; }
-.fila-cliente .s { grid-row: span 2; font-variant-numeric: tabular-nums; font-weight: 700; color: var(--oro); }
+.fila-cliente { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; text-align: left; padding: 13px 14px; border-radius: 14px; border: 1px solid var(--borde); background: var(--superficie); width: 100%; }
+.fila-cliente .n { font-weight: 700; font-size: 17px; }
+.fila-cliente .d { font-size: 13px; color: var(--tinta-suave); grid-column: 1; }
+.fila-cliente .s { grid-row: span 2; font-variant-numeric: tabular-nums; font-weight: 700; color: var(--oro); font-size: 13px; text-align: right; }
 .chip-estado { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; margin-left: 6px; vertical-align: 2px; }
 .chip-estado.listo { background: var(--oro-relleno); color: var(--sobre-oro); }
 .chip-estado.ausente { border: 1px solid var(--alerta); color: var(--alerta); }
-.chip-estado.ejemplo { border: 1px solid var(--borde); color: var(--tinta-tenue); }
+.chip-estado.sin-mensajes { border: 1px solid var(--tinta-tenue); color: var(--tinta-tenue); }
 
-.ficha { border: 1px solid var(--borde); border-radius: 22px; padding: 18px; background: radial-gradient(90% 70% at 90% 0%, var(--resplandor), transparent 60%), var(--superficie); display: grid; gap: 14px; }
+.ficha { border: 1px solid var(--borde); border-radius: 22px; padding: 18px; background: radial-gradient(90% 70% at 90% 0%, var(--resplandor), transparent 60%), var(--superficie); display: grid; gap: 16px; }
 .ficha-cab { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
-.ficha h2 { margin: 0; font-size: 32px; line-height: 1.05; }
-.ficha .meta { font-size: 13px; color: var(--tinta-suave); margin: 4px 0 0; }
-.sellos { display: grid; grid-template-columns: repeat(5, minmax(0, 64px)); gap: 10px; }
-.sello { aspect-ratio: 1; border-radius: 50%; border: 1.5px dashed color-mix(in srgb, var(--oro) 55%, transparent); display: grid; place-items: center; color: var(--oro); font-weight: 700; font-size: 13px; }
-.sello.lleno { border: 0; background: var(--rojo); color: var(--sobre-rojo); }
-.sello svg { width: 58%; height: 58%; }
-.sello.premio { border-style: solid; border-color: var(--oro); }
+.ficha h2 { margin: 0; font-size: 34px; line-height: 1.05; }
+.ficha .meta { font-size: 13.5px; color: var(--tinta-suave); margin: 4px 0 0; }
+.tarjeta { border: 1px solid var(--borde); border-radius: 18px; padding: 14px; display: grid; gap: 12px; background: var(--fondo); }
+.tarjeta-cab { display: flex; align-items: center; gap: 12px; }
+.tarjeta-cab svg { width: 40px; height: 40px; color: var(--oro); flex: none; }
+.tarjeta-cab h3 { margin: 0; font-size: 26px; line-height: 1; flex: 1; }
+.tarjeta-cab .cuenta { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.tarjeta-cab .cuenta small { font-size: 14px; color: var(--tinta-suave); font-weight: 500; }
+.puntos { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; }
+.punto { aspect-ratio: 1; border-radius: 50%; border: 1.5px dashed color-mix(in srgb, var(--oro) 50%, transparent); }
+.punto.lleno { border: 0; background: var(--rojo); }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 12px 18px; font-weight: 700; text-decoration: none; text-align: center; }
 .btn-gigante { width: 100%; padding: 18px; font-size: 18px; }
 .btn-rojo { background: var(--rojo); color: var(--sobre-rojo); }
 .btn-oro { background: var(--oro-relleno); color: var(--sobre-oro); }
 .btn-linea { background: transparent; border: 1px solid var(--borde); color: var(--tinta); }
-.btn-chico { padding: 8px 14px; font-size: 13px; }
-.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn-chico { padding: 8px 14px; font-size: 13.5px; }
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+.btn-hecho { background: transparent; border: 1.5px solid var(--ok); color: var(--ok); }
 .horario { padding: 12px 14px; border-radius: 14px; font-size: 13.5px; margin: 0; border: 1px solid var(--ok); color: var(--ok); }
 .horario.cerrado { border-color: var(--alerta); color: var(--alerta); }
 .horario b { display: block; margin-bottom: 2px; }
-.chip-estado.sin-mensajes { border: 1px solid var(--tinta-tenue); color: var(--tinta-tenue); }
 .fila-botones { display: flex; flex-wrap: wrap; gap: 8px; }
 .fila-botones > * { flex: 1 1 160px; }
-.historial { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 13px; color: var(--tinta-suave); max-height: 160px; overflow-y: auto; }
-details summary { cursor: pointer; font-size: 13px; color: var(--tinta-suave); }
-.nota { font-size: 12.5px; color: var(--tinta-tenue); margin: 0; }
+.historial { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13px; color: var(--tinta-suave); max-height: 240px; overflow-y: auto; }
+.historial li { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.historial .anulado { text-decoration: line-through; color: var(--tinta-tenue); }
+details summary { cursor: pointer; font-size: 13.5px; color: var(--tinta-suave); }
+.nota { font-size: 13px; color: var(--tinta-tenue); margin: 0; }
 .ok { color: var(--ok); font-weight: 700; margin: 0; }
-.error { color: var(--alerta); margin: 0; font-size: 13.5px; }
+.error { color: var(--alerta); margin: 0; font-size: 14px; }
+
+.aviso-flotante { position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 40; width: min(560px, calc(100% - 32px)); padding: 14px 16px; border-radius: 18px; background: var(--superficie); border: 1.5px solid var(--ok); box-shadow: 0 18px 40px rgba(0, 0, 0, .45); display: grid; gap: 10px; }
+.aviso-flotante b { font-size: 17px; color: var(--ok); }
+.aviso-flotante.mal { border-color: var(--alerta); }
+.aviso-flotante.mal b { color: var(--alerta); }
 
 form.tarjeta-form, .panel { border: 1px solid var(--borde); border-radius: 20px; padding: 18px; background: var(--superficie); display: grid; gap: 12px; }
 .panel h2, form.tarjeta-form h2 { margin: 0; font-size: 26px; }
+.panel h3 { margin: 4px 0 0; font-size: 20px; }
 .campo { display: grid; gap: 6px; }
-.campo label { font-size: 13px; font-weight: 700; }
-.campo input, .campo select, .campo textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--borde); background: var(--fondo); }
+.campo label { font-size: 13.5px; font-weight: 700; }
+.campo input, .campo select, .campo textarea { width: 100%; padding: 13px; border-radius: 12px; border: 1px solid var(--borde); background: var(--fondo); font-size: 16px; }
 .dos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .dos > * { min-width: 0; }
-.autoriza { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--tinta-suave); }
-.autoriza input { width: 22px; height: 22px; flex: none; accent-color: var(--rojo); margin-top: 1px; }
-
+.autoriza { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: var(--tinta-suave); }
+.autoriza input { width: 24px; height: 24px; flex: none; accent-color: var(--rojo); margin-top: 1px; }
 .lista-seccion { display: grid; gap: 8px; }
 .lista-seccion h3 { margin: 6px 0 0; font-size: 22px; }
-.vacio { color: var(--tinta-tenue); font-size: 13.5px; margin: 0; }
+.vacio { color: var(--tinta-tenue); font-size: 14px; margin: 0; }
+.alerta { border-left: 3px solid var(--alerta); padding: 6px 0 6px 12px; font-size: 14px; }
+.alerta small { display: block; color: var(--tinta-tenue); }
+.tabla { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tabla th, .tabla td { text-align: left; padding: 7px 6px; border-top: 1px solid var(--borde); vertical-align: top; }
+.tabla th { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-tenue); }
+.tabla-scroll { overflow-x: auto; }
 
-/* ---------- raspa y descubre ---------- */
-.raspa-fondo { position: fixed; inset: 0; z-index: 50; background: rgba(8, 5, 3, .86); display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
-.raspa { width: min(420px, 100%); display: grid; gap: 14px; text-align: center; color: #F4E8D4; }
-.raspa h2 { margin: 0; font-size: 34px; line-height: 1.05; }
-.raspa p { margin: 0; color: #BBA98F; }
-.boleto { position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 4 / 3; max-width: 100%; border: 2px solid #F2C14E; background: radial-gradient(80% 80% at 50% 40%, rgba(242, 193, 78, .25), transparent 70%), #1A140F; }
-.boleto .premio-texto { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 8px; padding: 18px; }
-.boleto .premio-texto small { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #F2C14E; font-weight: 700; }
-.boleto .premio-texto b { font-family: var(--f-display); font-style: italic; font-size: 30px; line-height: 1.05; color: #F4E8D4; }
-.boleto canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.entrar { display: grid; gap: 16px; justify-items: center; text-align: center; padding: 28px 18px; border: 1px solid var(--borde); border-radius: 22px; background: var(--superficie); }
+.entrar h2 { margin: 0; font-size: 34px; line-height: 1.05; }
+.entrar p { margin: 0; color: var(--tinta-suave); max-width: 40ch; }
+.dialogo-fondo { position: fixed; inset: 0; z-index: 50; background: rgba(8, 5, 3, .8); display: grid; place-items: center; padding: 16px; }
+.dialogo { width: min(440px, 100%); background: var(--superficie); border: 1px solid var(--borde); border-radius: 22px; padding: 22px; display: grid; gap: 14px; text-align: center; }
+.dialogo h2 { margin: 0; font-size: 32px; line-height: 1.05; }
+.dialogo p { margin: 0; color: var(--tinta-suave); }
 
 @media (max-width: 420px) {
   .dos { grid-template-columns: 1fr; }
   .cifra b { font-size: 22px; }
-  .ficha h2 { font-size: 28px; }
+  .ficha h2 { font-size: 30px; }
+  .puntos { gap: 4px; }
 }
 </style>
 </head>
@@ -160,163 +176,201 @@ form.tarjeta-form, .panel { border: 1px solid var(--borde); border-radius: 20px;
       <path d="M14 13.5l4 3.2 6-6.7 6 6.7 4-3.2v13c0 6.6-4.5 11.3-10 13.6C18.5 37.8 14 33.1 14 26.5z" fill="none" stroke="#FCD150" stroke-width="2.2" stroke-linejoin="round"/>
       <path d="M24 12v27.5M14.6 23.5h18.8" stroke="#FCD150" stroke-width="3" stroke-linecap="round"/>
     </svg>
-    <div><h1 class="cursiva">Caja del Club</h1><p>Pan Suizo · sellos, premios y avisos por WhatsApp</p></div>
+    <div><h1 class="cursiva">Caja del Club</h1><p>Pan Suizo · tarjetas de desayunos y almuerzos</p></div>
   </header>
 
-  <nav class="pestanas" role="tablist" aria-label="Secciones">
-    <button type="button" role="tab" id="p-caja" aria-selected="true" aria-controls="v-caja">Caja</button>
-    <button type="button" role="tab" id="p-listas" aria-selected="false" aria-controls="v-listas">A quién escribir</button>
-    <button type="button" role="tab" id="p-ajustes" aria-selected="false" aria-controls="v-ajustes">Ajustes</button>
-  </nav>
+  <div class="sesion" id="sesion" role="status"><span id="sesion-txt">Cargando…</span><button type="button" class="btn btn-linea btn-chico" id="salir" hidden>Salir</button></div>
 
-  <div class="cifras" aria-label="Resumen">
-    <div class="cifra"><b id="c-clientes">0</b><span>clientes en el club</span></div>
-    <div class="cifra"><b id="c-hoy">0</b><span>sellos puestos hoy</span></div>
-    <div class="cifra"><b id="c-premios">0</b><span>premios entregados</span></div>
+  <!-- ===== entrar (registro seguro) ===== -->
+  <section class="entrar" id="v-entrar" hidden aria-labelledby="t-entrar">
+    <h2 class="cursiva" id="t-entrar">Entra con tu cuenta de Google</h2>
+    <p>Solo pueden poner sellos las cuentas que John autorizó. Se hace una vez en este celular y queda abierta.</p>
+    <button type="button" class="btn btn-rojo btn-gigante" id="entrar">Entrar con Google</button>
+    <p class="error" id="entrar-error" role="alert" hidden></p>
+  </section>
+  <section class="entrar" id="v-sin-permiso" hidden aria-labelledby="t-sin-permiso">
+    <h2 class="cursiva" id="t-sin-permiso">Esta cuenta todavía no tiene permiso</h2>
+    <p id="sin-permiso-txt"></p>
+    <p>Pídele a John que te dé acceso desde «Control» y vuelve a entrar.</p>
+    <button type="button" class="btn btn-oro" id="reintentar">Ya me dio acceso: volver a intentar</button>
+  </section>
+
+  <div id="app" hidden style="display:grid;gap:16px">
+    <nav class="pestanas" role="tablist" aria-label="Secciones">
+      <button type="button" role="tab" id="p-caja" aria-selected="true" aria-controls="v-caja">Caja</button>
+      <button type="button" role="tab" id="p-listas" aria-selected="false" aria-controls="v-listas">A quién escribir</button>
+      <button type="button" role="tab" id="p-control" aria-selected="false" aria-controls="v-control">Control</button>
+    </nav>
+
+    <!-- ================= CAJA ================= -->
+    <section id="v-caja" role="tabpanel" aria-labelledby="p-caja" style="display:grid;gap:14px">
+      <div class="cifras" aria-label="Resumen de hoy">
+        <div class="cifra"><b id="c-clientes">0</b><span>clientes en el club</span></div>
+        <div class="cifra"><b id="c-hoy">0</b><span>sellos puestos hoy</span></div>
+        <div class="cifra"><b id="c-premios">0</b><span>premios entregados hoy</span></div>
+      </div>
+      <div class="buscar">
+        <label for="buscar" hidden>Buscar cliente</label>
+        <input id="buscar" type="search" placeholder="Celular o nombre del cliente" autocomplete="off">
+        <button type="button" class="btn btn-oro" id="nuevo">Nuevo</button>
+      </div>
+      <div class="resultados" id="resultados"></div>
+
+      <article class="ficha" id="ficha" hidden aria-live="polite">
+        <div class="ficha-cab">
+          <div><h2 class="cursiva" id="f-nombre"></h2><p class="meta" id="f-meta"></p></div>
+          <button type="button" class="btn btn-linea btn-chico" id="f-cerrar">Cerrar</button>
+        </div>
+        <p class="nota" id="f-cargando" hidden>Revisando sus tarjetas…</p>
+        <div id="f-tarjetas" style="display:grid;gap:12px"></div>
+        <div class="fila-botones">
+          <a class="btn btn-linea btn-chico" id="f-whatsapp" href="#" target="_blank" rel="noopener">Avisarle por WhatsApp</a>
+        </div>
+        <p class="nota" id="f-horario" hidden></p>
+        <details><summary>Historial y datos</summary>
+          <ul class="historial" id="f-historial" style="margin-top:10px"></ul>
+          <p class="nota" id="f-autoriza" style="margin-top:8px"></p>
+          <div class="fila-botones" style="margin-top:8px"><button type="button" class="btn btn-linea btn-chico" id="f-mensajes"></button><button type="button" class="btn btn-linea btn-chico" id="f-borrar">Borrar a este cliente (lo pidió)</button></div>
+          <p class="error" id="f-confirmar" hidden></p>
+        </details>
+      </article>
+
+      <form class="tarjeta-form" id="form-nuevo" hidden novalidate>
+        <h2 class="cursiva">Nuevo cliente</h2>
+        <div class="campo"><label for="n-nombre">Nombre</label><input id="n-nombre" autocomplete="off" placeholder="Ej.: Lucía Gómez"></div>
+        <div class="dos">
+          <div class="campo"><label for="n-cel">Celular (10 dígitos)</label><input id="n-cel" inputmode="numeric" maxlength="10" placeholder="3001234567"></div>
+          <div class="campo"><label for="n-cumple">Cumpleaños (opcional)</label><input id="n-cumple" inputmode="numeric" placeholder="Día/mes, ej.: 14/03"></div>
+        </div>
+        <label class="autoriza"><input type="checkbox" id="n-autoriza"><span id="n-autoriza-txt"></span></label>
+        <p class="error" id="n-error" role="alert" hidden></p>
+        <div class="fila-botones">
+          <button type="submit" class="btn btn-rojo" id="n-guardar">Inscribir</button>
+          <button type="button" class="btn btn-linea" id="n-cancelar">Cancelar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ================= LISTAS ================= -->
+    <section id="v-listas" role="tabpanel" aria-labelledby="p-listas" hidden style="display:grid;gap:18px">
+      <p class="horario" id="l-horario" role="status"></p>
+      <p class="nota">Cada botón abre WhatsApp con el mensaje escrito; quien atiende lo revisa y lo envía. Solo aparecen clientes que autorizaron los mensajes y no pidieron dejar de recibirlos. Cada mensaje dice cómo dejar de recibirlos.</p>
+      <div class="lista-seccion"><h3 class="cursiva">Les falta poco para el premio</h3><div id="l-cerca"></div></div>
+      <div class="lista-seccion"><h3 class="cursiva">Hace rato no vienen</h3><p class="nota" id="l-ausentes-nota"></p><div id="l-ausentes"></div></div>
+      <div class="lista-seccion"><h3 class="cursiva">Cumplen años este mes</h3><div id="l-cumple"></div></div>
+    </section>
+
+    <!-- ================= CONTROL ================= -->
+    <section id="v-control" role="tabpanel" aria-labelledby="p-control" hidden style="display:grid;gap:14px">
+      <div class="panel">
+        <h2 class="cursiva">Reglas del club</h2>
+        <ul id="reglas" style="margin:0;padding-left:20px;display:grid;gap:4px;font-size:14.5px"></ul>
+        <p class="nota">El premio es seguro para todos los que completan la tarjeta: no es un sorteo. Un premio al azar sería un juego promocional, que en Bogotá necesita permiso de la Lotería de Bogotá.</p>
+      </div>
+      <div class="panel" id="panel-alertas">
+        <h2 class="cursiva">Revisar</h2>
+        <p class="nota">Lo que conviene mirar de los últimos 30 días. Que algo aparezca aquí no quiere decir que esté mal: es para que tú lo confirmes.</p>
+        <div id="alertas" style="display:grid;gap:10px"></div>
+      </div>
+      <div class="panel" id="panel-personal" hidden>
+        <h2 class="cursiva">Quién puede poner sellos</h2>
+        <p class="nota">Solo estas cuentas de Google pueden entrar a la caja. Si alguien deja de trabajar o pierde el celular, desactívala: deja de funcionar al instante, aunque el celular siga abierto.</p>
+        <div id="personal" style="display:grid;gap:8px"></div>
+        <form id="form-personal" style="display:grid;gap:10px" novalidate>
+          <div class="dos">
+            <div class="campo"><label for="pe-correo">Correo de Gmail</label><input id="pe-correo" type="email" autocomplete="off" placeholder="nombre@gmail.com"></div>
+            <div class="campo"><label for="pe-nombre">Nombre</label><input id="pe-nombre" autocomplete="off" placeholder="Ej.: Mamá"></div>
+          </div>
+          <p class="error" id="pe-error" role="alert" hidden></p>
+          <button type="submit" class="btn btn-rojo">Dar acceso</button>
+        </form>
+        <h3 class="cursiva">Intentos de entrar sin permiso</h3>
+        <div id="intentos"></div>
+      </div>
+      <div class="panel">
+        <h2 class="cursiva">Movimientos recientes</h2>
+        <div class="tabla-scroll"><table class="tabla" id="actividad"></table></div>
+      </div>
+      <div class="panel">
+        <h2 class="cursiva">Copias para Excel</h2>
+        <p class="nota" id="copia-nota"></p>
+        <div class="fila-botones">
+          <button type="button" class="btn btn-oro" id="csv-clientes">Clientes (.csv)</button>
+          <button type="button" class="btn btn-linea" id="csv-movimientos">Movimientos de 90 días (.csv)</button>
+        </div>
+        <div id="importar-v1" hidden style="display:grid;gap:8px">
+          <p class="nota" id="importar-v1-txt"></p>
+          <button type="button" class="btn btn-linea" id="importar-v1-btn">Pasar esos clientes al club nuevo</button>
+        </div>
+        <p class="ok" id="copia-estado" role="status"></p>
+      </div>
+    </section>
   </div>
-
-  <div class="aviso" id="aviso-ejemplos" hidden>
-    <span>Los clientes marcados como <b>ejemplo</b> son de prueba para que veas cómo funciona.</span>
-    <button type="button" class="btn btn-linea btn-chico" id="borrar-ejemplos">Quitar los ejemplos y empezar</button>
-  </div>
-
-  <!-- ================= CAJA ================= -->
-  <section id="v-caja" role="tabpanel" aria-labelledby="p-caja" style="display:grid;gap:14px">
-    <div class="buscar">
-      <label for="buscar" hidden>Buscar cliente</label>
-      <input id="buscar" type="search" inputmode="search" placeholder="Nombre o celular del cliente" autocomplete="off">
-      <button type="button" class="btn btn-oro" id="nuevo">Nuevo</button>
-    </div>
-    <div class="resultados" id="resultados"></div>
-
-    <article class="ficha" id="ficha" hidden aria-live="polite">
-      <div class="ficha-cab">
-        <div><h2 class="cursiva" id="f-nombre"></h2><p class="meta" id="f-meta"></p></div>
-        <button type="button" class="btn btn-linea btn-chico" id="f-cerrar">Cerrar</button>
-      </div>
-      <div class="sellos" id="f-sellos"></div>
-      <p class="ok" id="f-estado"></p>
-      <button type="button" class="btn btn-rojo btn-gigante" id="f-sello">Poner sello</button>
-      <button type="button" class="btn btn-oro btn-gigante" id="f-raspar" hidden>Tarjeta completa: raspar el premio</button>
-      <div class="fila-botones">
-        <a class="btn btn-linea btn-chico" id="f-whatsapp" href="#" target="_blank" rel="noopener">Avisarle por WhatsApp</a>
-        <button type="button" class="btn btn-linea btn-chico" id="f-deshacer">Deshacer el último sello</button>
-      </div>
-      <p class="nota" id="f-horario" hidden></p>
-      <details><summary>Historial y datos</summary>
-        <ul class="historial" id="f-historial"></ul>
-        <p class="nota" id="f-autoriza"></p>
-        <div class="fila-botones" style="margin-top:8px"><button type="button" class="btn btn-linea btn-chico" id="f-mensajes"></button><button type="button" class="btn btn-linea btn-chico" id="f-borrar">Borrar a este cliente (lo pidió)</button></div>
-        <p class="error" id="f-confirmar" hidden></p>
-      </details>
-    </article>
-
-    <form class="tarjeta-form" id="form-nuevo" hidden novalidate>
-      <h2 class="cursiva">Nuevo cliente</h2>
-      <div class="campo"><label for="n-nombre">Nombre</label><input id="n-nombre" autocomplete="off" placeholder="Ej.: Lucía Gómez"></div>
-      <div class="dos">
-        <div class="campo"><label for="n-cel">Celular (10 dígitos)</label><input id="n-cel" inputmode="numeric" maxlength="10" placeholder="3001234567"></div>
-        <div class="campo"><label for="n-cumple">Cumpleaños (opcional)</label><input id="n-cumple" placeholder="Día/mes, ej.: 14/03"></div>
-      </div>
-      <label class="autoriza"><input type="checkbox" id="n-autoriza"><span id="n-autoriza-txt"></span></label>
-      <p class="error" id="n-error" role="alert" hidden></p>
-      <div class="fila-botones">
-        <button type="submit" class="btn btn-rojo">Inscribir y raspar la bienvenida</button>
-        <button type="button" class="btn btn-linea" id="n-cancelar">Cancelar</button>
-      </div>
-    </form>
-  </section>
-
-  <!-- ================= LISTAS ================= -->
-  <section id="v-listas" role="tabpanel" aria-labelledby="p-listas" hidden style="display:grid;gap:18px">
-    <p class="horario" id="l-horario" role="status"></p>
-    <p class="nota">Cada botón abre WhatsApp con el mensaje escrito; quien atiende revisa y lo envía. Solo aparecen clientes que autorizaron los mensajes y no pidieron dejar de recibirlos. Cada mensaje dice cómo dejar de recibirlos.</p>
-    <div class="lista-seccion"><h3 class="cursiva">Les falta poco para el premio</h3><div id="l-cerca"></div></div>
-    <div class="lista-seccion"><h3 class="cursiva">Hace rato no vienen</h3><p class="nota" id="l-ausentes-nota"></p><div id="l-ausentes"></div></div>
-    <div class="lista-seccion"><h3 class="cursiva">Cumplen años este mes</h3><div id="l-cumple"></div></div>
-  </section>
-
-  <!-- ================= AJUSTES ================= -->
-  <section id="v-ajustes" role="tabpanel" aria-labelledby="p-ajustes" hidden style="display:grid;gap:14px">
-    <form class="panel" id="form-ajustes" novalidate>
-      <h2 class="cursiva">Reglas del club</h2>
-      <div class="dos">
-        <div class="campo"><label for="a-casillas">Sellos por tarjeta</label><input id="a-casillas" type="number" min="5" max="15"></div>
-        <div class="campo"><label for="a-regalo">Sellos de regalo al unirse</label><input id="a-regalo" type="number" min="0" max="5"></div>
-      </div>
-      <div class="dos">
-        <div class="campo"><label for="a-minima">Compra mínima por sello ($)</label><input id="a-minima" type="number" min="0" step="500"></div>
-        <div class="campo"><label for="a-ausente">«Hace rato no viene» después de (días)</label><input id="a-ausente" type="number" min="7" max="120"></div>
-      </div>
-      <div class="campo"><label for="a-premio">Premio al completar la tarjeta</label><textarea id="a-premio" rows="2"></textarea></div>
-      <div class="campo"><label for="a-cumple">Detalle de cumpleaños (opcional)</label><input id="a-cumple" placeholder="Ej.: una almojábana de regalo en tu cumpleaños"></div>
-      <p class="nota">El premio es seguro para todos los que completan la tarjeta: no es un sorteo. Un premio al azar sería un juego promocional, que en Bogotá necesita permiso de la Lotería de Bogotá y pago de derechos.</p>
-      <p class="ok" id="a-guardado" hidden>Ajustes guardados.</p>
-      <button type="submit" class="btn btn-rojo">Guardar ajustes</button>
-    </form>
-    <div class="panel">
-      <h2 class="cursiva">Copia de seguridad</h2>
-      <p class="nota">Los datos del club viven en este dispositivo. Descarga una copia cada semana y guárdala en tu correo o en Drive; con ella puedes pasar el club a otro celular.</p>
-      <div class="fila-botones">
-        <button type="button" class="btn btn-oro" id="exportar">Descargar copia</button>
-        <label class="btn btn-linea" for="importar" style="cursor:pointer">Cargar una copia</label>
-        <input id="importar" type="file" accept="application/json,.json" hidden>
-      </div>
-      <p class="nota" id="copia-estado"></p>
-    </div>
-  </section>
 </div>
 
-<div class="raspa-fondo" id="raspa" hidden role="dialog" aria-modal="true" aria-labelledby="r-titulo">
-  <div class="raspa">
-    <h2 class="cursiva" id="r-titulo"></h2>
-    <p id="r-sub">Pasa el dedo por la tarjeta dorada.</p>
-    <div class="boleto" id="boleto">
-      <div class="premio-texto"><small id="r-etiqueta"></small><b id="r-premio"></b></div>
-      <canvas id="lienzo" aria-label="Zona para raspar"></canvas>
-    </div>
-    <button type="button" class="btn btn-oro btn-gigante" id="r-listo" hidden></button>
-    <button type="button" class="btn btn-linea btn-chico" id="r-descubrir">Descubrir sin raspar</button>
+<div class="aviso-flotante" id="aviso" hidden role="status" aria-live="polite">
+  <b id="aviso-titulo"></b>
+  <span id="aviso-txt" class="nota"></span>
+  <div class="fila-botones" id="aviso-botones"></div>
+</div>
+
+<div class="dialogo-fondo" id="dialogo" hidden role="dialog" aria-modal="true" aria-labelledby="d-titulo">
+  <div class="dialogo">
+    <h2 class="cursiva" id="d-titulo"></h2>
+    <p id="d-txt"></p>
+    <button type="button" class="btn btn-oro btn-gigante" id="d-si"></button>
+    <button type="button" class="btn btn-linea" id="d-no">Cancelar</button>
   </div>
 </div>
 
 <script>
-/* ===== Club Pan Suizo · caja =====
-   Los datos se guardan en este navegador (localStorage, clave "pan-suizo-club-v1") y se respaldan con
-   «Descargar copia». Nada se envía solo: los mensajes se abren en WhatsApp y una persona los envía. */
-const CLAVE = "pan-suizo-club-v1";
-const AJUSTES_INICIALES = {
-  casillas: 10, deRegalo: 2, compraMinima: 10000, diasAusente: 21,
-  premio: "Desayuno de la casa: huevos pericos, dos panes calientes y café con leche",
-  cumple: "",
-  autorizacion: "El cliente autoriza a Pan Suizo a guardar su nombre, celular y fecha de cumpleaños para llevar su tarjeta del club y escribirle por WhatsApp sobre sus sellos, premios e invitaciones. Puede pedir que se borren sus datos cuando quiera (Ley 1581 de 2012).",
+/* ===== Club Pan Suizo · caja (versión 2, 23/10/2026) =====
+   Dos modos:
+   · «Registro seguro» (FIREBASE con datos): los datos viven en Cloud Firestore (Google). Solo entran las cuentas de
+     Google autorizadas; las reglas del servidor (firebase/firestore.rules) impiden poner o borrar sellos a cualquier
+     otra persona. Cada sello, premio o anulación es un documento que no se puede cambiar ni borrar.
+   · «Prueba en este celular» (FIREBASE = null): lo mismo, guardado solo en este navegador (localStorage).
+   Nada se envía solo: los mensajes se abren en WhatsApp y una persona los envía. */
+
+/* Configuración web de Firebase (no es una clave secreta: la seguridad la ponen las reglas del servidor).
+   La pega John al activar el registro seguro; mientras sea null, la caja funciona en modo de prueba. */
+const FIREBASE = null;
+const VERSION_FIREBASE = "12.19.0";
+
+/* Reglas que dio la dueña el 23/10/2026: 20 desayunos → 1 gratis; 20 almuerzos → 1 gratis.
+   Un sello por día en cada tarjeta (lo exige también el servidor). Deben coincidir con CLUB.tarjetas de carta.html
+   y con la lista de tarjetas válidas de firestore.rules. «compras» es la tarjeta anterior (10 compras desde $ 10.000),
+   apagada: se enciende con activa: true. */
+const TARJETAS = [
+  { id: "desayunos", nombre: "Desayunos", singular: "desayuno", icono: "taza", meta: 20, premio: "1 desayuno gratis", activa: true },
+  { id: "almuerzos", nombre: "Almuerzos", singular: "almuerzo", icono: "plato", meta: 20, premio: "1 almuerzo del día gratis", activa: true },
+  { id: "compras", nombre: "Compras", singular: "compra desde $ 10.000", icono: "bolsa", meta: 10, premio: "el desayuno de la casa", activa: false },
+];
+const ACTIVAS = TARJETAS.filter((t) => t.activa);
+const AJUSTES = {
+  diasAusente: 21,
+  autorizacion: "El cliente autoriza a Pan Suizo a guardar su nombre, celular y fecha de cumpleaños para llevar sus tarjetas del club y escribirle por WhatsApp sobre sus sellos, premios e invitaciones. Puede pedir que se borren sus datos cuando quiera (Ley 1581 de 2012).",
 };
-const DIA = 864e5;
-const hace = (d) => new Date(Date.now() - d * DIA).toISOString();
-function ejemplos() {
-  return [
-    { id: "ej1", nombre: "Lucía Gómez", cel: "3000000001", cumple: "", autoriza: true, fechaAutoriza: hace(40), sellos: 8, premios: 1, visitas: [hace(40), hace(30), hace(20), hace(9), hace(2)], ejemplo: true },
-    { id: "ej2", nombre: "Mario Rincón", cel: "3000000002", cumple: "", autoriza: true, fechaAutoriza: hace(60), sellos: 4, premios: 0, visitas: [hace(60), hace(45), hace(33)], ejemplo: true },
-    { id: "ej3", nombre: "Andrea Torres", cel: "3000000003", cumple: "", autoriza: true, fechaAutoriza: hace(25), sellos: 10, premios: 0, visitas: [hace(25), hace(14), hace(1)], ejemplo: true },
-  ];
-}
-let datos = { clientes: ejemplos(), ajustes: { ...AJUSTES_INICIALES }, sellosPorDia: {} };
-try { const g = JSON.parse(localStorage.getItem(CLAVE) || "null"); if (g && Array.isArray(g.clientes)) datos = { ...datos, ...g, ajustes: { ...AJUSTES_INICIALES, ...(g.ajustes || {}) } }; } catch (e) { /* sin almacenamiento: queda en memoria */ }
-function guardar() { try { localStorage.setItem(CLAVE, JSON.stringify(datos)); } catch (e) { /* sin almacenamiento */ } pintarCifras(); }
+const ICONOS = {
+  taza: '<path d="M10 20h22v8a10 10 0 0 1-10 10h-2a10 10 0 0 1-10-10z"/><path d="M32 23h2.5a4 4 0 0 1 0 8H31"/><path d="M16 7c-2 3 2 5 0 8M22 6c-2 3 2 5 0 8M28 7c-2 3 2 5 0 8"/><path d="M7 42h30"/>',
+  plato: '<circle cx="24" cy="25" r="18"/><circle cx="24" cy="25" r="12"/><path d="M19 22c3-4 9-3 10 1s-3 7-7 6-5-4-3-7z"/><circle cx="23.5" cy="25" r="2.5"/>',
+  bolsa: '<path d="M11 16h26l-2 25H13z"/><path d="M18 16v-3a6 6 0 0 1 12 0v3"/>',
+};
+const svg = (n) => `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONOS[n] || ""}</svg>`;
 
 const $ = (s) => document.querySelector(s);
-const pesos = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
-const fmt = (n) => pesos.format(n).replace(/\s/g, " ");
-const A = () => datos.ajustes;
+const DIA = 864e5;
 const fechaLocal = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const hoyISO = () => fechaLocal(new Date()); // fecha local: toISOString es UTC y en Colombia (UTC−5) cambia de día a las 7 p. m.
 const sinTildes = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 const primerNombre = (c) => c.nombre.split(" ")[0];
-const ultimaVisita = (c) => c.visitas.length ? new Date(c.visitas[c.visitas.length - 1]) : null;
-const diasSinVenir = (c) => { const u = ultimaVisita(c); return u ? Math.floor((Date.now() - u) / DIA) : Infinity; };
-const fechaCorta = (iso) => new Date(iso).toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" });
+const celBonito = (t) => t.replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3");
+const fechaCorta = (iso) => iso ? new Date(iso).toLocaleDateString("es-CO", { day: "numeric", month: "short", year: "numeric" }) : "—";
+const fechaHora = (iso) => iso ? new Date(iso).toLocaleString("es-CO", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "sin subir aún";
+const diasSinVenir = (c) => c.ultimaVisita ? Math.floor((Date.now() - new Date(c.ultimaVisita)) / DIA) : Infinity;
 const BAJA = "\n\nSi prefieres no recibir más mensajes del club, respóndenos NO.";
-const wa = (c, texto) => `https://wa.me/57${c.cel}?text=${encodeURIComponent(texto + BAJA)}`;
+const wa = (c, texto) => `https://wa.me/57${c.tel}?text=${encodeURIComponent(texto + BAJA)}`;
+const tarjetaDe = (id) => TARJETAS.find((t) => t.id === id) || { id, nombre: id, singular: id, meta: 20, premio: "" };
 
 /* ---------- horario para mensajes ----------
    Ley 2300 de 2023, arts. 3 y 5 (par. 3): los mensajes comerciales o publicitarios solo de lunes a viernes de
@@ -361,42 +415,200 @@ const cuandoCorto = (d) => {
   return `${dia}, ${horaCorta(d)}`;
 };
 const RESUMEN_HORARIO = "lunes a viernes de 7:00 a. m. a 7:00 p. m. y sábados de 8:00 a. m. a 3:00 p. m.; domingos y festivos no";
-const SVG_SELLO = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 25l8 8 16-17"/></svg>';
-const SVG_ESTRELLA = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M24 7l5 10.5 11.5 1.5-8.5 8 2 11.5L24 33l-10 5.5 2-11.5-8.5-8L19 17.5z"/></svg>';
 
-/* ---------- mensajes ---------- */
-const MENSAJES = {
-  bienvenida: (c) => `¡Hola ${primerNombre(c)}! Ya eres parte del Club Pan Suizo. Empiezas con ${A().deRegalo} sellos de regalo. Cada compra desde ${fmt(A().compraMinima)} suma un sello y al completar ${A().casillas} te llevas: ${A().premio}.`,
-  estado: (c) => c.sellos >= A().casillas
-    ? `¡${primerNombre(c)}, completaste tu tarjeta del Club Pan Suizo! Pasa por la panadería, raspa y llévate tu premio: ${A().premio}.`
-    : `¡Gracias por venir, ${primerNombre(c)}! Llevas ${c.sellos} de ${A().casillas} sellos en el Club Pan Suizo. Te ${A().casillas - c.sellos === 1 ? "falta 1" : "faltan " + (A().casillas - c.sellos)} para tu premio: ${A().premio}.`,
-  volver: (c) => `Hola ${primerNombre(c)}, te extrañamos en Pan Suizo. Tu tarjeta del club va en ${c.sellos} de ${A().casillas} sellos. ¡Ven por el siguiente, el pan sale calientito!`,
-  cumple: (c) => `¡Feliz cumpleaños, ${primerNombre(c)}! En Pan Suizo te queremos consentir${A().cumple ? ": " + A().cumple : ""}. Te esperamos.`,
-};
+/* ---------- tarjetas: todo se calcula desde los movimientos ----------
+   Un movimiento es { id, tel, tarjeta, tipo: "sello" | "canje" | "anulacion", dia, fecha, por, ciclo?, anula?, motivo? }.
+   Ids fijos: sello «tel_tarjeta_día» (uno por día; «…_2» solo si el primero se anuló), premio «tel_tarjeta_canje_N»,
+   anulación «id_anulado». Como el id se repetiría, el servidor rechaza un segundo sello el mismo día. */
+const idSello = (tel, t, dia) => `${tel}_${t}_${dia}`;
+function estadoTarjeta(movs, t) {
+  const anulados = new Set(movs.filter((m) => m.tipo === "anulacion").map((m) => m.anula));
+  const deTarjeta = movs.filter((m) => m.tarjeta === t.id);
+  const validos = deTarjeta.filter((m) => !anulados.has(m.id) && m.tipo !== "anulacion");
+  const sellos = validos.filter((m) => m.tipo === "sello").length;
+  const canjes = validos.filter((m) => m.tipo === "canje").length;
+  const hoy = hoyISO();
+  const ids = new Set(deTarjeta.map((m) => m.id));
+  const selloHoy = validos.find((m) => m.tipo === "sello" && m.dia === hoy) || null;
+  return {
+    actuales: Math.max(0, sellos - canjes * t.meta), sellos, canjes, selloHoy,
+    canjesTotales: deTarjeta.filter((m) => m.tipo === "canje").length,
+    idHoy: (tel) => { const b = idSello(tel, t.id, hoy); if (!ids.has(b)) return b; if (anulados.has(b) && !ids.has(b + "_2")) return b + "_2"; return null; },
+  };
+}
 
-/* ---------- resumen ---------- */
+/* ================= almacenes ================= */
+/* Almacén local: misma forma que el de Firestore, en localStorage. */
+function almacenLocal() {
+  const CLAVE = "pan-suizo-club-v2";
+  let d = { clientes: {}, movimientos: {} };
+  try { const g = JSON.parse(localStorage.getItem(CLAVE) || "null"); if (g && g.clientes) d = g; } catch (e) { /* sin almacenamiento */ }
+  const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(d)); } catch (e) { /* sin almacenamiento */ } };
+  const oyentes = [];
+  const avisar = () => { const l = Object.values(d.clientes); oyentes.forEach((f) => f(l)); };
+  const ahora = () => new Date().toISOString();
+  return {
+    modo: "local", usuario: { correo: "este celular", nombre: "Este celular", admin: true },
+    async iniciar() { return true; },
+    escucharClientes(f) { oyentes.push(f); f(Object.values(d.clientes)); return () => {}; },
+    escucharHoy(f) { const hoy = hoyISO(); f(Object.values(d.movimientos).filter((m) => m.dia === hoy)); oyentes.push(() => f(Object.values(d.movimientos).filter((m) => m.dia === hoyISO()))); },
+    async movimientosDe(tel) { return Object.values(d.movimientos).filter((m) => m.tel === tel); },
+    async movimientosDesde(iso) { return Object.values(d.movimientos).filter((m) => (m.fecha || "") >= iso); },
+    async crearCliente(c) {
+      if (d.clientes[c.tel]) throw new Error("existe");
+      d.clientes[c.tel] = { ...c, fechaAutoriza: c.fechaAutoriza || ahora(), creado: ahora(), creadoPor: this.usuario.correo };
+      guardar(); avisar();
+    },
+    async actualizarCliente(tel, campos) { Object.assign(d.clientes[tel], campos, campos.ultimaVisita === true ? { ultimaVisita: ahora() } : {}); guardar(); avisar(); },
+    async borrarCliente(tel) { delete d.clientes[tel]; Object.keys(d.movimientos).forEach((k) => { if (d.movimientos[k].tel === tel) delete d.movimientos[k]; }); guardar(); avisar(); },
+    async registrar(m) {
+      if (d.movimientos[m.id]) throw new Error("existe");
+      d.movimientos[m.id] = { ...m, fecha: ahora(), por: this.usuario.correo }; guardar(); avisar();
+      return { pendiente: false };
+    },
+  };
+}
+
+/* Almacén en Cloud Firestore con inicio de sesión de Google. */
+function almacenNube(config) {
+  let A, F, auth, db;
+  const aISO = (v) => (v && v.toDate ? v.toDate().toISOString() : v || null);
+  const plano = (snap) => { const x = snap.data({ serverTimestamps: "estimate" }); Object.keys(x).forEach((k) => { if (x[k] && x[k].toDate) x[k] = aISO(x[k]); }); return x; };
+  const conTiempo = (p, ms) => Promise.race([p.then(() => ({ pendiente: false })), new Promise((ok) => setTimeout(() => ok({ pendiente: true }), ms))]);
+  const yo = {
+    modo: "nube", usuario: null,
+    async cargar() {
+      const u = `https://www.gstatic.com/firebasejs/${VERSION_FIREBASE}/`;
+      const [app, a, f] = await Promise.all([import(u + "firebase-app.js"), import(u + "firebase-auth.js"), import(u + "firebase-firestore.js")]);
+      A = a; F = f;
+      const fb = app.initializeApp(config);
+      auth = A.getAuth(fb); auth.languageCode = "es";
+      db = F.initializeFirestore(fb, { localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() }) });
+    },
+    alCambiarSesion(f) { return A.onAuthStateChanged(auth, f); },
+    async entrar() {
+      const prov = new A.GoogleAuthProvider(); prov.setCustomParameters({ prompt: "select_account" });
+      try { await A.signInWithPopup(auth, prov); }
+      catch (e) { if (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment") await A.signInWithRedirect(auth, prov); else throw e; }
+    },
+    salir() { return A.signOut(auth); },
+    /* ¿Esta cuenta puede usar la caja? Admin = puede leer «intentos» (solo las reglas lo saben; el correo del
+       administrador no está en esta página pública). */
+    async permisos(u) {
+      const correo = (u.email || "").toLowerCase();
+      let admin = false, personal = null;
+      try { await F.getDocs(F.query(F.collection(db, "intentos"), F.limit(1))); admin = true; } catch (e) { admin = false; }
+      if (!admin) {
+        try { const s = await F.getDoc(F.doc(db, "personal", correo)); personal = s.exists() ? s.data() : null; } catch (e) { personal = null; }
+      }
+      const ok = admin || !!(personal && personal.activo);
+      if (!ok) { try { await F.setDoc(F.doc(db, "intentos", u.uid), { correo: u.email || "", nombre: (u.displayName || "").slice(0, 80), fecha: F.serverTimestamp() }); } catch (e) { /* sin permiso para dejar constancia */ } }
+      this.usuario = { correo, nombre: u.displayName || correo, admin };
+      return ok;
+    },
+    escucharClientes(f) { return F.onSnapshot(F.collection(db, "clientes"), (s) => f(s.docs.map((d) => ({ tel: d.id, ...plano(d) }))), (e) => avisoError("No se pudieron leer los clientes", e)); },
+    escucharHoy(f) { return F.onSnapshot(F.query(F.collection(db, "movimientos"), F.where("dia", "==", hoyISO())), (s) => f(s.docs.map((d) => ({ id: d.id, ...plano(d) }))), () => {}); },
+    async movimientosDe(tel) { const s = await F.getDocs(F.query(F.collection(db, "movimientos"), F.where("tel", "==", tel))); return s.docs.map((d) => ({ id: d.id, ...plano(d) })); },
+    async movimientosDesde(iso) { const s = await F.getDocs(F.query(F.collection(db, "movimientos"), F.where("fecha", ">=", F.Timestamp.fromDate(new Date(iso))))); return s.docs.map((d) => ({ id: d.id, ...plano(d) })); },
+    async crearCliente(c) {
+      const ref = F.doc(db, "clientes", c.tel);
+      const datos = { nombre: c.nombre, autoriza: true, fechaAutoriza: c.fechaAutoriza ? F.Timestamp.fromDate(new Date(c.fechaAutoriza)) : F.serverTimestamp(), creado: F.serverTimestamp(), creadoPor: this.usuario.correo };
+      if (c.cumple) datos.cumple = c.cumple;
+      if (c.sinMensajes) datos.sinMensajes = c.sinMensajes;
+      return conTiempo(F.setDoc(ref, datos), 5000);
+    },
+    async actualizarCliente(tel, campos) {
+      const c = { ...campos }; if (c.ultimaVisita === true) c.ultimaVisita = F.serverTimestamp();
+      return conTiempo(F.updateDoc(F.doc(db, "clientes", tel), c), 5000);
+    },
+    async borrarCliente(tel) {
+      const movs = await this.movimientosDe(tel);
+      const lote = F.writeBatch(db);
+      movs.forEach((m) => lote.delete(F.doc(db, "movimientos", m.id)));
+      lote.delete(F.doc(db, "clientes", tel));
+      return lote.commit();
+    },
+    async registrar(m) {
+      const { id, ...resto } = m;
+      return conTiempo(F.setDoc(F.doc(db, "movimientos", id), { ...resto, fecha: F.serverTimestamp(), por: this.usuario.correo }), 5000);
+    },
+    async personal() { const s = await F.getDocs(F.collection(db, "personal")); return s.docs.map((d) => ({ correo: d.id, ...plano(d) })); },
+    async guardarPersonal(correo, datos) { return F.setDoc(F.doc(db, "personal", correo), { ...datos, rol: "caja", modificado: F.serverTimestamp(), modificadoPor: this.usuario.correo }); },
+    async intentos() { const s = await F.getDocs(F.collection(db, "intentos")); return s.docs.map((d) => ({ uid: d.id, ...plano(d) })); },
+  };
+  return yo;
+}
+
+/* ================= estado de la pantalla ================= */
+let almacen = null, clientes = [], movsHoy = [], actual = null, movsActual = [];
+
+function pintarSesion() {
+  const s = $("#sesion"), t = $("#sesion-txt");
+  t.innerHTML = "";
+  if (almacen.modo === "local") {
+    s.className = "sesion prueba";
+    t.append(Object.assign(document.createElement("b"), { textContent: "Modo de prueba en este celular. " }), "Los datos se guardan solo aquí y nadie los controla. Falta activar el registro seguro (lo hace John).");
+    $("#salir").hidden = true;
+  } else {
+    s.className = "sesion segura";
+    t.append(Object.assign(document.createElement("b"), { textContent: "Registro seguro · " }), almacen.usuario ? almacen.usuario.correo + (almacen.usuario.admin ? " (administrador)" : "") : "sin entrar");
+    $("#salir").hidden = !almacen.usuario;
+  }
+}
 function pintarCifras() {
-  $("#c-clientes").textContent = datos.clientes.length;
-  $("#c-hoy").textContent = datos.sellosPorDia[hoyISO()] || 0;
-  $("#c-premios").textContent = datos.clientes.reduce((s, c) => s + (c.premios || 0), 0);
-  $("#aviso-ejemplos").hidden = !datos.clientes.some((c) => c.ejemplo);
+  $("#c-clientes").textContent = clientes.length;
+  const anul = new Set(movsHoy.filter((m) => m.tipo === "anulacion").map((m) => m.anula));
+  $("#c-hoy").textContent = movsHoy.filter((m) => m.tipo === "sello" && !anul.has(m.id)).length;
+  $("#c-premios").textContent = movsHoy.filter((m) => m.tipo === "canje" && !anul.has(m.id)).length;
+}
+
+/* ---------- avisos ---------- */
+let temporizadorAviso = null;
+function avisar(titulo, texto, botones = [], mal = false, ms = 9000) {
+  $("#aviso").className = "aviso-flotante" + (mal ? " mal" : "");
+  $("#aviso-titulo").textContent = titulo; $("#aviso-txt").textContent = texto || ""; $("#aviso-txt").hidden = !texto;
+  const cont = $("#aviso-botones"); cont.innerHTML = "";
+  botones.forEach(([etq, accion, enlace]) => {
+    const b = document.createElement(enlace ? "a" : "button");
+    b.className = "btn btn-linea btn-chico"; b.textContent = etq;
+    if (enlace) { b.href = enlace; b.target = "_blank"; b.rel = "noopener"; } else b.type = "button";
+    b.addEventListener("click", () => { if (accion) accion(); cerrarAviso(); });
+    cont.append(b);
+  });
+  $("#aviso").hidden = false;
+  clearTimeout(temporizadorAviso); temporizadorAviso = setTimeout(cerrarAviso, ms);
+}
+const cerrarAviso = () => { $("#aviso").hidden = true; };
+function avisoError(titulo, e) {
+  const permiso = e && (e.code === "permission-denied" || /permission/i.test(e.message || ""));
+  avisar(titulo, permiso ? "El servidor no lo permitió. Puede ser que ya exista o que tu cuenta no tenga permiso." : "Revisa el internet e inténtalo de nuevo.", [], true, 12000);
+}
+function confirmar(titulo, texto, si) {
+  return new Promise((ok) => {
+    $("#d-titulo").textContent = titulo; $("#d-txt").textContent = texto; $("#d-si").textContent = si;
+    $("#dialogo").hidden = false; $("#d-si").focus();
+    const fin = (v) => { $("#dialogo").hidden = true; $("#d-si").onclick = null; $("#d-no").onclick = null; ok(v); };
+    $("#d-si").onclick = () => fin(true); $("#d-no").onclick = () => fin(false);
+  });
 }
 
 /* ---------- buscar ---------- */
 function chipsDe(c) {
   const out = [];
-  if (c.sellos >= A().casillas) out.push(["listo", "Premio listo"]);
-  else if (diasSinVenir(c) >= A().diasAusente) out.push(["ausente", `${diasSinVenir(c)} días sin venir`]);
+  const r = c.resumen || {};
+  if (ACTIVAS.some((t) => (r[t.id] || 0) >= t.meta)) out.push(["listo", "Premio listo"]);
+  else if (c.ultimaVisita && diasSinVenir(c) >= AJUSTES.diasAusente) out.push(["ausente", `${diasSinVenir(c)} días sin venir`]);
   if (c.sinMensajes) out.push(["sin-mensajes", "Sin mensajes"]);
-  if (c.ejemplo) out.push(["ejemplo", "Ejemplo"]);
   return out;
 }
 function filaCliente(c, alHacerClic) {
   const b = document.createElement("button"); b.type = "button"; b.className = "fila-cliente";
   const n = document.createElement("span"); n.className = "n"; n.textContent = c.nombre;
   chipsDe(c).forEach(([cl, t]) => { const ch = document.createElement("span"); ch.className = "chip-estado " + cl; ch.textContent = t; n.append(ch); });
-  const s = document.createElement("span"); s.className = "s"; s.textContent = `${Math.min(c.sellos, A().casillas)}/${A().casillas}`;
-  const d = document.createElement("span"); d.className = "d"; d.textContent = `${c.cel.replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3")} · última visita ${ultimaVisita(c) ? fechaCorta(ultimaVisita(c)) : "—"}`;
+  const s = document.createElement("span"); s.className = "s";
+  s.textContent = ACTIVAS.map((t) => `${t.nombre.slice(0, 3)}. ${Math.min((c.resumen || {})[t.id] || 0, t.meta)}/${t.meta}`).join("\n");
+  s.style.whiteSpace = "pre";
+  const d = document.createElement("span"); d.className = "d"; d.textContent = `${celBonito(c.tel)} · última visita ${c.ultimaVisita ? fechaCorta(c.ultimaVisita) : "—"}`;
   b.append(n, s, d);
   b.addEventListener("click", alHacerClic);
   return b;
@@ -404,166 +616,196 @@ function filaCliente(c, alHacerClic) {
 function pintarResultados() {
   const q = sinTildes($("#buscar").value.trim()), cont = $("#resultados");
   cont.innerHTML = "";
-  let lista = datos.clientes;
-  if (q) lista = lista.filter((c) => sinTildes(c.nombre).includes(q) || c.cel.includes(q.replace(/\D/g, "") || "@"));
-  else lista = [...lista].sort((a, b) => (ultimaVisita(b) || 0) - (ultimaVisita(a) || 0)).slice(0, 6);
+  const digitos = q.replace(/\D/g, "");
+  let lista = clientes;
+  if (q) lista = lista.filter((c) => sinTildes(c.nombre).includes(q) || (digitos.length >= 3 && c.tel.includes(digitos)));
+  else lista = [...lista].sort((a, b) => (b.ultimaVisita || "").localeCompare(a.ultimaVisita || "")).slice(0, 6);
   if (!lista.length) {
     const p = document.createElement("p"); p.className = "vacio";
     p.textContent = q ? "No hay nadie con ese nombre o celular. Inscríbelo con «Nuevo»." : "Todavía no hay clientes. Inscribe al primero con «Nuevo».";
     cont.append(p); return;
   }
   if (!q) { const p = document.createElement("p"); p.className = "nota"; p.textContent = "Últimos clientes que vinieron:"; cont.append(p); }
-  lista.forEach((c) => cont.append(filaCliente(c, () => abrirFicha(c.id))));
+  lista.slice(0, 30).forEach((c) => cont.append(filaCliente(c, () => abrirFicha(c.tel))));
 }
 $("#buscar").addEventListener("input", pintarResultados);
 
 /* ---------- ficha ---------- */
-let actual = null;
-function abrirFicha(id) {
-  actual = datos.clientes.find((c) => c.id === id); if (!actual) return;
+async function abrirFicha(tel) {
+  actual = clientes.find((c) => c.tel === tel); if (!actual) return;
   $("#form-nuevo").hidden = true; $("#ficha").hidden = false; $("#f-confirmar").hidden = true;
-  pintarFicha(); $("#ficha").scrollIntoView({ behavior: "smooth", block: "start" });
+  $("#resultados").hidden = true; // con la ficha abierta solo se ve ese cliente: menos cosas para tocar por error
+  $("#f-tarjetas").innerHTML = ""; $("#f-cargando").hidden = false;
+  pintarDatosFicha();
+  $("#ficha").scrollIntoView({ behavior: "smooth", block: "start" });
+  try { movsActual = await almacen.movimientosDe(tel); } catch (e) { movsActual = []; avisoError("No se pudo leer el historial", e); }
+  if (!actual || actual.tel !== tel) return;
+  $("#f-cargando").hidden = true;
+  pintarTarjetas();
 }
-function pintarFicha() {
-  const c = actual; if (!c) return;
+function pintarDatosFicha() {
+  const c = actual;
   $("#f-nombre").textContent = c.nombre;
-  const ult = ultimaVisita(c);
-  $("#f-meta").textContent = `${c.cel.replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3")} · ${c.visitas.length} ${c.visitas.length === 1 ? "visita" : "visitas"} · ${c.premios || 0} ${c.premios === 1 ? "premio" : "premios"}${ult ? " · última: " + fechaCorta(ult) : ""}`;
-  const s = $("#f-sellos"); s.innerHTML = "";
-  for (let i = 0; i < A().casillas; i++) {
-    const d = document.createElement("span");
-    const ultimo = i === A().casillas - 1;
-    d.className = "sello" + (i < c.sellos ? " lleno" : "") + (ultimo && i >= c.sellos ? " premio" : "");
-    d.innerHTML = i < c.sellos ? SVG_SELLO : (ultimo ? SVG_ESTRELLA : String(i + 1));
-    s.append(d);
-  }
-  const completa = c.sellos >= A().casillas;
-  $("#f-sello").hidden = completa; $("#f-raspar").hidden = !completa;
-  $("#f-estado").textContent = completa ? "¡Tarjeta completa! Que raspe su premio." : `Le ${A().casillas - c.sellos === 1 ? "falta 1 sello" : "faltan " + (A().casillas - c.sellos) + " sellos"} para el premio. Sello por compras desde ${fmt(A().compraMinima)}.`;
-  $("#f-whatsapp").href = wa(c, MENSAJES.estado(c));
-  $("#f-whatsapp").hidden = !!c.sinMensajes;
+  $("#f-meta").textContent = `${celBonito(c.tel)} · en el club desde ${fechaCorta(c.creado)}${c.ultimaVisita ? " · última visita " + fechaCorta(c.ultimaVisita) : ""}`;
   const hm = horarioMensajes();
+  $("#f-whatsapp").hidden = !!c.sinMensajes;
   $("#f-horario").hidden = !!c.sinMensajes || hm.abierto;
-  $("#f-horario").textContent = hm.abierto ? "" : `Fuera del horario para mensajes (${RESUMEN_HORARIO}). Si el cliente está aquí y te pidió el aviso, puedes enviarlo; si no, espera a ${hm.desde ? cuandoCorto(hm.desde) : "un día hábil"}.`.replace(/\.\.$/, ".");
+  $("#f-horario").textContent = hm.abierto ? "" : `Fuera del horario para mensajes (${RESUMEN_HORARIO}). Si el cliente está aquí y te pidió el aviso, puedes enviarlo; si no, espera a ${hm.desde ? cuandoCorto(hm.desde) : "un día hábil"}.`;
   $("#f-mensajes").textContent = c.sinMensajes ? "Volver a enviarle mensajes (lo pidió)" : "No quiere más mensajes";
-  $("#f-deshacer").disabled = !c.ultimoSello;
-  const h = $("#f-historial"); h.innerHTML = "";
-  [...c.visitas].reverse().slice(0, 30).forEach((v) => { const li = document.createElement("li"); li.textContent = `Sello · ${new Date(v).toLocaleString("es-CO", { dateStyle: "medium", timeStyle: "short" })}`; h.append(li); });
-  if (!c.visitas.length) { const li = document.createElement("li"); li.textContent = "Sin sellos todavía."; h.append(li); }
-  $("#f-autoriza").textContent = `Autorizó el tratamiento de sus datos el ${fechaCorta(c.fechaAutoriza)}.${c.cumple ? " Cumpleaños: " + c.cumple + "." : ""}${c.sinMensajes ? ` Pidió no recibir más mensajes el ${fechaCorta(c.sinMensajes)}.` : ""}`;
+  $("#f-borrar").hidden = !almacen.usuario.admin;
+  $("#f-autoriza").textContent = `Autorizó el tratamiento de sus datos el ${fechaCorta(c.fechaAutoriza)}${c.creadoPor ? " (lo inscribió " + c.creadoPor + ")" : ""}.${c.cumple ? " Cumpleaños: " + c.cumple + "." : ""}${c.sinMensajes ? ` Pidió no recibir más mensajes el ${fechaCorta(c.sinMensajes)}.` : ""}${almacen.usuario.admin ? "" : " Para borrar sus datos, pídeselo a John."}`;
 }
-$("#f-mensajes").addEventListener("click", () => {
+function mensajeEstado(c) {
+  const partes = ACTIVAS.map((t) => { const e = estadoTarjeta(movsActual, t); return { t, e }; });
+  const lista = partes.find((x) => x.e.actuales >= x.t.meta);
+  if (lista) return `¡${primerNombre(c)}, completaste tu tarjeta de ${lista.t.nombre.toLowerCase()} del Club Pan Suizo! En tu próxima visita te llevas ${lista.t.premio}.`;
+  return `¡Gracias por venir, ${primerNombre(c)}! Así van tus tarjetas del Club Pan Suizo: ` + partes.map(({ t, e }) => `${t.nombre.toLowerCase()} ${e.actuales} de ${t.meta}`).join(" y ") + `. Al completar ${ACTIVAS[0].meta}, el siguiente va por la casa.`;
+}
+function pintarTarjetas() {
+  const c = actual, cont = $("#f-tarjetas"); cont.innerHTML = "";
+  ACTIVAS.forEach((t) => {
+    const e = estadoTarjeta(movsActual, t);
+    const art = document.createElement("section"); art.className = "tarjeta"; art.setAttribute("aria-label", `Tarjeta de ${t.nombre.toLowerCase()}`);
+    art.innerHTML = `<div class="tarjeta-cab">${svg(t.icono)}<h3 class="cursiva"></h3><span class="cuenta"></span></div><div class="puntos" aria-hidden="true"></div>`;
+    art.querySelector("h3").textContent = t.nombre;
+    const cuenta = art.querySelector(".cuenta"); cuenta.textContent = Math.min(e.actuales, t.meta);
+    cuenta.append(Object.assign(document.createElement("small"), { textContent: ` de ${t.meta}` }));
+    const pts = art.querySelector(".puntos");
+    pts.style.gridTemplateColumns = `repeat(${t.meta > 10 ? 10 : t.meta}, 1fr)`;
+    for (let i = 0; i < t.meta; i++) { const p = document.createElement("span"); p.className = "punto" + (i < e.actuales ? " lleno" : ""); pts.append(p); }
+    const b = document.createElement("button"); b.type = "button";
+    if (e.actuales >= t.meta) {
+      b.className = "btn btn-oro btn-gigante"; b.textContent = `Entregar ${t.premio}`;
+      b.addEventListener("click", () => entregarPremio(t));
+    } else if (!e.idHoy(c.tel)) {
+      b.className = "btn btn-hecho btn-gigante"; b.disabled = true;
+      b.textContent = e.selloHoy ? `✓ Ya tiene el sello de ${t.singular} de hoy` : "El sello de hoy se anuló dos veces: mañana puede recibir otro";
+    } else {
+      b.className = "btn btn-rojo btn-gigante"; b.textContent = `Poner sello de ${t.singular}`;
+      b.addEventListener("click", () => ponerSello(t, b));
+    }
+    art.append(b);
+    const falta = t.meta - e.actuales;
+    const p = document.createElement("p"); p.className = "nota";
+    p.textContent = e.actuales >= t.meta ? `Tarjeta completa: le toca ${t.premio}.` : `Le ${falta === 1 ? "falta 1 sello" : `faltan ${falta} sellos`} para ${t.premio}.${e.canjes ? ` Ya ganó ${e.canjes} ${e.canjes === 1 ? "premio" : "premios"}.` : ""}`;
+    art.append(p);
+    cont.append(art);
+  });
+  $("#f-whatsapp").href = wa(c, mensajeEstado(c));
+  pintarHistorial();
+}
+function pintarHistorial() {
+  const h = $("#f-historial"); h.innerHTML = "";
+  const anulados = new Map(movsActual.filter((m) => m.tipo === "anulacion").map((m) => [m.anula, m]));
+  const orden = [...movsActual].filter((m) => m.tipo !== "anulacion").sort((a, b) => (b.fecha || "9").localeCompare(a.fecha || "9"));
+  if (!orden.length) { const li = document.createElement("li"); li.textContent = "Sin sellos todavía."; h.append(li); return; }
+  orden.slice(0, 60).forEach((m) => {
+    const t = tarjetaDe(m.tarjeta), an = anulados.get(m.id);
+    const li = document.createElement("li");
+    const s = document.createElement("span");
+    s.textContent = `${m.tipo === "canje" ? "Premio" : "Sello"} de ${t.singular} · ${fechaHora(m.fecha)} · ${m.por === almacen.usuario.correo ? "tú" : m.por}`;
+    if (an) { s.className = "anulado"; s.title = `Anulado por ${an.por}: ${an.motivo || ""}`; }
+    li.append(s);
+    const puede = !an && (almacen.usuario.admin || (m.tipo === "sello" && m.por === almacen.usuario.correo && m.dia === hoyISO()));
+    if (puede) {
+      const b = document.createElement("button"); b.type = "button"; b.className = "btn btn-linea btn-chico"; b.textContent = "Anular";
+      b.addEventListener("click", () => anular(m));
+      li.append(b);
+    } else if (an) li.append(Object.assign(document.createElement("small"), { textContent: "anulado" }));
+    h.append(li);
+  });
+}
+async function ponerSello(t, boton) {
+  const c = actual, e = estadoTarjeta(movsActual, t), id = e.idHoy(c.tel);
+  if (!id) return;
+  boton.disabled = true; boton.textContent = "Guardando…";
+  const m = { id, tel: c.tel, tarjeta: t.id, tipo: "sello", dia: hoyISO() };
+  try {
+    const r = await almacen.registrar(m);
+    movsActual.push({ ...m, fecha: new Date().toISOString(), por: almacen.usuario.correo });
+    const n = estadoTarjeta(movsActual, t).actuales;
+    actualizarResumen(c);
+    pintarTarjetas();
+    avisar(`✓ Sello de ${t.singular} puesto: ${n} de ${t.meta}`, r.pendiente ? "Se guardó en este celular y se sube solo cuando vuelva el internet." : (n >= t.meta ? `¡Completó la tarjeta! En su próxima visita le toca ${t.premio}.` : ""),
+      [["Deshacer", () => anular({ ...m, por: almacen.usuario.correo }, "Se puso por error")], ...(c.sinMensajes ? [] : [["Avisarle por WhatsApp", null, wa(c, mensajeEstado(c))]])]);
+  } catch (err) {
+    avisoError("No se pudo poner el sello", err);
+    abrirFicha(c.tel);
+  }
+}
+async function entregarPremio(t) {
+  const c = actual, e = estadoTarjeta(movsActual, t);
+  if (e.actuales < t.meta) return;
+  if (!(await confirmar(`¿Le entregaste ${t.premio}?`, `${c.nombre} completó ${t.meta} sellos de ${t.nombre.toLowerCase()}. Al confirmar, su tarjeta vuelve a empezar en 0.`, "Sí, ya se lo entregué"))) return;
+  const ciclo = e.canjesTotales + 1;
+  const m = { id: `${c.tel}_${t.id}_canje_${ciclo}`, tel: c.tel, tarjeta: t.id, tipo: "canje", dia: hoyISO(), ciclo };
+  try {
+    const r = await almacen.registrar(m);
+    movsActual.push({ ...m, fecha: new Date().toISOString(), por: almacen.usuario.correo });
+    actualizarResumen(c); pintarTarjetas();
+    avisar(`✓ Premio entregado a ${primerNombre(c)}`, r.pendiente ? "Se guardó en este celular y se sube solo cuando vuelva el internet." : "Su tarjeta empieza de nuevo.");
+  } catch (err) { avisoError("No se pudo guardar el premio", err); abrirFicha(c.tel); }
+}
+async function anular(m, motivoFijo) {
+  const motivo = motivoFijo || (await confirmar("¿Anular este movimiento?", "Queda escrito que lo anulaste y por qué. No se puede volver a activar.", "Sí, anular") ? "Anulado desde el historial" : null);
+  if (!motivo) return;
+  const a = { id: m.id + "_anulado", tel: m.tel, tarjeta: m.tarjeta, tipo: "anulacion", dia: hoyISO(), anula: m.id, motivo };
+  try {
+    await almacen.registrar(a);
+    movsActual.push({ ...a, fecha: new Date().toISOString(), por: almacen.usuario.correo });
+    if (actual && actual.tel === m.tel) { actualizarResumen(actual); pintarTarjetas(); }
+    avisar("Listo: quedó anulado", "", [], false, 4000);
+  } catch (err) { avisoError("No se pudo anular", err); }
+}
+function actualizarResumen(c) {
+  const resumen = {}; ACTIVAS.forEach((t) => { resumen[t.id] = estadoTarjeta(movsActual, t).actuales; });
+  almacen.actualizarCliente(c.tel, { resumen, ultimaVisita: true }).catch(() => { /* el resumen es solo para las listas */ });
+}
+$("#f-mensajes").addEventListener("click", async () => {
   const c = actual; if (!c) return;
-  if (c.sinMensajes) delete c.sinMensajes; else c.sinMensajes = new Date().toISOString();
-  guardar(); pintarFicha(); pintarResultados();
+  try { await almacen.actualizarCliente(c.tel, { sinMensajes: c.sinMensajes ? null : new Date().toISOString() }); }
+  catch (e) { avisoError("No se pudo guardar", e); }
+  actual = clientes.find((x) => x.tel === c.tel) || c; pintarDatosFicha(); pintarResultados();
 });
-$("#f-cerrar").addEventListener("click", () => { $("#ficha").hidden = true; actual = null; pintarResultados(); });
-$("#f-sello").addEventListener("click", () => {
-  const c = actual; if (!c || c.sellos >= A().casillas) return;
-  c.sellos += 1; const ahora = new Date().toISOString(); c.visitas.push(ahora); c.ultimoSello = ahora;
-  datos.sellosPorDia[hoyISO()] = (datos.sellosPorDia[hoyISO()] || 0) + 1;
-  delete c.ejemploSinUso; guardar(); pintarFicha(); pintarResultados();
-});
-$("#f-deshacer").addEventListener("click", () => {
-  const c = actual; if (!c || !c.ultimoSello) return;
-  const i = c.visitas.lastIndexOf(c.ultimoSello); if (i >= 0) c.visitas.splice(i, 1);
-  c.sellos = Math.max(0, c.sellos - 1);
-  const dia = fechaLocal(new Date(c.ultimoSello)); if (datos.sellosPorDia[dia]) datos.sellosPorDia[dia] -= 1;
-  c.ultimoSello = null; guardar(); pintarFicha(); pintarResultados();
-});
-$("#f-raspar").addEventListener("click", () => abrirRaspa("premio", actual));
+$("#f-cerrar").addEventListener("click", () => { $("#ficha").hidden = true; actual = null; $("#resultados").hidden = false; $("#buscar").value = ""; pintarResultados(); $("#buscar").focus(); });
+$("#buscar").addEventListener("focus", () => { if (!$("#ficha").hidden) { $("#ficha").hidden = true; actual = null; $("#resultados").hidden = false; pintarResultados(); } });
 let confirmarBorrado = false;
-$("#f-borrar").addEventListener("click", () => {
-  if (!confirmarBorrado) { confirmarBorrado = true; $("#f-confirmar").hidden = false; $("#f-confirmar").textContent = `Toca otra vez para borrar a ${actual.nombre} y todos sus sellos. No se puede deshacer.`; $("#f-borrar").textContent = "Sí, borrar sus datos"; return; }
-  datos.clientes = datos.clientes.filter((c) => c !== actual); confirmarBorrado = false; $("#f-borrar").textContent = "Borrar a este cliente (lo pidió)";
-  actual = null; $("#ficha").hidden = true; guardar(); pintarResultados();
+$("#f-borrar").addEventListener("click", async () => {
+  if (!confirmarBorrado) { confirmarBorrado = true; $("#f-confirmar").hidden = false; $("#f-confirmar").textContent = `Toca otra vez para borrar a ${actual.nombre}, sus tarjetas y su historial. No se puede deshacer.`; $("#f-borrar").textContent = "Sí, borrar sus datos"; return; }
+  confirmarBorrado = false; $("#f-borrar").textContent = "Borrar a este cliente (lo pidió)";
+  try { await almacen.borrarCliente(actual.tel); actual = null; $("#ficha").hidden = true; $("#resultados").hidden = false; pintarResultados(); avisar("Datos borrados", "", [], false, 4000); }
+  catch (e) { avisoError("No se pudo borrar", e); }
 });
 
 /* ---------- nuevo cliente ---------- */
 $("#nuevo").addEventListener("click", () => {
-  $("#ficha").hidden = true; $("#form-nuevo").hidden = false; $("#n-error").hidden = true;
+  $("#ficha").hidden = true; actual = null; $("#resultados").hidden = false; $("#form-nuevo").hidden = false; $("#n-error").hidden = true;
   const q = $("#buscar").value.trim();
   $("#n-nombre").value = /\d/.test(q) ? "" : q; $("#n-cel").value = /^\d+$/.test(q) ? q : ""; $("#n-cumple").value = ""; $("#n-autoriza").checked = false;
-  $("#n-autoriza-txt").textContent = A().autorizacion;
+  $("#n-autoriza-txt").textContent = AJUSTES.autorizacion;
   $("#n-nombre").focus();
 });
 $("#n-cancelar").addEventListener("click", () => { $("#form-nuevo").hidden = true; });
-$("#form-nuevo").addEventListener("submit", (e) => {
+$("#form-nuevo").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const nombre = $("#n-nombre").value.trim().replace(/\s+/g, " ");
-  const cel = $("#n-cel").value.replace(/\D/g, "");
+  const nombre = $("#n-nombre").value.trim().replace(/\s+/g, " ").slice(0, 60);
+  const tel = $("#n-cel").value.replace(/\D/g, "");
   const cumple = $("#n-cumple").value.trim();
-  const err = !nombre ? "Escribe el nombre." : !/^3\d{9}$/.test(cel) ? "El celular debe tener 10 dígitos y empezar por 3." :
-    datos.clientes.some((c) => c.cel === cel) ? "Ese celular ya está inscrito: búscalo arriba." :
+  const err = !nombre ? "Escribe el nombre." : !/^3\d{9}$/.test(tel) ? "El celular debe tener 10 dígitos y empezar por 3." :
+    clientes.some((c) => c.tel === tel) ? "Ese celular ya está inscrito: búscalo arriba." :
     cumple && !/^\d{1,2}\/\d{1,2}$/.test(cumple) ? "Escribe el cumpleaños como día/mes, por ejemplo 14/03." :
     !$("#n-autoriza").checked ? "Sin la autorización del cliente no podemos guardar sus datos." : "";
   if (err) { $("#n-error").textContent = err; $("#n-error").hidden = false; return; }
-  const c = { id: "c" + Date.now().toString(36), nombre, cel, cumple, autoriza: true, fechaAutoriza: new Date().toISOString(), sellos: 0, premios: 0, visitas: [] };
-  datos.clientes.push(c); guardar();
-  $("#form-nuevo").hidden = true; $("#buscar").value = "";
-  actual = c; abrirRaspa("bienvenida", c);
-});
-
-/* ---------- raspa y descubre ---------- */
-let modoRaspa = null, clienteRaspa = null, raspado = false;
-function abrirRaspa(modo, c) {
-  modoRaspa = modo; clienteRaspa = c; raspado = false;
-  $("#r-titulo").textContent = modo === "premio" ? `¡${primerNombre(c)}, completaste tu tarjeta!` : `¡Bienvenido al club, ${primerNombre(c)}!`;
-  $("#r-etiqueta").textContent = modo === "premio" ? "Tu premio" : "Tu regalo de bienvenida";
-  $("#r-premio").textContent = modo === "premio" ? A().premio : `${A().deRegalo} sellos de regalo para empezar`;
-  $("#r-listo").hidden = true; $("#r-descubrir").hidden = false; $("#r-sub").textContent = "Pasa el dedo por la tarjeta dorada.";
-  $("#raspa").hidden = false;
-  requestAnimationFrame(cubrir);
-}
-function cubrir() {
-  const cv = $("#lienzo"), r = cv.getBoundingClientRect(), k = devicePixelRatio || 1;
-  cv.width = Math.round(r.width * k); cv.height = Math.round(r.height * k);
-  const x = cv.getContext("2d"); x.globalCompositeOperation = "source-over";
-  const g = x.createLinearGradient(0, 0, cv.width, cv.height);
-  g.addColorStop(0, "#C9952B"); g.addColorStop(.45, "#F6D27A"); g.addColorStop(.55, "#E9B848"); g.addColorStop(1, "#B9821F");
-  x.fillStyle = g; x.fillRect(0, 0, cv.width, cv.height);
-  x.globalAlpha = .18; x.fillStyle = "#5A3A0A";
-  for (let i = 0; i < 260; i++) { x.beginPath(); x.arc((i * 97) % cv.width, (i * 57 + (i % 7) * 13) % cv.height, 1.2 * k, 0, 7); x.fill(); }
-  x.globalAlpha = 1; x.fillStyle = "#3A2405"; x.textAlign = "center"; x.textBaseline = "middle";
-  x.font = `700 ${Math.round(15 * k)}px "DM Sans", system-ui, sans-serif`;
-  x.fillText("RASPA AQUÍ", cv.width / 2, cv.height / 2 - 12 * k);
-  x.font = `italic 700 ${Math.round(22 * k)}px "Cormorant Garamond", Georgia, serif`;
-  x.fillText("Club Pan Suizo", cv.width / 2, cv.height / 2 + 16 * k);
-  cv.style.opacity = "1";
-}
-(function prepararLienzo() {
-  const cv = $("#lienzo"); let abajo = false, n = 0;
-  const raspar = (e) => {
-    if (!abajo || raspado) return;
-    const r = cv.getBoundingClientRect(), k = cv.width / r.width, x = cv.getContext("2d");
-    x.globalCompositeOperation = "destination-out"; x.beginPath();
-    x.arc((e.clientX - r.left) * k, (e.clientY - r.top) * k, 24 * k, 0, 7); x.fill();
-    if (++n % 8 === 0 && porcentajeLimpio(cv) > .5) descubrir();
-  };
-  cv.addEventListener("pointerdown", (e) => { abajo = true; try { cv.setPointerCapture(e.pointerId); } catch (err) { /* puntero sintético */ } raspar(e); });
-  cv.addEventListener("pointermove", raspar);
-  cv.addEventListener("pointerup", () => { abajo = false; });
-  cv.addEventListener("pointercancel", () => { abajo = false; });
-})();
-function porcentajeLimpio(cv) {
-  const d = cv.getContext("2d").getImageData(0, 0, cv.width, cv.height).data;
-  let limpio = 0, total = 0;
-  for (let i = 3; i < d.length; i += 4 * 40) { total++; if (d[i] < 40) limpio++; }
-  return limpio / total;
-}
-function descubrir() {
-  if (raspado) return; raspado = true;
-  const cv = $("#lienzo"); cv.style.transition = matchMedia("(prefers-reduced-motion: reduce)").matches ? "none" : "opacity .5s"; cv.style.opacity = "0";
-  $("#r-descubrir").hidden = true; $("#r-listo").hidden = false;
-  if (modoRaspa === "premio") { $("#r-sub").textContent = "Entrégale el premio y toca el botón para empezar una tarjeta nueva."; $("#r-listo").textContent = "Premio entregado · nueva tarjeta"; }
-  else { $("#r-sub").textContent = "Ya quedaron puestos en su tarjeta."; $("#r-listo").textContent = "Listo · enviarle la bienvenida"; }
-}
-$("#r-descubrir").addEventListener("click", descubrir);
-$("#r-listo").addEventListener("click", () => {
-  const c = clienteRaspa;
-  if (modoRaspa === "premio") { c.premios = (c.premios || 0) + 1; c.sellos = 0; c.ultimoSello = null; c.ultimoPremio = new Date().toISOString(); }
-  else { c.sellos = A().deRegalo; window.open(wa(c, MENSAJES.bienvenida(c)), "_blank", "noopener"); }
-  guardar(); $("#raspa").hidden = true; abrirFicha(c.id); pintarResultados();
+  $("#n-guardar").disabled = true;
+  try {
+    await almacen.crearCliente({ tel, nombre, cumple });
+    if (!clientes.some((c) => c.tel === tel)) clientes.push({ tel, nombre, cumple, creado: new Date().toISOString(), fechaAutoriza: new Date().toISOString(), creadoPor: almacen.usuario.correo });
+    $("#form-nuevo").hidden = true; $("#buscar").value = "";
+    abrirFicha(tel);
+    const c = clientes.find((x) => x.tel === tel);
+    avisar(`✓ ${primerNombre(c)} ya está en el club`, "Ahora ponle el sello de lo que compró.", [["Enviarle la bienvenida", null, wa(c, `¡Hola ${primerNombre(c)}! Ya eres parte del Club Pan Suizo. Cada desayuno y cada almuerzo que compras suma un sello en su tarjeta; al completar ${ACTIVAS[0].meta}, el siguiente va por la casa.`)]]);
+  } catch (er) { $("#n-error").textContent = "No se pudo inscribir. Si ya estaba inscrito, búscalo arriba; si no, revisa el internet."; $("#n-error").hidden = false; }
+  $("#n-guardar").disabled = false;
 });
 
 /* ---------- listas para escribir ---------- */
@@ -579,11 +821,11 @@ function pintarListas() {
     if (!lista.length) { const p = document.createElement("p"); p.className = "vacio"; p.textContent = "Nadie por ahora."; cont.append(p); return; }
     lista.forEach((c) => {
       const w = document.createElement("div"); w.style.display = "grid"; w.style.gap = "6px";
-      w.append(filaCliente(c, () => { mostrar("caja"); abrirFicha(c.id); }));
+      w.append(filaCliente(c, () => { mostrar("caja"); abrirFicha(c.tel); }));
       if (hm.abierto) {
         const a = document.createElement("a"); a.className = "btn btn-linea btn-chico"; a.target = "_blank"; a.rel = "noopener";
         a.href = wa(c, mensaje(c)); a.textContent = etiqueta;
-        a.addEventListener("click", () => { c.ultimoMensaje = new Date().toISOString(); guardar(); });
+        a.addEventListener("click", () => { almacen.actualizarCliente(c.tel, { ultimoMensaje: new Date().toISOString() }).catch(() => {}); });
         w.append(a);
       } else {
         const b = document.createElement("button"); b.type = "button"; b.className = "btn btn-linea btn-chico"; b.disabled = true;
@@ -597,61 +839,171 @@ function pintarListas() {
       cont.append(w);
     });
   };
-  const autorizados = datos.clientes.filter((c) => c.autoriza && !c.sinMensajes);
-  conBoton($("#l-cerca"), autorizados.filter((c) => c.sellos >= A().casillas - 2).sort((a, b) => b.sellos - a.sellos), MENSAJES.estado, "Recordarle por WhatsApp");
-  $("#l-ausentes-nota").textContent = `Clientes que no vienen hace ${A().diasAusente} días o más. Una invitación amable suele traerlos de vuelta; no les escribas más de una vez al mes.`;
-  conBoton($("#l-ausentes"), autorizados.filter((c) => diasSinVenir(c) >= A().diasAusente && c.visitas.length).sort((a, b) => diasSinVenir(a) - diasSinVenir(b)), MENSAJES.volver, "Invitarle a volver");
+  const autorizados = clientes.filter((c) => c.autoriza !== false && !c.sinMensajes);
+  const cerca = (c) => ACTIVAS.find((t) => ((c.resumen || {})[t.id] || 0) >= t.meta - 2);
+  conBoton($("#l-cerca"), autorizados.filter(cerca), (c) => { const t = cerca(c), n = Math.min((c.resumen || {})[t.id] || 0, t.meta); return n >= t.meta ? `¡${primerNombre(c)}, completaste tu tarjeta de ${t.nombre.toLowerCase()} del Club Pan Suizo! Pasa cuando quieras por ${t.premio}.` : `¡Hola ${primerNombre(c)}! Tu tarjeta de ${t.nombre.toLowerCase()} del Club Pan Suizo va en ${n} de ${t.meta}. Te ${t.meta - n === 1 ? "falta 1" : "faltan " + (t.meta - n)} para ${t.premio}.`; }, "Recordarle por WhatsApp");
+  $("#l-ausentes-nota").textContent = `Clientes que no vienen hace ${AJUSTES.diasAusente} días o más. Una invitación amable suele traerlos de vuelta; no les escribas más de una vez al mes.`;
+  conBoton($("#l-ausentes"), autorizados.filter((c) => c.ultimaVisita && diasSinVenir(c) >= AJUSTES.diasAusente).sort((a, b) => diasSinVenir(a) - diasSinVenir(b)), (c) => `Hola ${primerNombre(c)}, te extrañamos en Pan Suizo. Tus tarjetas del club te esperan: ¡ven por el siguiente sello, el pan sale calientito!`, "Invitarle a volver");
   const mes = new Date().getMonth() + 1;
-  conBoton($("#l-cumple"), autorizados.filter((c) => c.cumple && +c.cumple.split("/")[1] === mes), MENSAJES.cumple, "Felicitarle por WhatsApp");
+  conBoton($("#l-cumple"), autorizados.filter((c) => c.cumple && +c.cumple.split("/")[1] === mes), (c) => `¡Feliz cumpleaños, ${primerNombre(c)}! En Pan Suizo te queremos consentir. Te esperamos.`, "Felicitarle por WhatsApp");
 }
 
-/* ---------- ajustes y copia ---------- */
-function pintarAjustes() {
-  $("#a-casillas").value = A().casillas; $("#a-regalo").value = A().deRegalo; $("#a-minima").value = A().compraMinima;
-  $("#a-ausente").value = A().diasAusente; $("#a-premio").value = A().premio; $("#a-cumple").value = A().cumple;
+/* ---------- control ---------- */
+async function pintarControl() {
+  const reglas = $("#reglas"); reglas.innerHTML = "";
+  [...ACTIVAS.map((t) => `Tarjeta de ${t.nombre.toLowerCase()}: ${t.meta} sellos = ${t.premio}.`), "Un sello por día en cada tarjeta, solo cuando el cliente compra.",
+    "Cada sello, premio o anulación queda con la cuenta que lo hizo y la hora del servidor. No se puede borrar: solo anular, y la anulación también queda."].forEach((t) => reglas.append(Object.assign(document.createElement("li"), { textContent: t })));
+  $("#panel-personal").hidden = !(almacen.modo === "nube" && almacen.usuario.admin);
+  $("#copia-nota").textContent = almacen.modo === "nube" ? "Los datos están guardados en el registro seguro (Google). Estas copias son para revisarlos en Excel." : "En modo de prueba los datos viven solo en este celular. Descarga una copia cada semana.";
+  pintarImportarV1();
+  let movs = [];
+  try { movs = await almacen.movimientosDesde(new Date(Date.now() - 30 * DIA).toISOString()); } catch (e) { avisoError("No se pudo leer la actividad", e); }
+  pintarAlertas(movs); pintarActividad(movs);
+  if (!$("#panel-personal").hidden) pintarPersonal();
 }
-$("#form-ajustes").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const n = (id, min, max, def) => { const v = Math.round(+$(id).value); return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : def; };
-  Object.assign(datos.ajustes, {
-    casillas: n("#a-casillas", 5, 15, 10), deRegalo: n("#a-regalo", 0, 5, 2), compraMinima: n("#a-minima", 0, 1e6, 10000),
-    diasAusente: n("#a-ausente", 7, 120, 21), premio: $("#a-premio").value.trim() || AJUSTES_INICIALES.premio, cumple: $("#a-cumple").value.trim(),
+function pintarAlertas(movs) {
+  const cont = $("#alertas"); cont.innerHTML = "";
+  const nombre = (tel) => (clientes.find((c) => c.tel === tel) || { nombre: celBonito(tel) }).nombre;
+  const lista = [];
+  const anul = movs.filter((m) => m.tipo === "anulacion");
+  movs.filter((m) => m.tipo === "canje").forEach((m) => lista.push([`Premio de ${tarjetaDe(m.tarjeta).singular} a ${nombre(m.tel)}`, `${fechaHora(m.fecha)} · lo registró ${m.por}`]));
+  movs.filter((m) => m.tipo === "sello" && m.fecha).forEach((m) => {
+    const f = new Date(m.fecha), h = f.getHours() + f.getMinutes() / 60;
+    if (h < 5.5 || h > 21.5) lista.push([`Sello fuera del horario de la panadería: ${nombre(m.tel)}`, `${fechaHora(m.fecha)} · ${m.por}`]);
+    else if (fechaLocal(f) !== m.dia) lista.push([`Sello con un día distinto al del registro: ${nombre(m.tel)}`, `Dice ${m.dia}; llegó al servidor el ${fechaHora(m.fecha)} (puede ser un celular sin internet) · ${m.por}`]);
   });
-  guardar(); pintarAjustes(); $("#a-guardado").hidden = false; setTimeout(() => { $("#a-guardado").hidden = true; }, 2500);
+  const porPersona = {}; anul.forEach((m) => { porPersona[m.por] = (porPersona[m.por] || 0) + 1; });
+  Object.entries(porPersona).filter(([, n]) => n >= 3).forEach(([p, n]) => lista.push([`${n} anulaciones de ${p} en 30 días`, "Conviene preguntar qué pasó."]));
+  const porDia = {}; movs.filter((m) => m.tipo === "sello").forEach((m) => { const k = m.por + " " + m.dia; porDia[k] = (porDia[k] || 0) + 1; });
+  Object.entries(porDia).filter(([, n]) => n > 40).forEach(([k, n]) => lista.push([`${n} sellos en un solo día`, k]));
+  if (!lista.length) { cont.append(Object.assign(document.createElement("p"), { className: "vacio", textContent: "Nada que revisar en los últimos 30 días." })); return; }
+  lista.slice(0, 40).forEach(([t, d]) => { const p = document.createElement("div"); p.className = "alerta"; p.textContent = t; p.append(Object.assign(document.createElement("small"), { textContent: d })); cont.append(p); });
+}
+function pintarActividad(movs) {
+  const t = $("#actividad"); t.innerHTML = "<thead><tr><th>Cuándo</th><th>Qué</th><th>Cliente</th><th>Quién</th></tr></thead>";
+  const tb = document.createElement("tbody");
+  const nombre = (tel) => (clientes.find((c) => c.tel === tel) || { nombre: celBonito(tel) }).nombre;
+  const orden = [...movs].sort((a, b) => (b.fecha || "").localeCompare(a.fecha || "")).slice(0, 60);
+  if (!orden.length) tb.innerHTML = '<tr><td colspan="4">Sin movimientos en 30 días.</td></tr>';
+  orden.forEach((m) => {
+    const tr = document.createElement("tr");
+    const que = m.tipo === "sello" ? `Sello · ${tarjetaDe(m.tarjeta).singular}` : m.tipo === "canje" ? `Premio · ${tarjetaDe(m.tarjeta).singular}` : `Anulación (${m.motivo || ""})`;
+    [fechaHora(m.fecha), que, nombre(m.tel), m.por].forEach((v) => tr.append(Object.assign(document.createElement("td"), { textContent: v })));
+    tb.append(tr);
+  });
+  t.append(tb);
+}
+async function pintarPersonal() {
+  const cont = $("#personal"); cont.innerHTML = "";
+  let lista = [];
+  try { lista = await almacen.personal(); } catch (e) { avisoError("No se pudo leer el personal", e); }
+  if (!lista.length) cont.append(Object.assign(document.createElement("p"), { className: "vacio", textContent: "Todavía no hay nadie más. Agrega el Gmail de tu mamá aquí abajo." }));
+  lista.forEach((p) => {
+    const f = document.createElement("div"); f.className = "fila-cliente"; f.style.cursor = "default";
+    const n = document.createElement("span"); n.className = "n"; n.textContent = `${p.nombre} · ${p.activo ? "puede entrar" : "desactivada"}`;
+    const b = document.createElement("button"); b.type = "button"; b.className = "btn btn-linea btn-chico"; b.textContent = p.activo ? "Desactivar" : "Activar";
+    b.style.gridRow = "span 2";
+    b.addEventListener("click", async () => { try { await almacen.guardarPersonal(p.correo, { nombre: p.nombre, activo: !p.activo }); pintarPersonal(); } catch (e) { avisoError("No se pudo cambiar", e); } });
+    const d = document.createElement("span"); d.className = "d"; d.textContent = p.correo;
+    f.append(n, b, d); cont.append(f);
+  });
+  const ic = $("#intentos"); ic.innerHTML = "";
+  let intentos = [];
+  try { intentos = await almacen.intentos(); } catch (e) { /* solo administrador */ }
+  const permitidos = new Set(lista.filter((p) => p.activo).map((p) => p.correo));
+  const otros = intentos.filter((i) => !permitidos.has((i.correo || "").toLowerCase()));
+  if (!otros.length) ic.append(Object.assign(document.createElement("p"), { className: "vacio", textContent: "Nadie ha intentado entrar sin permiso." }));
+  otros.forEach((i) => ic.append(Object.assign(document.createElement("p"), { className: "alerta", textContent: `${i.correo} (${i.nombre || "sin nombre"}) · ${fechaHora(i.fecha)}` })));
+}
+$("#form-personal").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const correo = $("#pe-correo").value.trim().toLowerCase(), nombre = $("#pe-nombre").value.trim().slice(0, 60);
+  const err = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo) ? "Escribe un correo válido." : !nombre ? "Escribe el nombre." : "";
+  if (err) { $("#pe-error").textContent = err; $("#pe-error").hidden = false; return; }
+  $("#pe-error").hidden = true;
+  try { await almacen.guardarPersonal(correo, { nombre, activo: true }); $("#pe-correo").value = ""; $("#pe-nombre").value = ""; pintarPersonal(); avisar(`✓ ${nombre} ya puede entrar`, `Que abra esta página en su celular y entre con ${correo}.`); }
+  catch (er) { avisoError("No se pudo dar acceso", er); }
 });
-$("#exportar").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(datos, null, 2)], { type: "application/json" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `club-pan-suizo-${hoyISO()}.json`;
+function csv(nombre, filas) {
+  const esc = (v) => { const s = v == null ? "" : String(v); return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  const texto = "﻿" + filas.map((f) => f.map(esc).join(";")).join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([texto], { type: "text/csv;charset=utf-8" })); a.download = nombre;
   document.body.append(a); a.click(); a.remove();
-  $("#copia-estado").textContent = `Copia preparada: club-pan-suizo-${hoyISO()}.json (${datos.clientes.length} clientes).`;
-});
-$("#importar").addEventListener("change", async (e) => {
-  const f = e.target.files[0]; if (!f) return;
+  $("#copia-estado").textContent = `Listo: ${nombre} (${filas.length - 1} filas).`;
+}
+$("#csv-clientes").addEventListener("click", () => csv(`club-clientes-${hoyISO()}.csv`, [["celular", "nombre", "cumpleaños", "inscrito", "inscribió", "autorizó datos", "sin mensajes", "última visita", ...ACTIVAS.map((t) => "sellos " + t.nombre.toLowerCase())],
+  ...clientes.map((c) => [c.tel, c.nombre, c.cumple || "", c.creado || "", c.creadoPor || "", c.fechaAutoriza || "", c.sinMensajes || "", c.ultimaVisita || "", ...ACTIVAS.map((t) => (c.resumen || {})[t.id] || 0)])]));
+$("#csv-movimientos").addEventListener("click", async () => {
   try {
-    const g = JSON.parse(await f.text());
-    if (!g || !Array.isArray(g.clientes)) throw new Error("formato");
-    datos = { clientes: g.clientes, ajustes: { ...AJUSTES_INICIALES, ...(g.ajustes || {}) }, sellosPorDia: g.sellosPorDia || {} };
-    guardar(); pintarAjustes(); pintarResultados();
-    $("#copia-estado").textContent = `Copia cargada: ${datos.clientes.length} clientes.`;
-  } catch (err) { $("#copia-estado").textContent = "Ese archivo no es una copia del club. Elige el .json que descargaste con «Descargar copia»."; }
-  e.target.value = "";
+    const movs = await almacen.movimientosDesde(new Date(Date.now() - 90 * DIA).toISOString());
+    csv(`club-movimientos-${hoyISO()}.csv`, [["fecha del servidor", "día", "tipo", "tarjeta", "celular", "cliente", "quién", "anula", "motivo"],
+      ...movs.sort((a, b) => (a.fecha || "").localeCompare(b.fecha || "")).map((m) => [m.fecha || "", m.dia, m.tipo, m.tarjeta, m.tel, (clientes.find((c) => c.tel === m.tel) || {}).nombre || "", m.por, m.anula || "", m.motivo || ""])]);
+  } catch (e) { avisoError("No se pudo preparar la copia", e); }
 });
-$("#borrar-ejemplos").addEventListener("click", () => {
-  datos.clientes = datos.clientes.filter((c) => !c.ejemplo); datos.sellosPorDia = {};
-  if (actual && actual.ejemplo) { actual = null; $("#ficha").hidden = true; }
-  guardar(); pintarResultados(); pintarListas();
+
+/* Clientes de la caja anterior (versión 1, guardada en este celular): se pasan solo nombre, celular, cumpleaños y
+   autorización. Los sellos viejos eran de otra tarjeta (10 compras) y no se convierten. */
+function clientesV1() {
+  try { const g = JSON.parse(localStorage.getItem("pan-suizo-club-v1") || "null"); return g && Array.isArray(g.clientes) ? g.clientes.filter((c) => !c.ejemplo && c.autoriza && /^3\d{9}$/.test(c.cel)) : []; } catch (e) { return []; }
+}
+function pintarImportarV1() {
+  const v1 = clientesV1().filter((c) => !clientes.some((x) => x.tel === c.cel));
+  $("#importar-v1").hidden = !v1.length || !almacen.usuario.admin;
+  $("#importar-v1-txt").textContent = `En este celular hay ${v1.length} ${v1.length === 1 ? "cliente" : "clientes"} de la caja anterior. Sus sellos viejos (tarjeta de 10 compras) no se pasan: anótalos si quieres respetarlos.`;
+}
+$("#importar-v1-btn").addEventListener("click", async () => {
+  let n = 0;
+  for (const c of clientesV1().filter((x) => !clientes.some((y) => y.tel === x.cel))) {
+    try { await almacen.crearCliente({ tel: c.cel, nombre: c.nombre.slice(0, 60), cumple: c.cumple || "", fechaAutoriza: c.fechaAutoriza, sinMensajes: c.sinMensajes || null }); n++; } catch (e) { /* ya estaba */ }
+  }
+  $("#copia-estado").textContent = `Listo: ${n} clientes pasados al club nuevo.`; pintarImportarV1();
 });
 
 /* ---------- pestañas ---------- */
 function mostrar(v) {
-  ["caja", "listas", "ajustes"].forEach((k) => { $("#v-" + k).hidden = k !== v; $("#p-" + k).setAttribute("aria-selected", String(k === v)); });
+  ["caja", "listas", "control"].forEach((k) => { $("#v-" + k).hidden = k !== v; $("#p-" + k).setAttribute("aria-selected", String(k === v)); });
   if (v === "listas") pintarListas();
-  if (v === "ajustes") pintarAjustes();
+  if (v === "control") pintarControl();
 }
-["caja", "listas", "ajustes"].forEach((k) => $("#p-" + k).addEventListener("click", () => mostrar(k)));
+["caja", "listas", "control"].forEach((k) => $("#p-" + k).addEventListener("click", () => mostrar(k)));
 setInterval(() => { if (!$("#v-listas").hidden) pintarListas(); }, 60000); // el horario cambia con el reloj
 
-pintarCifras(); pintarResultados();
+/* ---------- arranque ---------- */
+let dejarDeOir = [];
+function abrirCaja() {
+  dejarDeOir.forEach((f) => f && f()); dejarDeOir = [];
+  $("#v-entrar").hidden = true; $("#v-sin-permiso").hidden = true; $("#app").hidden = false;
+  pintarSesion();
+  dejarDeOir.push(almacen.escucharClientes((l) => {
+    clientes = l; pintarCifras();
+    if (!$("#ficha").hidden && actual) { actual = clientes.find((c) => c.tel === actual.tel) || actual; pintarDatosFicha(); }
+    else pintarResultados();
+  }));
+  dejarDeOir.push(almacen.escucharHoy((l) => { movsHoy = l; pintarCifras(); }));
+  mostrar("caja");
+}
+(async function arrancar() {
+  if (!FIREBASE) { almacen = almacenLocal(); abrirCaja(); return; }
+  almacen = almacenNube(FIREBASE);
+  try { await almacen.cargar(); }
+  catch (e) { $("#sesion-txt").textContent = "No se pudo cargar el registro seguro. Revisa el internet y vuelve a abrir la página."; return; }
+  pintarSesion();
+  almacen.alCambiarSesion(async (u) => {
+    if (!u) { almacen.usuario = null; pintarSesion(); $("#app").hidden = true; $("#v-sin-permiso").hidden = true; $("#v-entrar").hidden = false; return; }
+    $("#sesion-txt").textContent = "Revisando permisos…";
+    const ok = await almacen.permisos(u);
+    pintarSesion();
+    if (ok) abrirCaja();
+    else { $("#app").hidden = true; $("#v-entrar").hidden = true; $("#v-sin-permiso").hidden = false; $("#sin-permiso-txt").textContent = `Entraste como ${u.email}.`; }
+  });
+})();
+$("#entrar").addEventListener("click", async () => {
+  $("#entrar-error").hidden = true;
+  try { await almacen.entrar(); }
+  catch (e) { $("#entrar-error").textContent = e.code === "auth/unauthorized-domain" ? "Esta dirección no está autorizada en Firebase (Authentication → Configuración → Dominios autorizados)." : "No se pudo entrar. Inténtalo otra vez."; $("#entrar-error").hidden = false; }
+});
+$("#reintentar").addEventListener("click", () => location.reload()); // la sesión sigue abierta: al recargar se revisan otra vez los permisos
+$("#salir").addEventListener("click", async () => { if (await confirmar("¿Salir de la caja?", "Para volver a entrar necesitarás la cuenta de Google.", "Sí, salir")) { await almacen.salir(); location.reload(); } });
 </script>
 
 </body>

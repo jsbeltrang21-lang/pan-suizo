@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F0B08">
+<link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../img/icono-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<meta name="robots" content="noindex, nofollow">
+<title>Pedidos de Pan Suizo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Lista diaria de pedidos a proveedores de Pan Suizo: qué pedir hoy, qué quedó pendiente, qué toca mañana y el almuerzo del día.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* Concepto: la libreta de pedidos pegada en la nevera, pero que ya sabe qué día es. Misma identidad que la carta
+   (rojo y oro del escudo, fondo de horno). Letra grande y una sola cosa por renglón: se usa de pie, rápido y con
+   las manos ocupadas. Lo que toca hoy arriba; lo de mañana y el almuerzo, debajo. */
+:root {
+  --fondo: #0F0B08;
+  --superficie: #1A140F;
+  --velo-sup: rgba(244, 232, 212, .06);
+  --borde: rgba(244, 232, 212, .14);
+  --tinta: #F4E8D4;
+  --tinta-suave: #BBA98F;
+  --tinta-tenue: #8A7A63;
+  --oro: #F2C14E;
+  --oro-relleno: #F2C14E;
+  --sobre-oro: #1C1206;
+  --rojo: #B82227;
+  --sobre-rojo: #FFF6EC;
+  --ok: #86C996;
+  --alerta: #FF8F86;
+  --resplandor: rgba(242, 193, 78, .20);
+  --f-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --f-texto: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --fondo: #F6EEDF; --superficie: #FFFBF4; --velo-sup: rgba(60, 35, 15, .05); --borde: rgba(60, 35, 15, .15);
+    --tinta: #2A1A10; --tinta-suave: #6A5442; --tinta-tenue: #8C7763; --oro: #8F6200; --oro-relleno: #F2C14E;
+    --sobre-oro: #1C1206; --rojo: #A71E21; --sobre-rojo: #FFF6EC; --ok: #1F7A45; --alerta: #B3261E;
+    --resplandor: rgba(242, 193, 78, .35); color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --fondo: #F6EEDF; --superficie: #FFFBF4; --velo-sup: rgba(60, 35, 15, .05); --borde: rgba(60, 35, 15, .15);
+  --tinta: #2A1A10; --tinta-suave: #6A5442; --tinta-tenue: #8C7763; --oro: #8F6200; --oro-relleno: #F2C14E;
+  --sobre-oro: #1C1206; --rojo: #A71E21; --sobre-rojo: #FFF6EC; --ok: #1F7A45; --alerta: #B3261E;
+  --resplandor: rgba(242, 193, 78, .35); color-scheme: light;
+}
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fondo); color: var(--tinta); font-family: var(--f-texto); font-size: 17px; line-height: 1.45; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--oro); outline-offset: 2px; }
+.envoltura { max-width: 640px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px 48px; display: grid; gap: 16px; }
+.cursiva { font-family: var(--f-display); font-style: italic; font-weight: 700; }
+.ceja { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); margin: 0; }
+.nota { font-size: 14px; color: var(--tinta-tenue); margin: 0; }
+
+.cab { display: flex; align-items: center; gap: 12px; }
+.cab svg { width: 46px; height: 46px; flex: none; }
+.cab h1 { margin: 0; font-size: 32px; line-height: 1; }
+.cab p { margin: 4px 0 0; font-size: 15px; color: var(--tinta-suave); }
+.pestanas { display: flex; gap: 6px; padding: 4px; border: 1px solid var(--borde); border-radius: 999px; background: var(--velo-sup); }
+.pestanas button { flex: 1; border: 0; background: transparent; border-radius: 999px; padding: 10px 8px; font-weight: 700; font-size: 15px; color: var(--tinta-suave); }
+.pestanas button[aria-selected="true"] { background: var(--oro-relleno); color: var(--sobre-oro); }
+
+.resumen { margin: 0; padding: 14px 16px; border-radius: 16px; background: var(--superficie); border: 1px solid var(--borde); font-size: 16px; }
+.resumen b { font-size: 22px; font-variant-numeric: tabular-nums; }
+.aviso { padding: 12px 14px; border-radius: 14px; border: 1px dashed color-mix(in srgb, var(--oro) 60%, transparent); font-size: 14px; color: var(--tinta-suave); margin: 0; }
+
+.grupo { border: 1px solid var(--borde); border-radius: 20px; background: var(--superficie); overflow: hidden; }
+.grupo.hecho { border-color: color-mix(in srgb, var(--ok) 60%, transparent); }
+.grupo-cab { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; padding: 16px 16px 10px; }
+.grupo-cab h2 { margin: 0; font-size: 28px; line-height: 1.05; }
+.grupo-cab .frec { margin: 4px 0 0; font-size: 14px; color: var(--tinta-suave); }
+.contador { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--oro); white-space: nowrap; font-size: 16px; }
+.grupo.hecho .contador { color: var(--ok); }
+.chip { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; margin: 6px 6px 0 0; }
+.chip.pendiente { border: 1px solid var(--alerta); color: var(--alerta); }
+.chip.falta { background: var(--rojo); color: var(--sobre-rojo); }
+.subtitulo { margin: 6px 16px 2px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-tenue); }
+.items { list-style: none; margin: 0; padding: 0 8px 8px; display: grid; }
+.item { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 12px 8px; border: 0; border-top: 1px solid var(--borde); background: transparent; min-height: 56px; }
+.item:first-child { border-top: 0; }
+.caja-check { width: 30px; height: 30px; flex: none; border-radius: 9px; border: 2px solid var(--oro); display: grid; place-items: center; }
+.caja-check svg { width: 20px; height: 20px; opacity: 0; }
+.item[aria-pressed="true"] .caja-check { background: var(--ok); border-color: var(--ok); color: #0F0B08; }
+.item[aria-pressed="true"] .caja-check svg { opacity: 1; }
+.item[aria-pressed="true"] .txt { color: var(--tinta-tenue); text-decoration: line-through; text-decoration-thickness: 1px; }
+.item .txt { flex: 1; min-width: 0; font-size: 18px; }
+.item .cant { display: block; font-size: 14px; color: var(--tinta-suave); text-decoration: none; }
+.grupo-pie { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 16px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 13px 18px; font-weight: 700; text-decoration: none; text-align: center; font-size: 16px; }
+.btn-rojo { background: var(--rojo); color: var(--sobre-rojo); }
+.btn-oro { background: var(--oro-relleno); color: var(--sobre-oro); }
+.btn-linea { background: transparent; border: 1px solid var(--borde); color: var(--tinta); }
+.btn-chico { padding: 9px 14px; font-size: 14px; }
+.grande { width: 100%; padding: 16px; font-size: 17px; }
+.hecho-txt { margin: 0; padding: 0 16px 16px; color: var(--ok); font-weight: 700; font-size: 15px; }
+
+.panel { border: 1px solid var(--borde); border-radius: 20px; padding: 16px; background: var(--superficie); display: grid; gap: 12px; }
+.panel h2 { margin: 0; font-size: 26px; line-height: 1.05; }
+.panel h3 { margin: 0; font-size: 20px; }
+.faltante { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--borde); }
+.faltante:first-of-type { border-top: 0; }
+.agregar { display: flex; gap: 8px; }
+.agregar input { flex: 1; min-width: 0; padding: 13px; border-radius: 14px; border: 1px solid var(--borde); background: var(--fondo); font-size: 16px; }
+.menu-dia { display: grid; gap: 8px; margin: 0; }
+.menu-dia div { display: grid; grid-template-columns: 96px 1fr; gap: 8px; }
+.menu-dia dt { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--oro); padding-top: 3px; }
+.menu-dia dd { margin: 0; font-size: 16px; }
+.manana { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+
+.semana { width: 100%; border-collapse: collapse; font-size: 15px; }
+.semana th, .semana td { text-align: left; vertical-align: top; padding: 10px 6px; border-top: 1px solid var(--borde); }
+.semana th { width: 92px; font-weight: 700; }
+.semana tr.hoy th, .semana tr.hoy td { color: var(--oro); }
+
+.campo { display: grid; gap: 6px; }
+.campo label, .campo .etq { font-size: 14px; font-weight: 700; }
+.campo input, .campo select, .campo textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--borde); background: var(--fondo); font-size: 16px; }
+.dias { display: flex; flex-wrap: wrap; gap: 5px; }
+.dias label { position: relative; }
+.dias input { position: absolute; opacity: 0; inset: 0; }
+.dias span { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--borde); font-weight: 700; font-size: 15px; }
+.dias input:checked + span { background: var(--oro-relleno); color: var(--sobre-oro); border-color: var(--oro); }
+.dias input:focus-visible + span { outline: 2px solid var(--oro); outline-offset: 2px; }
+.ok { color: var(--ok); font-weight: 700; margin: 0; }
+.fila-botones { display: flex; flex-wrap: wrap; gap: 8px; }
+.fila-botones > * { flex: 1 1 180px; }
+</style>
+</head>
+<body>
+
+<div class="envoltura">
+  <header class="cab">
+    <svg viewBox="0 0 48 48" role="img" aria-label="Escudo de Pan Suizo">
+      <circle cx="24" cy="24" r="24" fill="#A71E21"/>
+      <path d="M14 13.5l4 3.2 6-6.7 6 6.7 4-3.2v13c0 6.6-4.5 11.3-10 13.6C18.5 37.8 14 33.1 14 26.5z" fill="none" stroke="#FCD150" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M24 12v27.5M14.6 23.5h18.8" stroke="#FCD150" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div><h1 class="cursiva">Pedidos de hoy</h1><p id="fecha-hoy"></p></div>
+  </header>
+
+  <nav class="pestanas" role="tablist" aria-label="Secciones">
+    <button type="button" role="tab" id="p-hoy" aria-selected="true" aria-controls="v-hoy">Hoy</button>
+    <button type="button" role="tab" id="p-semana" aria-selected="false" aria-controls="v-semana">La semana</button>
+    <button type="button" role="tab" id="p-ajustes" aria-selected="false" aria-controls="v-ajustes">Ajustes</button>
+  </nav>
+
+  <!-- ================= HOY ================= -->
+  <section id="v-hoy" role="tabpanel" aria-labelledby="p-hoy" style="display:grid;gap:16px">
+    <p class="resumen" id="resumen" role="status"></p>
+    <p class="aviso" id="aviso-propuesta" hidden>Los días de Alpina, harina, grasa, levadura, bolsas y verduras son una <b>propuesta</b>. Si tu mamá pide otros días, cámbialos una vez en «Ajustes» y quedan guardados.</p>
+    <div id="lista-hoy" style="display:grid;gap:14px"></div>
+
+    <section class="panel" aria-labelledby="t-faltan">
+      <h2 class="cursiva" id="t-faltan">¿Se acabó algo?</h2>
+      <p class="nota">Toca lo que se acabó y aparece arriba como «Falta» hasta que lo pidas.</p>
+      <div id="faltantes"></div>
+      <form class="agregar" id="form-falta" autocomplete="off">
+        <label for="otra-falta" hidden>Otra cosa que falta</label>
+        <input id="otra-falta" placeholder="Otra cosa que falta (ej.: champiñones)">
+        <button type="submit" class="btn btn-oro">Anotar</button>
+      </form>
+    </section>
+
+    <section class="panel" id="panel-almuerzo" aria-labelledby="t-almuerzo">
+      <p class="ceja">Almuerzo de hoy</p>
+      <h2 class="cursiva" id="t-almuerzo"></h2>
+      <dl class="menu-dia" id="almuerzo-hoy"></dl>
+    </section>
+
+    <section class="panel" aria-labelledby="t-manana">
+      <p class="ceja">Para ir pensando</p>
+      <h2 class="cursiva" id="t-manana"></h2>
+      <ul class="manana" id="lista-manana"></ul>
+      <p class="nota" id="almuerzo-manana"></p>
+    </section>
+
+    <section class="panel" aria-labelledby="t-recordar">
+      <h2 class="cursiva" id="t-recordar">Que el celular le recuerde</h2>
+      <p class="nota">Crea un aviso diario en Google Calendar que abre esta lista. Se hace una sola vez, desde el celular de tu mamá.</p>
+      <div class="campo"><label for="hora-aviso">Hora del aviso</label>
+        <select id="hora-aviso"></select></div>
+      <a class="btn btn-rojo grande" id="btn-calendario" href="#" target="_blank" rel="noopener">Crear el aviso en Google Calendar</a>
+      <button type="button" class="btn btn-linea btn-chico" id="btn-ics">Descargar el aviso para otro calendario (.ics)</button>
+      <p class="nota">En la pantalla de Google Calendar revisa que diga «Todos los días» y toca «Guardar». Si prefieres, también sirve una alarma diaria del reloj del celular con el nombre «Pedidos».</p>
+    </section>
+  </section>
+
+  <!-- ================= SEMANA ================= -->
+  <section id="v-semana" role="tabpanel" aria-labelledby="p-semana" hidden style="display:grid;gap:14px">
+    <div class="panel">
+      <h2 class="cursiva">Qué se pide cada día</h2>
+      <table class="semana" id="tabla-semana"></table>
+      <p class="nota" id="nota-mes"></p>
+    </div>
+    <div class="panel">
+      <h2 class="cursiva">Almuerzos de la semana</h2>
+      <div id="almuerzos-semana" style="display:grid;gap:16px"></div>
+    </div>
+  </section>
+
+  <!-- ================= AJUSTES ================= -->
+  <section id="v-ajustes" role="tabpanel" aria-labelledby="p-ajustes" hidden style="display:grid;gap:14px">
+    <p class="nota">Cambia los días de cada pedido y lo que lleva. Escribe un producto por renglón; si quieres, después de una raya « | » la cantidad (ej.: <i>Harina | 10 bultos</i>). Los cambios se guardan en este celular.</p>
+    <form id="form-ajustes" style="display:grid;gap:14px" novalidate></form>
+    <p class="ok" id="guardado" role="status" hidden>Cambios guardados.</p>
+    <div class="fila-botones">
+      <button type="button" class="btn btn-rojo" id="guardar-ajustes">Guardar cambios</button>
+      <button type="button" class="btn btn-linea" id="restaurar">Volver a la lista original</button>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ===== Pedidos a proveedores · Pan Suizo =====
+   Lista de la dueña («RUTINA DE PEDIDOS MAMÁ SEMANALMENTE», 23/10/2026). La frecuencia es suya; los días exactos
+   marcados con «propuesta» los eligió el asistente y se cambian en Ajustes. Todo se guarda en este navegador
+   (localStorage, clave "pan-suizo-pedidos-v1"); no se envía nada a ningún lado. */
+const CLAVE = "pan-suizo-pedidos-v1";
+const URL_PUBLICA = "https://jsbeltrang21-lang.github.io/pan-suizo/pedidos/";
+
+/* frecuencia: { semana: [días 0 = domingo … 6 = sábado] } · { mes: [días del mes] } · { cuandoSeAcabe: true } */
+const GRUPOS_INICIALES = [
+  { id: "carnes", nombre: "Carnes", frecuenciaTxt: "todos los días", frecuencia: { semana: [0, 1, 2, 3, 4, 5, 6] },
+    items: [["Carne"], ["Pollo"], ["Pechuga"], ["Costilla"]] },
+  { id: "gaseosas", nombre: "Gaseosas, jugos y agua", frecuenciaTxt: "casi todos los días", frecuencia: { semana: [1, 2, 3, 4, 5, 6] },
+    secciones: { 0: "Coca-Cola", 5: "Pony Malta", 7: "Postobón y Hit" },
+    items: [["Coca-Cola 350 ml de vidrio", "1 canasta"], ["Coca-Cola 3 litros"], ["Coca-Cola 1,5 litros"], ["Coca-Cola mini 250 ml plástica"],
+      ["Coca-Cola 400 ml no retornable"], ["Pony Malta 330 ml plástica"], ["Pony Malta 2 litros plástica"],
+      ["Hit de botella plástica: naranja piña"], ["Hit de botella plástica: mango"], ["Hit de botella plástica: mora"], ["Hit de botella plástica: lulo"],
+      ["Colombiana"], ["Manzana Postobón"], ["Agua Cristal personal"], ["Agua Cristal con gas personal"], ["Hit en caja con pitillo"]] },
+  { id: "alpina", nombre: "Alpina", frecuenciaTxt: "dos veces por semana", frecuencia: { semana: [1, 4] }, propuesta: true,
+    items: [["Yogur de melocotón"], ["Yogur de fresa"], ["Bon Yurt"], ["Leche chocolatada Alpina"], ["Gelatinas"], ["Yogur griego"], ["Yogo Yogo premio"]] },
+  { id: "levadura", nombre: "Levadura y extractos", frecuenciaTxt: "dos veces por semana", frecuencia: { semana: [1, 4] }, propuesta: true,
+    items: [["Levadura"], ["Extractos para el pan"]] },
+  { id: "verduras", nombre: "Verduras y fruta (Abastos)", frecuenciaTxt: "tres veces por semana", frecuencia: { semana: [1, 3, 5] }, propuesta: true,
+    items: [["Verduras"], ["Fruta"]] },
+  { id: "grasa", nombre: "Grasa para el pan", frecuenciaTxt: "una vez por semana", frecuencia: { semana: [1] }, propuesta: true,
+    items: [["Grasa", "4 cajas"]] },
+  { id: "bolsas", nombre: "Bolsas plásticas", frecuenciaTxt: "una vez por semana", frecuencia: { semana: [1] }, propuesta: true,
+    items: [["Bolsas plásticas"]] },
+  { id: "harina", nombre: "Harina", frecuenciaTxt: "dos veces al mes (20 bultos al mes)", frecuencia: { mes: [1, 15] }, propuesta: true,
+    items: [["Harina", "10 bultos"]] },
+  { id: "desechables", nombre: "Desechables", frecuenciaTxt: "cuando se acaben", frecuencia: { cuandoSeAcabe: true },
+    items: [["Desechables"]] },
+];
+
+/* Almuerzos de lunes a viernes, según la dueña. Misma lista que ALMUERZOS en carta.html (construir_sitio.py lo comprueba). */
+const ALMUERZOS = {
+  1: { sopa: "Sopa del día", principios: ["Lentejas", "Frijoles", "Ahuyama"], carnes: ["Pechuga a la plancha", "Pollo en salsa de champiñones", "Carne a la plancha", "Chuleta de cerdo"], jugo: "Mora" },
+  2: { sopa: "Cuchuco de trigo", principios: ["Frijoles", "Garbanzos", "Verdura con mayonesa"], carnes: ["Pechuga a la plancha", "Pollo dorado", "Carne asada", "Chuleta de cerdo"], jugo: "Guayaba" },
+  3: { sopa: "Sopa de verduras", principios: ["Frijoles", "Espaguetis", "Acelgas"], carnes: ["Carne en bistec", "Pechuga a la plancha", "Pollo dorado", "Chuleta de cerdo"], jugo: null },
+  4: { especial: "Sudado de pollo con yuca, papa, arroz y plátano", sopa: "Sopa de pasta", principios: ["Frijoles", "Pepino", "Guiso"], carnes: ["Pechuga a la plancha", "Carne asada", "Chuleta de cerdo"], jugo: "Maracuyá" },
+  5: { sopa: "Sancocho", principios: ["Frijoles", "Zucchini", "Espaguetis"], carnes: ["Pechuga a la plancha", "Carne asada", "Chuleta de cerdo", "Pollo apanado"], jugo: "Limonada" },
+};
+
+const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const INICIAL = ["D", "L", "M", "X", "J", "V", "S"];
+const $ = (s) => document.querySelector(s);
+const fechaLocal = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const masDias = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const mayus = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+const fechaLarga = (d) => mayus(d.toLocaleDateString("es-CO", { weekday: "long", day: "numeric", month: "long" }));
+const SVG_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+/* ---------- datos guardados ---------- */
+let datos = { grupos: null, marcas: {}, faltantes: [], horaAviso: "07:00" };
+try { const g = JSON.parse(localStorage.getItem(CLAVE) || "null"); if (g && typeof g === "object") datos = { ...datos, ...g }; } catch (e) { /* sin almacenamiento: queda en memoria */ }
+if (!datos.desde) { datos.desde = fechaLocal(new Date()); guardar(); } // lo de antes de empezar a usar la lista no cuenta como pendiente
+function guardar() {
+  const limite = fechaLocal(masDias(new Date(), -14)); // las marcas de más de 2 semanas ya no sirven
+  Object.keys(datos.marcas).forEach((k) => { if (k < limite) delete datos.marcas[k]; });
+  try { localStorage.setItem(CLAVE, JSON.stringify(datos)); } catch (e) { /* sin almacenamiento */ }
+}
+const grupos = () => datos.grupos || GRUPOS_INICIALES;
+const claveItem = (g, it) => `${g.id}:${it[0]}`;
+const marcasDe = (dia) => (datos.marcas[dia] = datos.marcas[dia] || {});
+
+/* ---------- qué toca cada día ---------- */
+function tocaEl(g, d) {
+  const f = g.frecuencia;
+  if (f.semana) return f.semana.includes(d.getDay());
+  if (f.mes) return f.mes.includes(d.getDate());
+  return false;
+}
+const completo = (g, dia) => g.items.every((it) => (datos.marcas[dia] || {})[claveItem(g, it)]);
+function frecuenciaTexto(g) {
+  const f = g.frecuencia;
+  if (f.semana) return f.semana.length === 7 ? "todos los días" : f.semana.length === 6 && !f.semana.includes(0) ? "de lunes a sábado" : f.semana.map((i) => DIAS[i]).join(", ").replace(/, ([^,]*)$/, " y $1");
+  if (f.mes) return "los días " + f.mes.join(" y ") + " de cada mes";
+  return "cuando se acabe";
+}
+
+/* ---------- HOY ---------- */
+function pintarHoy() {
+  const ahora = new Date(), hoy = fechaLocal(ahora), ayer = masDias(ahora, -1);
+  $("#fecha-hoy").textContent = fechaLarga(ahora);
+  const lista = $("#lista-hoy"); lista.innerHTML = "";
+  const faltaIds = new Set(datos.faltantes.map((f) => f.id));
+  const tarjetas = [];
+  grupos().forEach((g) => {
+    const tocaHoy = tocaEl(g, ahora);
+    const pendienteAyer = !tocaHoy && fechaLocal(ayer) >= datos.desde && tocaEl(g, ayer) && !completo(g, fechaLocal(ayer));
+    const falta = g.frecuencia.cuandoSeAcabe && faltaIds.has(g.id);
+    if (tocaHoy || pendienteAyer || falta) tarjetas.push({ g, pendienteAyer, falta });
+  });
+  datos.faltantes.filter((f) => f.libre).forEach((f) => tarjetas.push({ g: { id: f.id, nombre: f.texto, items: [[f.texto]], libre: true }, falta: true }));
+  // lo que falta y lo pendiente de ayer van primero
+  tarjetas.sort((a, b) => (b.falta || b.pendienteAyer ? 1 : 0) - (a.falta || a.pendienteAyer ? 1 : 0));
+  let hechos = 0;
+  tarjetas.forEach((t) => { const c = tarjetaGrupo(t, hoy); if (c.hecho) hechos++; lista.append(c.el); });
+  const n = tarjetas.length;
+  $("#resumen").innerHTML = "";
+  const b = document.createElement("b"); b.textContent = n ? `${hechos} de ${n}` : "Nada";
+  $("#resumen").append(b, document.createTextNode(n ? (hechos === n ? " pedidos hechos. ¡Listo por hoy!" : ` pedidos hechos hoy. Toca cada producto cuando lo hayas revisado o pedido.`) : " para pedir hoy."));
+  $("#aviso-propuesta").hidden = !!datos.grupos;
+  pintarFaltantes(); pintarAlmuerzo(); pintarManana();
+}
+function tarjetaGrupo({ g, pendienteAyer, falta }, hoy) {
+  const marcas = marcasDe(hoy);
+  const el = document.createElement("article"); el.className = "grupo";
+  const cab = document.createElement("div"); cab.className = "grupo-cab";
+  const izq = document.createElement("div");
+  const h = document.createElement("h2"); h.className = "cursiva"; h.textContent = g.nombre;
+  izq.append(h);
+  if (!g.libre) { const p = document.createElement("p"); p.className = "frec"; p.textContent = "Se pide " + frecuenciaTexto(g); izq.append(p); }
+  if (pendienteAyer) { const c = document.createElement("span"); c.className = "chip pendiente"; c.textContent = "Quedó pendiente de ayer"; izq.append(c); }
+  if (falta) { const c = document.createElement("span"); c.className = "chip falta"; c.textContent = "Falta"; izq.append(c); }
+  const cont = document.createElement("span"); cont.className = "contador";
+  cab.append(izq, cont); el.append(cab);
+  const ul = document.createElement("ul"); ul.className = "items";
+  const pintarCuenta = () => {
+    const n = g.items.filter((it) => marcas[claveItem(g, it)]).length, total = g.items.length;
+    cont.textContent = `${n}/${total}`; el.classList.toggle("hecho", n === total);
+    return n === total;
+  };
+  g.items.forEach((it, i) => {
+    if (g.secciones && g.secciones[i]) { const s = document.createElement("li"); s.className = "subtitulo"; s.textContent = g.secciones[i]; ul.append(s); }
+    const li = document.createElement("li");
+    const b = document.createElement("button"); b.type = "button"; b.className = "item";
+    const k = claveItem(g, it);
+    b.setAttribute("aria-pressed", String(!!marcas[k]));
+    b.innerHTML = `<span class="caja-check">${SVG_CHECK}</span><span class="txt"></span>`;
+    b.querySelector(".txt").textContent = it[0];
+    if (it[1]) { const c = document.createElement("span"); c.className = "cant"; c.textContent = it[1]; b.querySelector(".txt").append(c); }
+    b.addEventListener("click", () => {
+      if (marcas[k]) delete marcas[k]; else marcas[k] = new Date().toISOString();
+      b.setAttribute("aria-pressed", String(!!marcas[k]));
+      if (pintarCuenta() && (falta || g.libre)) quitarFaltante(g.id);
+      guardar(); pintarResumenSolo();
+    });
+    li.append(b); ul.append(li);
+  });
+  el.append(ul);
+  const pie = document.createElement("div"); pie.className = "grupo-pie";
+  const todo = document.createElement("button"); todo.type = "button"; todo.className = "btn btn-linea btn-chico";
+  todo.textContent = g.items.length > 1 ? "Ya hice todo este pedido" : "Ya lo pedí";
+  todo.addEventListener("click", () => {
+    g.items.forEach((it) => { marcas[claveItem(g, it)] = marcas[claveItem(g, it)] || new Date().toISOString(); });
+    if (falta || g.libre) quitarFaltante(g.id);
+    guardar(); pintarHoy();
+  });
+  pie.append(todo); el.append(pie);
+  const hecho = pintarCuenta();
+  return { el, hecho };
+}
+function pintarResumenSolo() {
+  const tarjetas = [...document.querySelectorAll("#lista-hoy .grupo")];
+  const hechos = tarjetas.filter((t) => t.classList.contains("hecho")).length;
+  $("#resumen").innerHTML = "";
+  const b = document.createElement("b"); b.textContent = `${hechos} de ${tarjetas.length}`;
+  $("#resumen").append(b, document.createTextNode(hechos === tarjetas.length ? " pedidos hechos. ¡Listo por hoy!" : " pedidos hechos hoy. Toca cada producto cuando lo hayas revisado o pedido."));
+}
+
+/* ---------- se acabó ---------- */
+function quitarFaltante(id) { datos.faltantes = datos.faltantes.filter((f) => f.id !== id); }
+function pintarFaltantes() {
+  const cont = $("#faltantes"); cont.innerHTML = "";
+  grupos().filter((g) => g.frecuencia.cuandoSeAcabe).forEach((g) => {
+    const fila = document.createElement("div"); fila.className = "faltante";
+    const t = document.createElement("span"); t.textContent = g.nombre;
+    const marcado = datos.faltantes.some((f) => f.id === g.id);
+    const b = document.createElement("button"); b.type = "button"; b.className = "btn btn-chico " + (marcado ? "btn-linea" : "btn-rojo");
+    b.textContent = marcado ? "Ya está en la lista" : "Se acabó";
+    b.disabled = marcado;
+    b.addEventListener("click", () => { datos.faltantes.push({ id: g.id, desde: new Date().toISOString() }); guardar(); pintarHoy(); scrollTo({ top: 0, behavior: "smooth" }); });
+    fila.append(t, b); cont.append(fila);
+  });
+  datos.faltantes.filter((f) => f.libre).forEach((f) => {
+    const fila = document.createElement("div"); fila.className = "faltante";
+    const t = document.createElement("span"); t.textContent = f.texto;
+    const b = document.createElement("button"); b.type = "button"; b.className = "btn btn-linea btn-chico"; b.textContent = "Quitar";
+    b.addEventListener("click", () => { quitarFaltante(f.id); guardar(); pintarHoy(); });
+    fila.append(t, b); cont.append(fila);
+  });
+}
+$("#form-falta").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const texto = $("#otra-falta").value.trim().replace(/\s+/g, " ");
+  if (!texto) return;
+  datos.faltantes.push({ id: "libre-" + Date.now().toString(36), texto, libre: true, desde: new Date().toISOString() });
+  $("#otra-falta").value = ""; guardar(); pintarHoy();
+});
+
+/* ---------- almuerzo y mañana ---------- */
+function filasMenu(dl, m) {
+  dl.innerHTML = "";
+  const fila = (t, v) => { if (!v) return; const d = document.createElement("div"); const dt = document.createElement("dt"); dt.textContent = t; const dd = document.createElement("dd"); dd.textContent = v; d.append(dt, dd); dl.append(d); };
+  fila("Especial", m.especial);
+  fila("Sopa", m.sopa);
+  fila("Principios", m.principios.join(" · "));
+  fila("Carnes", m.carnes.join(" · "));
+  fila("Jugo", m.jugo || "Jugo del día");
+}
+function pintarAlmuerzo() {
+  const m = ALMUERZOS[new Date().getDay()];
+  $("#panel-almuerzo").hidden = !m;
+  if (!m) return;
+  $("#t-almuerzo").textContent = m.especial ? "Hoy hay sudado de pollo" : `Hoy: ${m.sopa.toLowerCase()}`;
+  filasMenu($("#almuerzo-hoy"), m);
+}
+function pintarManana() {
+  const man = masDias(new Date(), 1);
+  $("#t-manana").textContent = `Mañana ${DIAS[man.getDay()]} toca pedir`;
+  const ul = $("#lista-manana"); ul.innerHTML = "";
+  const g = grupos().filter((x) => tocaEl(x, man));
+  (g.length ? g.map((x) => x.nombre) : ["Nada fijo"]).forEach((t) => { const li = document.createElement("li"); li.textContent = t; ul.append(li); });
+  const m = ALMUERZOS[man.getDay()];
+  $("#almuerzo-manana").textContent = m ? `Almuerzo de mañana: ${m.especial ? m.especial.toLowerCase() + ", " : ""}${m.sopa.toLowerCase()}, carnes: ${m.carnes.join(", ").toLowerCase()}.` : "Mañana no hay almuerzo (solo de lunes a viernes).";
+}
+
+/* ---------- recordatorio ---------- */
+function horaAviso() { const [h, m] = (datos.horaAviso || "07:00").split(":").map(Number); return { h, m }; }
+function inicioAviso() { const { h, m } = horaAviso(); const d = masDias(new Date(), 1); d.setHours(h, m, 0, 0); return d; }
+const utc = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+const urlPedidos = () => (location.protocol === "https:" ? location.href.split("#")[0] : URL_PUBLICA);
+function pintarRecordatorio() {
+  const sel = $("#hora-aviso");
+  if (!sel.options.length) for (let x = 5 * 60; x <= 11 * 60; x += 30) { const v = `${String(Math.floor(x / 60)).padStart(2, "0")}:${String(x % 60).padStart(2, "0")}`; const d = new Date(2026, 0, 1, Math.floor(x / 60), x % 60); sel.append(new Option(d.toLocaleTimeString("es-CO", { hour: "numeric", minute: "2-digit" }), v)); }
+  sel.value = datos.horaAviso;
+  const ini = inicioAviso(), fin = new Date(ini.getTime() + 15 * 60000);
+  const p = new URLSearchParams({ action: "TEMPLATE", text: "Pan Suizo · ¿Qué pido hoy?", dates: `${utc(ini)}/${utc(fin)}`, ctz: "America/Bogota",
+    details: `Abre la lista de pedidos de hoy: ${urlPedidos()}`, recur: "RRULE:FREQ=DAILY" });
+  $("#btn-calendario").href = "https://calendar.google.com/calendar/render?" + p.toString();
+}
+$("#hora-aviso").addEventListener("change", (e) => { datos.horaAviso = e.target.value; guardar(); pintarRecordatorio(); });
+$("#btn-ics").addEventListener("click", () => {
+  const esc = (t) => t.replace(/([,;\\])/g, "\\$1");
+  const ini = inicioAviso();
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Pan Suizo//Pedidos//ES", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
+    "UID:pedidos-diarios-" + utc(ini) + "@pan-suizo", "DTSTAMP:" + utc(new Date()), "DTSTART:" + utc(ini), "DURATION:PT15M", "RRULE:FREQ=DAILY",
+    "SUMMARY:" + esc("Pan Suizo · ¿Qué pido hoy?"), "DESCRIPTION:" + esc("Abre la lista de pedidos de hoy: " + urlPedidos()), "URL:" + urlPedidos(),
+    "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + esc("¿Qué pido hoy?"), "TRIGGER:PT0M", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n") + "\r\n";
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" })); a.download = "aviso-pedidos-pan-suizo.ics";
+  document.body.append(a); a.click(); a.remove();
+});
+
+/* ---------- SEMANA ---------- */
+function pintarSemana() {
+  const t = $("#tabla-semana"); t.innerHTML = "";
+  const hoy = new Date().getDay();
+  [1, 2, 3, 4, 5, 6, 0].forEach((i) => {
+    const tr = document.createElement("tr"); if (i === hoy) tr.className = "hoy";
+    const th = document.createElement("th"); th.scope = "row"; th.textContent = mayus(DIAS[i]);
+    const td = document.createElement("td");
+    td.textContent = grupos().filter((g) => g.frecuencia.semana && g.frecuencia.semana.includes(i)).map((g) => g.nombre).join(" · ") || "—";
+    tr.append(th, td); t.append(tr);
+  });
+  const mensuales = grupos().filter((g) => g.frecuencia.mes);
+  $("#nota-mes").textContent = mensuales.map((g) => `${g.nombre}: ${frecuenciaTexto(g)}`).join(" · ") + (mensuales.length ? ". " : "") + "Desechables: cuando se acaben.";
+  const cont = $("#almuerzos-semana"); cont.innerHTML = "";
+  [1, 2, 3, 4, 5].forEach((i) => {
+    const w = document.createElement("div");
+    const h = document.createElement("h3"); h.className = "cursiva"; h.textContent = mayus(DIAS[i]) + (i === hoy ? " (hoy)" : "");
+    const dl = document.createElement("dl"); dl.className = "menu-dia"; filasMenu(dl, ALMUERZOS[i]);
+    w.append(h, dl); cont.append(w);
+  });
+}
+
+/* ---------- AJUSTES ---------- */
+function pintarAjustes() {
+  const f = $("#form-ajustes"); f.innerHTML = "";
+  grupos().forEach((g, gi) => {
+    const p = document.createElement("div"); p.className = "panel"; p.setAttribute("role", "group"); p.setAttribute("aria-labelledby", "aj-" + gi);
+    const lg = document.createElement("h2"); lg.className = "cursiva"; lg.id = "aj-" + gi; lg.textContent = g.nombre;
+    p.append(lg);
+    const fr = g.frecuencia;
+    if (fr.semana) {
+      const c = document.createElement("div"); c.className = "campo";
+      const e = document.createElement("span"); e.className = "etq"; e.textContent = "Días en que se pide";
+      const dias = document.createElement("div"); dias.className = "dias";
+      [1, 2, 3, 4, 5, 6, 0].forEach((i) => {
+        const l = document.createElement("label");
+        l.innerHTML = `<input type="checkbox" data-g="${gi}" data-dia="${i}" aria-label="${DIAS[i]}"><span aria-hidden="true">${INICIAL[i]}</span>`;
+        l.querySelector("input").checked = fr.semana.includes(i);
+        dias.append(l);
+      });
+      c.append(e, dias); p.append(c);
+    } else if (fr.mes) {
+      const c = document.createElement("div"); c.className = "campo";
+      c.innerHTML = `<label for="mes-${gi}">Días del mes en que se pide (separados por coma)</label><input id="mes-${gi}" data-g="${gi}" data-mes inputmode="numeric">`;
+      c.querySelector("input").value = fr.mes.join(", "); p.append(c);
+    } else {
+      const n = document.createElement("p"); n.className = "nota"; n.textContent = "Se pide cuando se acaba: se marca con «Se acabó» en la pantalla de hoy."; p.append(n);
+    }
+    const c = document.createElement("div"); c.className = "campo";
+    c.innerHTML = `<label for="items-${gi}">Productos (uno por renglón)</label><textarea id="items-${gi}" data-g="${gi}" data-items rows="${Math.min(10, g.items.length + 1)}"></textarea>`;
+    c.querySelector("textarea").value = g.items.map((it) => it[1] ? `${it[0]} | ${it[1]}` : it[0]).join("\n");
+    p.append(c); f.append(p);
+  });
+}
+$("#guardar-ajustes").addEventListener("click", () => {
+  const nuevos = JSON.parse(JSON.stringify(grupos()));
+  nuevos.forEach((g, gi) => {
+    if (g.frecuencia.semana) g.frecuencia.semana = [...document.querySelectorAll(`[data-g="${gi}"][data-dia]`)].filter((x) => x.checked).map((x) => +x.dataset.dia).sort();
+    if (g.frecuencia.mes) {
+      const dias = $(`#mes-${gi}`).value.split(/[^\d]+/).map(Number).filter((n) => n >= 1 && n <= 31);
+      if (dias.length) g.frecuencia.mes = [...new Set(dias)].sort((a, b) => a - b);
+    }
+    const lineas = $(`#items-${gi}`).value.split("\n").map((l) => l.trim()).filter(Boolean);
+    if (lineas.length) {
+      const antes = g.items.map((it) => it[0]);
+      g.items = lineas.map((l) => { const [n, c] = l.split("|").map((x) => x.trim()); return c ? [n, c] : [n]; });
+      if (g.secciones && antes.join("\n") !== g.items.map((it) => it[0]).join("\n")) delete g.secciones; // los subtítulos ya no coinciden
+    }
+    delete g.propuesta;
+  });
+  datos.grupos = nuevos; guardar();
+  $("#guardado").hidden = false; setTimeout(() => { $("#guardado").hidden = true; }, 2500);
+  pintarAjustes();
+});
+$("#restaurar").addEventListener("click", () => { datos.grupos = null; guardar(); pintarAjustes(); $("#guardado").hidden = false; $("#guardado").textContent = "Lista original restaurada."; setTimeout(() => { $("#guardado").hidden = true; $("#guardado").textContent = "Cambios guardados."; }, 2500); });
+
+/* ---------- pestañas ---------- */
+function mostrar(v) {
+  ["hoy", "semana", "ajustes"].forEach((k) => { $("#v-" + k).hidden = k !== v; $("#p-" + k).setAttribute("aria-selected", String(k === v)); });
+  if (v === "hoy") pintarHoy();
+  if (v === "semana") pintarSemana();
+  if (v === "ajustes") pintarAjustes();
+}
+["hoy", "semana", "ajustes"].forEach((k) => $("#p-" + k).addEventListener("click", () => mostrar(k)));
+
+let diaPintado = fechaLocal(new Date());
+setInterval(() => { const d = fechaLocal(new Date()); if (d !== diaPintado) { diaPintado = d; if (!$("#v-hoy").hidden) pintarHoy(); pintarRecordatorio(); } }, 60000); // cambia sola a medianoche
+pintarHoy(); pintarRecordatorio();
+</script>
+
+</body>
+</html>
