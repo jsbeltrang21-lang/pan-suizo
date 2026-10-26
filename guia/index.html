@@ -118,7 +118,7 @@ code { font-size: 13.5px; background: rgba(127, 127, 127, .14); padding: 1px 5px
     <div class="tabla-scroll"><table>
       <thead><tr><th>Herramienta</th><th>Para quién</th><th>Qué hace</th><th>Dónde quedan los datos</th></tr></thead>
       <tbody>
-        <tr><td><b>La carta</b><br><a href="../">/pan-suizo/</a></td><td>Clientes (con el QR)</td><td>Muestra productos, precios, el almuerzo del día, horario y el club. <b>No vende:</b> la compra es en la caja.</td><td>No guarda nada de nadie</td></tr>
+        <tr><td><b>La carta</b><br><a href="../">/pan-suizo/</a></td><td>Clientes (con el QR)</td><td>Portada con dos cartas: <a href="../desayunos/">Desayunos</a> (platos, pan, dulces y bebidas) y <a href="../almuerzos/">Almuerzos</a> (menú de hoy y de la semana), con los precios de la caja, horario y el club. <b>No vende:</b> la compra es en la caja.</td><td>No guarda nada de nadie</td></tr>
         <tr><td><b>Caja del club</b><br><a href="../caja/">/caja/</a></td><td>Tu mamá y quien atienda</td><td>Inscribe clientes y pone sellos de desayunos y almuerzos.</td><td>Registro seguro de Google (cuando se active; mientras tanto, en el celular)</td></tr>
         <tr><td><b>Pedidos</b><br><a href="../pedidos/">/pedidos/</a></td><td>Tu mamá</td><td>Le dice qué pedir hoy a cada proveedor, qué quedó pendiente y el almuerzo del día.</td><td>En su celular</td></tr>
         <tr><td><b>Encargos</b><br><a href="../encargos/">/encargos/</a></td><td>Tu mamá</td><td>Tortas y pedidos por teléfono: qué, para cuándo, abono y saldo.</td><td>En su celular</td></tr>
@@ -267,8 +267,8 @@ code { font-size: 13.5px; background: rgba(127, 127, 127, .14); padding: 1px 5px
     <p>Poco tiempo, pero constante. Toca cada botón una vez desde tu celular y Google Calendar te lo recuerda solo (revisa que diga «Todos los días», «Cada semana» o «Cada mes» y toca «Guardar»).</p>
     <h3>Cada día · 2 minutos · 8:00 a. m.</h3>
     <ul>
-      <li>Lee el informe de la rutina (carpeta <code>bitacora/</code> del PC, o pídele a Claude «¿qué dice el informe de hoy?»): ¿la página está en línea?, ¿cambió algún precio en Rappi?, ¿hay algo que aprobar?</li>
-      <li>Si tu mamá te contó un precio o un dato nuevo, anótalo en <code>panaderia/datos_negocio.md</code> o en <code>precios_tienda.csv</code>.</li>
+      <li>Lee el informe de la rutina (carpeta <code>bitacora/</code> del PC, o pídele a Claude «¿qué dice el informe de hoy?»): ¿la página está en línea?, ¿cambió algo en Rappi?, ¿hay algo que aprobar? (Los precios de la carta son los de la caja: lo que cambie en Rappi no los toca.)</li>
+      <li>Si tu mamá te contó un precio o un dato nuevo, anótalo en <code>panaderia/datos_negocio.md</code> o pásale a Claude la lista de precios exportada de la caja (CSV).</li>
     </ul>
     <p><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Pan+Suizo+%C2%B7+informe+de+la+rutina+%282+min%29&amp;dates=20261024T130000Z%2F20261024T131000Z&amp;ctz=America%2FBogota&amp;details=Lee+el+informe+del+d%C3%ADa+en+la+carpeta+bitacora+del+PC+%28o+p%C3%ADdeselo+a+Claude%29.+Qu%C3%A9+revisar%3A+https%3A%2F%2Fjsbeltrang21-lang.github.io%2Fpan-suizo%2Fguia%2F%23rutina&amp;recur=RRULE%3AFREQ%3DDAILY" target="_blank" rel="noopener">Crear el recordatorio diario</a></p>
     <h3>Cada domingo · 15 minutos · 7:00 p. m.</h3>
@@ -282,7 +282,7 @@ code { font-size: 13.5px; background: rgba(127, 127, 127, .14); padding: 1px 5px
     <p><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Pan+Suizo+%C2%B7+revisi%C3%B3n+semanal+%2815+min%29&amp;dates=20261026T000000Z%2F20261026T002000Z&amp;ctz=America%2FBogota&amp;details=Caja+%E2%86%92+Control%3A+Revisar%2C+intentos+y+copias+para+Excel.+Precios+y+datos+de+tu+mam%C3%A1.+Lista%3A+https%3A%2F%2Fjsbeltrang21-lang.github.io%2Fpan-suizo%2Fguia%2F%23rutina&amp;recur=RRULE%3AFREQ%3DWEEKLY%3BBYDAY%3DSU" target="_blank" rel="noopener">Crear el recordatorio semanal</a></p>
     <h3>El primer lunes de cada mes · 30 minutos</h3>
     <ul>
-      <li>Precios de tienda: ¿subió algo? Actualiza <code>precios_tienda.csv</code> y pide publicar el cambio.</li>
+      <li>Precios: ¿subió algo en la caja? Exporta la lista de productos de la caja (CSV), pásasela a Claude y pide publicar el cambio.</li>
       <li>Perfil de Google de la panadería: horario, fotos y enlace a la carta.</li>
       <li>Carteles y tarjetas con el QR: ¿siguen limpios y a la vista?</li>
       <li>Cuántos clientes nuevos tuvo el club y cuántos premios se entregaron (en las copias para Excel).</li>

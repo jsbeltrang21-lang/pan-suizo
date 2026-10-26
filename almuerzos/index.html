@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F0B08">
+<link rel="icon" href="../img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../img/icono-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="canonical" href="https://jsbeltrang21-lang.github.io/pan-suizo/almuerzos/">
+<link rel="manifest" href="../manifest.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pan Suizo">
+<meta property="og:locale" content="es_CO">
+<meta property="og:title" content="Almuerzos · Pan Suizo · Ciudad Salitre">
+<meta property="og:description" content="Almuerzo del día de Pan Suizo en Ciudad Salitre (Cra 69 # 25-11, Bogotá), de lunes a viernes: sopa, arroz, principio, carne y jugo. Menú de la semana y precios.">
+<meta property="og:url" content="https://jsbeltrang21-lang.github.io/pan-suizo/almuerzos/">
+<meta property="og:image" content="https://jsbeltrang21-lang.github.io/pan-suizo/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Escudo de Pan Suizo con el texto: mira la carta y el almuerzo del día">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Bakery", "name": "Pan Suizo", "description": "Carta de Pan Suizo, panadería en Ciudad Salitre (Cra 69 # 25-11, Bogotá): desayunos, almuerzo del día, pan del horno, dulces y bebidas, con precios y horario.", "url": "https://jsbeltrang21-lang.github.io/pan-suizo/", "hasMenu": ["https://jsbeltrang21-lang.github.io/pan-suizo/desayunos/", "https://jsbeltrang21-lang.github.io/pan-suizo/almuerzos/"], "image": "https://jsbeltrang21-lang.github.io/pan-suizo/img/og.png", "logo": "https://jsbeltrang21-lang.github.io/pan-suizo/img/icono-512.png", "telephone": "+57 311 5025315", "address": {"@type": "PostalAddress", "streetAddress": "Cra 69 # 25-11, Ciudad Salitre", "addressLocality": "Bogotá", "addressRegion": "Bogotá D.C.", "addressCountry": "CO"}, "geo": {"@type": "GeoCoordinates", "latitude": 4.656978, "longitude": -74.1083002}, "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "06:00", "closes": "21:00"}, {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday", "Sunday"], "opens": "06:00", "closes": "20:30"}], "servesCuisine": "Panadería colombiana", "priceRange": "$", "sameAs": ["https://www.rappi.com.co/restaurantes/900408872-pan-suizo"]}</script>
+<title>Almuerzos · Pan Suizo · Ciudad Salitre</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Carta digital de Pan Suizo, Ciudad Salitre: desayunos, almuerzo del día, pan del horno, dulces y bebidas, con precios y horario.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500;1,600;1,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* Concepto: el horno de noche. Fondo de horno apagado, letra cursiva de pizarra fina para los nombres
+   (Cormorant Garamond) y letra limpia para leer (DM Sans). El rojo y el oro salen del escudo de Pan Suizo:
+   rojo para la acción (preguntar, categoría activa), oro para precios, etiquetas e íconos de línea.
+   Columna única pensada para el celular. Es una carta para informar: la compra se hace en la caja
+   (o por teléfono/WhatsApp para encargos), no en la página. Desde el 26/10/2026 son tres páginas que salen de
+   este mismo archivo (construir_sitio.py): la portada del QR, Desayunos y Almuerzos. */
+:root {
+  --fondo: #0F0B08;
+  --superficie: #1A140F;
+  --velo-sup: rgba(244, 232, 212, .06);
+  --borde: rgba(244, 232, 212, .13);
+  --tinta: #F4E8D4;
+  --tinta-suave: #BBA98F;
+  --tinta-tenue: #8A7A63;
+  --oro: #F2C14E;
+  --oro-relleno: #F2C14E;
+  --sobre-oro: #1C1206;
+  --rojo: #B82227;
+  --sobre-rojo: #FFF6EC;
+  --ok: #86C996;
+  --alerta: #FF8F86;
+  --resplandor: rgba(242, 193, 78, .20);
+  --sombra: 0 18px 40px rgba(0, 0, 0, .5);
+  --f-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --f-texto: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  --radio: 18px;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --fondo: #F6EEDF; --superficie: #FFFBF4; --velo-sup: rgba(60, 35, 15, .05); --borde: rgba(60, 35, 15, .14);
+    --tinta: #2A1A10; --tinta-suave: #6A5442; --tinta-tenue: #8C7763; --oro: #8F6200; --oro-relleno: #F2C14E;
+    --sobre-oro: #1C1206; --rojo: #A71E21; --sobre-rojo: #FFF6EC; --ok: #1F7A45; --alerta: #B3261E;
+    --resplandor: rgba(242, 193, 78, .35); --sombra: 0 18px 40px rgba(60, 35, 15, .16); color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --fondo: #F6EEDF; --superficie: #FFFBF4; --velo-sup: rgba(60, 35, 15, .05); --borde: rgba(60, 35, 15, .14);
+  --tinta: #2A1A10; --tinta-suave: #6A5442; --tinta-tenue: #8C7763; --oro: #8F6200; --oro-relleno: #F2C14E;
+  --sobre-oro: #1C1206; --rojo: #A71E21; --sobre-rojo: #FFF6EC; --ok: #1F7A45; --alerta: #B3261E;
+  --resplandor: rgba(242, 193, 78, .35); --sombra: 0 18px 40px rgba(60, 35, 15, .16); color-scheme: light;
+}
+
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--fondo); color: var(--tinta); font-family: var(--f-texto); font-size: 15px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--fondo); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--oro); outline-offset: 2px; }
+[tabindex="-1"]:focus { outline: none; }
+.envoltura {
+  max-width: 560px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.cursiva { font-family: var(--f-display); font-style: italic; font-weight: 600; letter-spacing: .005em; }
+.ceja { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); margin: 0; }
+.ceja.cursiva-ceja { font-family: var(--f-display); font-style: italic; font-size: 15px; letter-spacing: .06em; font-weight: 600; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- cabecera ---------- */
+.cabecera { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--fondo) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--borde); }
+.cabecera .envoltura { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+.logo { width: 44px; height: 44px; flex: none; }
+.marca { min-width: 0; flex: 1; color: inherit; text-decoration: none; }
+.marca h1 { margin: 0; font-size: 26px; line-height: 1; }
+.marca p { margin: 3px 0 0; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); font-weight: 600; }
+.icono-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--borde); background: var(--velo-sup); display: grid; place-items: center; }
+.icono-btn svg { width: 18px; height: 18px; }
+.estado { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--tinta-suave); padding-block: 0 10px; }
+.estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--tinta-tenue); }
+.estado.abierto::before { background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 25%, transparent); }
+
+/* ---------- selector: la carta de esta página o el club (cada carta va sola: sin enlaces a la otra) ---------- */
+.vistas { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border: 1px solid var(--borde); border-radius: 999px; background: var(--velo-sup); margin-block: 14px 6px; }
+.vistas button { border: 0; background: transparent; border-radius: 999px; padding: 8px 6px; display: grid; line-height: 1.15; color: inherit; text-decoration: none; text-align: center; }
+.vistas b { font-family: var(--f-display); font-style: italic; font-size: 19px; font-weight: 700; }
+.vistas span { font-size: 11px; color: var(--tinta-suave); }
+.vistas [aria-pressed="true"] { background: var(--oro-relleno); color: var(--sobre-oro); }
+.vistas [aria-pressed="true"] span { color: color-mix(in srgb, var(--sobre-oro) 70%, transparent); }
+
+.aviso { margin-block: 10px 0; padding: 10px 12px; border: 1px dashed color-mix(in srgb, var(--oro) 60%, transparent); border-radius: 12px; font-size: 12.5px; color: var(--tinta-suave); }
+.aviso b { color: var(--tinta); }
+
+/* ---------- portada (la página del QR) ---------- */
+.inicio { padding-block: 20px 4px; display: grid; gap: 14px; }
+.titulo-inicio { margin: 0; font-size: 42px; line-height: 1; text-wrap: balance; }
+.portales { display: grid; gap: 12px; }
+.portal { position: relative; isolation: isolate; display: grid; align-content: end; min-height: 210px; border-radius: 22px; overflow: hidden; border: 1px solid var(--borde); background: var(--superficie); color: #FFF6EC; text-decoration: none; }
+.portal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.portal::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(15, 11, 8, 0) 20%, rgba(15, 11, 8, .9) 100%); }
+.portal:hover { border-color: var(--oro); }
+.portal-texto { display: grid; gap: 4px; padding: 16px 18px 18px; }
+.portal-texto .insignia { justify-self: start; }
+.portal-texto b { font-family: var(--f-display); font-style: italic; font-weight: 700; font-size: 40px; line-height: 1; }
+.portal-texto .detalle { font-size: 13.5px; color: rgba(255, 246, 236, .86); }
+.portal-texto .ir { font-size: 13px; font-weight: 700; color: #F2C14E; }
+.club-mini { display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: center; width: 100%; text-align: left; border: 1px dashed color-mix(in srgb, var(--oro) 60%, transparent); border-radius: 18px; padding: 12px 14px; background: var(--velo-sup); }
+.club-mini svg { width: 44px; height: 44px; color: var(--oro); }
+.club-mini b { display: block; font-family: var(--f-display); font-style: italic; font-size: 22px; line-height: 1.1; }
+.club-mini span { font-size: 13px; color: var(--tinta-suave); }
+
+/* ---------- buscador y categorías ---------- */
+.buscador { margin-block: 8px 0; }
+.buscador input { width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--borde); background: var(--superficie); }
+.chips-zona { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--alto-cab, 92px)); z-index: 15; background: var(--fondo); border-bottom: 1px solid var(--borde); }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; border: 1px solid var(--borde); background: transparent; color: var(--tinta); border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.chip small { color: var(--tinta-tenue); font-weight: 500; margin-left: 4px; }
+.chip[aria-current="true"] { background: var(--tinta); color: var(--fondo); border-color: var(--tinta); }
+.chip[aria-current="true"] small { color: color-mix(in srgb, var(--fondo) 65%, transparent); }
+
+/* ---------- destacado ---------- */
+.destacado { margin-block: 18px 6px; display: grid; gap: 10px; }
+.estrella { position: relative; overflow: hidden; border-radius: 22px; border: 1px solid var(--borde); background:
+  radial-gradient(120% 90% at 78% 30%, var(--resplandor), transparent 60%), var(--superficie); padding: 18px; display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; align-items: center; text-align: left; }
+a.estrella { color: inherit; text-decoration: none; }
+.estrella .insignia { justify-self: start; }
+.estrella h2 { margin: 2px 0 0; font-size: 34px; line-height: 1; text-wrap: balance; }
+.estrella p.d { margin: 6px 0 0; color: var(--tinta-suave); font-size: 13.5px; max-width: 32ch; }
+.estrella .ilus { width: 112px; height: 112px; color: var(--oro); filter: drop-shadow(0 0 14px var(--resplandor)); grid-row: span 3; }
+.estrella img.ilus { border-radius: 50%; object-fit: cover; filter: none; border: 2px solid color-mix(in srgb, var(--oro) 55%, transparent); }
+.estrella .pie-estrella { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; }
+.insignia { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; background: var(--oro-relleno); color: var(--sobre-oro); }
+.insignia.roja { background: var(--rojo); color: var(--sobre-rojo); }
+.sin-fila { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--tinta-suave); padding: 0 4px; margin: 0; }
+.sin-fila svg { width: 22px; height: 22px; color: var(--oro); flex: none; }
+
+/* ---------- carta ---------- */
+.categoria { padding-top: 22px; scroll-margin-top: calc(var(--alto-cab, 92px) + 56px); }
+.categoria h2 { margin: 0; font-size: 32px; line-height: 1.05; }
+.categoria .sub { margin: 2px 0 12px; font-size: 12.5px; color: var(--tinta-tenue); }
+.lista { display: grid; gap: 10px; }
+.producto { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: start; padding: 12px; border-radius: var(--radio); border: 1px solid var(--borde); background: var(--superficie); text-align: left; width: 100%; position: relative; }
+.producto:hover { border-color: color-mix(in srgb, var(--oro) 45%, var(--borde)); }
+.miniatura { width: 76px; height: 76px; border-radius: 14px; display: grid; place-items: center; background: radial-gradient(circle at 50% 45%, var(--resplandor), transparent 70%), var(--velo-sup); color: var(--oro); overflow: hidden; }
+.miniatura svg { width: 46px; height: 46px; }
+.miniatura img { width: 100%; height: 100%; object-fit: cover; }
+.p-cuerpo { min-width: 0; display: grid; gap: 4px; }
+.p-nombre { margin: 0; font-size: 22px; line-height: 1.05; text-wrap: balance; }
+.p-desc { margin: 0; font-size: 13px; color: var(--tinta-suave); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.p-desc:empty { display: none; }
+.precios { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.pildora { display: inline-flex; gap: 6px; align-items: baseline; font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--borde); color: var(--tinta-suave); }
+.pildora b { color: var(--oro); font-weight: 700; font-variant-numeric: tabular-nums; }
+.vacio { padding: 28px 8px; text-align: center; color: var(--tinta-suave); }
+
+/* listas de precios sin foto (nevera, para la casa) */
+.compacta { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); padding: 4px 14px 8px; }
+.compacta h3 { margin: 12px 0 2px; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); }
+.compacta ul { list-style: none; margin: 0; padding: 0; }
+.fila { display: flex; align-items: baseline; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--borde); font-size: 14.5px; }
+.fila:last-child { border-bottom: 0; }
+.fila b { margin-left: auto; color: var(--oro); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.pie { margin-block: 32px 48px; padding-top: 18px; border-top: 1px solid var(--borde); display: grid; gap: 6px; font-size: 12.5px; color: var(--tinta-tenue); }
+.pie b { color: var(--tinta-suave); font-weight: 600; }
+.pie a.suave { color: var(--tinta-suave); }
+.enlaces-pie { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; }
+.enlaces-pie a { color: var(--tinta); text-decoration: none; border: 1px solid var(--borde); border-radius: 999px; padding: 8px 14px; font-weight: 600; font-size: 13px; }
+.enlaces-pie a:hover { border-color: var(--oro); }
+
+/* ---------- club (vista para clientes) ---------- */
+.club { padding-block: 16px 8px; display: grid; gap: 18px; }
+.tarjeta-club { border-radius: 22px; padding: 20px; background:
+  radial-gradient(100% 80% at 85% 0%, var(--resplandor), transparent 60%), var(--superficie); border: 1px solid var(--borde); display: grid; gap: 14px; }
+.tarjeta-club h2 { margin: 0; font-size: 36px; line-height: 1; }
+.tarjeta-club p { margin: 0; color: var(--tinta-suave); font-size: 14px; }
+.tarjetas-club { display: grid; gap: 12px; }
+.tarjeta-tipo { border: 1px solid var(--borde); border-radius: 18px; padding: 14px; display: grid; grid-template-columns: 52px 1fr; gap: 6px 14px; align-items: center; background: var(--velo-sup); }
+.tarjeta-tipo > svg { width: 52px; height: 52px; color: var(--oro); grid-row: span 2; }
+.tarjeta-tipo b { font-family: var(--f-display); font-style: italic; font-size: 26px; line-height: 1; }
+.tarjeta-tipo p { margin: 0; color: var(--tinta-suave); font-size: 14px; }
+.sellos { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 6px; max-width: 280px; }
+.sello { aspect-ratio: 1; border-radius: 50%; border: 1.5px dashed color-mix(in srgb, var(--oro) 55%, transparent); display: grid; place-items: center; color: var(--oro); }
+.sello.premio { border-style: solid; border-color: var(--oro); background: color-mix(in srgb, var(--oro) 18%, transparent); }
+.sello.premio svg { width: 70%; height: 70%; }
+.pasos { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: paso; }
+.pasos li { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; counter-increment: paso; }
+.pasos li::before { content: counter(paso); width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--oro); color: var(--oro); display: grid; place-items: center; font-family: var(--f-display); font-style: italic; font-weight: 700; font-size: 18px; }
+.pasos b { display: block; font-size: 15px; }
+.pasos span { color: var(--tinta-suave); font-size: 13.5px; }
+.premio-caja { border: 1px solid var(--oro); border-radius: 18px; padding: 16px; display: grid; gap: 6px; }
+.premio-caja .cursiva { font-size: 26px; line-height: 1.05; }
+.letra-menuda { font-size: 12px; color: var(--tinta-tenue); margin: 0; }
+
+/* ---------- botones ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 12px 18px; font-weight: 700; text-decoration: none; }
+.btn-rojo { background: var(--rojo); color: var(--sobre-rojo); }
+.btn-oro { background: var(--oro-relleno); color: var(--sobre-oro); }
+.btn-linea { background: transparent; border: 1px solid var(--borde); color: var(--tinta); }
+.btn-chico { padding: 8px 14px; font-size: 13px; }
+.btn[aria-disabled="true"] { opacity: .55; }
+
+/* ---------- almuerzo del día ---------- */
+.almuerzo { border-radius: 22px; border: 1px solid var(--borde); overflow: hidden; display: grid; background:
+  radial-gradient(110% 80% at 90% 0%, var(--resplandor), transparent 60%), var(--superficie); }
+.almuerzo-foto { position: relative; height: 200px; }
+.almuerzo-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 78%; display: block; }
+#img-almuerzos { object-position: 50% 78%; }
+.almuerzo-cuerpo { padding: 16px 18px 18px; display: grid; gap: 14px; }
+.almuerzo-cab { display: grid; gap: 4px; }
+.almuerzo-cab h2 { margin: 0; font-size: 34px; line-height: 1.02; text-wrap: balance; }
+.almuerzo-cab p { margin: 0; color: var(--tinta-suave); font-size: 13.5px; }
+.almuerzo-cab .valor { color: var(--oro); font-weight: 700; font-size: 18px; font-variant-numeric: tabular-nums; }
+.menu-dia { margin: 0; display: grid; gap: 10px; }
+.menu-dia div { display: grid; grid-template-columns: 92px 1fr; gap: 10px; align-items: baseline; }
+.menu-dia dt { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--oro); }
+.menu-dia dd { margin: 0; font-size: 15px; }
+.semana { display: grid; gap: 10px; }
+.dia-card { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); padding: 14px; display: grid; gap: 8px; }
+.dia-card.hoy { border-color: var(--oro); box-shadow: inset 0 0 0 1px var(--oro); }
+.dia-card > b { font-family: var(--f-display); font-style: italic; font-size: 24px; line-height: 1; }
+
+/* ---------- hojas (detalle de producto) ---------- */
+.velo { position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, .55); }
+.hoja { position: fixed; left: 0; right: 0; bottom: 0; z-index: 31; max-height: 92vh; overflow-y: auto; background: var(--superficie); border-radius: 24px 24px 0 0; box-shadow: var(--sombra);
+  padding: 8px max(18px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); }
+.hoja > .dentro { max-width: 528px; margin: 0 auto; display: grid; gap: 14px; }
+.agarre { width: 44px; height: 5px; border-radius: 9px; background: var(--borde); margin: 6px auto 4px; }
+.hoja-cab { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.hoja-cab h2 { margin: 0; font-size: 30px; line-height: 1.05; }
+.cerrar { border: 1px solid var(--borde); background: var(--velo-sup); border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+.det-ilus { position: relative; height: 200px; border-radius: 18px; display: grid; place-items: center; color: var(--oro); background: radial-gradient(60% 70% at 50% 50%, var(--resplandor), transparent 70%), var(--velo-sup); overflow: hidden; }
+.det-ilus svg { width: 120px; height: 120px; filter: drop-shadow(0 0 16px var(--resplandor)); }
+.det-ilus img { width: 100%; height: 100%; object-fit: cover; }
+.foto-ref { position: absolute; right: 10px; bottom: 8px; font-size: 10.5px; letter-spacing: .04em; padding: 3px 8px; border-radius: 999px; background: rgba(15, 11, 8, .62); color: #F4E8D4; }
+.det-desc { margin: 0; color: var(--tinta-suave); font-size: 15px; }
+.det-desc:empty { display: none; }
+.titulo-lista { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); margin: 0 0 8px; }
+.opciones { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.opcion { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 14px; border: 1px solid var(--borde); background: var(--velo-sup); font-size: 14.5px; }
+.opcion b { color: var(--oro); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.opcion small { display: block; font-size: 12px; color: var(--tinta-suave); }
+.combina { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+.mini { flex: none; width: 150px; border: 1px solid var(--borde); border-radius: 14px; padding: 10px; display: grid; gap: 6px; background: var(--velo-sup); text-align: left; }
+.mini .cursiva { font-size: 18px; line-height: 1.05; }
+.mini small { color: var(--oro); font-weight: 700; }
+.mini span.mas { font-size: 12px; color: var(--tinta-suave); }
+.btn-3d { justify-self: start; }
+.como-pedir { margin: 0; font-size: 13.5px; color: var(--tinta-suave); }
+.visor3d { width: 100%; height: 300px; border-radius: 18px; background: var(--velo-sup); }
+
+@media (max-width: 380px) {
+  .producto { grid-template-columns: 60px 1fr; }
+  .miniatura { width: 60px; height: 60px; }
+  .estrella .ilus { width: 84px; height: 84px; }
+  .menu-dia div { grid-template-columns: 1fr; gap: 2px; }
+  .vistas b { font-size: 17px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hoja:not([hidden]) { animation: subir .26s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes subir { from { transform: translateY(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+}
+</style>
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="envoltura">
+    <svg class="logo" viewBox="0 0 48 48" role="img" aria-label="Escudo de Pan Suizo">
+      <circle cx="24" cy="24" r="24" fill="#A71E21"/>
+      <path d="M14 13.5l4 3.2 6-6.7 6 6.7 4-3.2v13c0 6.6-4.5 11.3-10 13.6C18.5 37.8 14 33.1 14 26.5z" fill="none" stroke="#FCD150" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M24 12v27.5M14.6 23.5h18.8" stroke="#FCD150" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <a class="marca" id="marca" href="#">
+      <h1 class="cursiva" id="nombre">Pan Suizo</h1>
+      <p id="sector">Panadería · Ciudad Salitre</p>
+    </a>
+    <button class="icono-btn" type="button" id="btn-buscar" aria-label="Buscar en la carta" aria-expanded="false" aria-controls="buscador" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    </button>
+  </div>
+  <div class="envoltura"><span class="estado" id="estado">Horario</span></div>
+</header>
+
+<div class="envoltura">
+  <nav class="vistas" id="vistas" aria-label="Secciones de la carta" hidden>
+    <button type="button" id="tab-carta" aria-pressed="true" aria-controls="vista-carta"><b id="tab-carta-nombre">La carta</b><span id="tab-carta-sub"></span></button>
+    <button type="button" id="tab-club" aria-pressed="false" aria-controls="vista-club"><b>Club</b><span>sellos y premios</span></button>
+  </nav>
+  <div class="buscador" id="buscador" hidden>
+    <label for="q" hidden>Buscar</label>
+    <input id="q" type="search" placeholder="Busca: almojábana, tamal, chocolate…" autocomplete="off">
+  </div>
+</div>
+
+<main id="vista-inicio" hidden>
+  <div class="envoltura inicio">
+    <p class="ceja cursiva-ceja">Bienvenido a Pan Suizo</p>
+    <h2 class="cursiva titulo-inicio">¿Qué se te antoja hoy?</h2>
+    <div class="portales">
+      <a class="portal" id="portal-desayunos" href="#">
+        <img id="img-desayunos" alt="" decoding="async">
+        <span class="portal-texto">
+          <span class="insignia" id="ahora-desayunos" hidden>Ahora</span>
+          <b>Desayunos</b>
+          <span class="detalle">Changua, caldo, tamal, huevos, pan del horno, dulces y bebidas</span>
+          <span class="ir">Ver la carta de desayunos →</span>
+        </span>
+      </a>
+      <a class="portal" id="portal-almuerzos" href="#">
+        <img id="img-almuerzos" alt="" decoding="async">
+        <span class="portal-texto">
+          <span class="insignia" id="ahora-almuerzos" hidden>Ahora</span>
+          <b>Almuerzos</b>
+          <span class="detalle" id="portal-almuerzos-sub"></span>
+          <span class="ir">Ver el menú de la semana →</span>
+        </span>
+      </a>
+    </div>
+    <p class="sin-fila">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>
+      <span>Mira la carta y pide en la caja. Para encargos, escríbenos por WhatsApp.</span>
+    </p>
+    <button type="button" class="club-mini" id="ir-club">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 7l5 10.5 11.5 1.5-8.5 8 2 11.5L24 33l-10 5.5 2-11.5-8.5-8L19 17.5z"/></svg>
+      <span><b>Club Pan Suizo</b><span>Cada 20 desayunos o 20 almuerzos, el siguiente va por la casa. Mira cómo funciona →</span></span>
+    </button>
+  </div>
+</main>
+
+<main id="vista-carta" hidden>
+  <div class="chips-zona"><div class="envoltura"><nav class="chips" id="categorias" aria-label="Secciones"></nav></div></div>
+  <div class="envoltura">
+    <section class="destacado" id="destacado" aria-labelledby="t-destacado" hidden>
+      <p class="ceja cursiva-ceja" id="t-destacado">Hoy te recomendamos</p>
+      <div id="estrella"></div>
+      <p class="sin-fila">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>
+        <span>Mira la carta y pide en la caja. Para encargos, escríbenos por WhatsApp.</span>
+      </p>
+      <p class="aviso" id="aviso-precios" hidden><b>Precios de referencia:</b> son los de Rappi a domicilio. En la panadería algunos precios son distintos; vale el precio de la caja.</p>
+    </section>
+
+    <section class="categoria" id="cat-hoy" aria-labelledby="almuerzo-titulo" hidden>
+      <article class="almuerzo">
+        <div class="almuerzo-foto"><img id="almuerzo-img" alt="" decoding="async"><span class="foto-ref">Foto de referencia</span></div>
+        <div class="almuerzo-cuerpo">
+          <div class="almuerzo-cab">
+            <p class="ceja" id="almuerzo-ceja"></p>
+            <h2 class="cursiva" id="almuerzo-titulo"></h2>
+            <p><span class="valor" id="almuerzo-valor"></span> · <span id="almuerzo-incluye"></span></p>
+          </div>
+          <dl class="menu-dia" id="almuerzo-menu"></dl>
+        </div>
+      </article>
+    </section>
+    <section class="categoria" id="cat-precios" aria-labelledby="t-precios" hidden>
+      <h2 class="cursiva" id="t-precios">Precios</h2>
+      <p class="sub">El almuerzo se pide y se paga en la caja.</p>
+      <ul class="opciones" id="almuerzo-precios"></ul>
+      <p class="titulo-lista" style="margin-top:16px">Adiciones</p>
+      <ul class="opciones" id="almuerzo-adiciones"></ul>
+    </section>
+    <section class="categoria" id="cat-semana" aria-labelledby="t-semana" hidden>
+      <h2 class="cursiva" id="t-semana">El menú de la semana</h2>
+      <p class="sub">De lunes a viernes cambian la sopa, los principios, las carnes y el jugo.</p>
+      <div class="semana" id="almuerzo-semana"></div>
+    </section>
+
+    <div id="menu"></div>
+    <p class="vacio" id="sin-resultados" hidden>No encontramos eso en la carta. Prueba con otra palabra.</p>
+  </div>
+</main>
+
+<main id="vista-club" hidden>
+  <div class="envoltura club">
+    <button type="button" class="btn btn-linea btn-chico" id="club-volver" style="justify-self:start">← Volver a la carta</button>
+    <section class="tarjeta-club" aria-labelledby="t-club">
+      <p class="ceja">Club Pan Suizo</p>
+      <h2 class="cursiva" id="t-club">Ven seguido y el siguiente va por la casa</h2>
+      <p id="club-intro"></p>
+      <div class="tarjetas-club" id="tarjetas-club"></div>
+    </section>
+    <section aria-labelledby="t-como">
+      <p class="ceja" id="t-como" style="margin-bottom:12px">Así funciona</p>
+      <ol class="pasos" id="pasos"></ol>
+    </section>
+    <section class="premio-caja" aria-labelledby="t-premio">
+      <p class="ceja" id="t-premio">Inscríbete en la caja</p>
+      <p class="cursiva">Solo tu nombre y tu celular</p>
+      <p class="letra-menuda">Tus sellos los pone quien te atiende cuando pagas; nadie más puede ponerlos ni quitarlos. El premio es seguro para todos los que completan la tarjeta: no es un sorteo.</p>
+      <a class="btn btn-linea btn-chico" id="club-dudas" href="#" target="_blank" rel="noopener" style="justify-self:start">¿Dudas? Escríbenos por WhatsApp</a>
+    </section>
+    <p class="letra-menuda" id="club-datos"></p>
+  </div>
+</main>
+
+<div class="envoltura"><footer class="pie" id="pie"></footer></div>
+
+<div class="velo" id="velo" hidden></div>
+
+<section class="hoja" id="detalle" hidden role="dialog" aria-modal="true" aria-labelledby="det-nombre">
+  <div class="dentro">
+    <div class="agarre"></div>
+    <div class="hoja-cab">
+      <p class="ceja" id="det-cat"></p>
+      <button type="button" class="cerrar" data-cerrar>Cerrar</button>
+    </div>
+    <div class="det-ilus" id="det-ilus"></div>
+    <div>
+      <h2 class="cursiva" id="det-nombre" style="margin:0;font-size:34px;line-height:1.05"></h2>
+      <div id="det-insignias" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"></div>
+    </div>
+    <p class="det-desc" id="det-desc"></p>
+    <button type="button" class="btn btn-linea btn-chico btn-3d" id="det-3d" hidden>Verlo en 3D y sobre tu mesa</button>
+    <div id="det-visor"></div>
+    <div id="det-opciones" hidden><p class="titulo-lista" id="det-opciones-titulo">Opciones y precios</p><ul class="opciones" id="det-opciones-lista"></ul></div>
+    <div id="det-adiciones" hidden><p class="titulo-lista">Puedes agregarle</p><ul class="opciones" id="det-adiciones-lista"></ul></div>
+    <div id="det-combina-zona" hidden>
+      <p class="ceja" style="margin-bottom:8px">Va perfecto con</p>
+      <div class="combina" id="det-combina"></div>
+    </div>
+    <p class="como-pedir">Pídelo en la caja. ¿Lo quieres encargar o tienes una duda?</p>
+    <a class="btn btn-linea" id="det-preguntar" href="#" target="_blank" rel="noopener">Preguntar por WhatsApp</a>
+  </div>
+</section>
+
+<script>
+/* ===================== PÁGINA (la escribe construir_sitio.py; no cambiar esta línea a mano) =====================
+   pagina: "inicio" (la que abre el QR), "desayunos" o "almuerzos". raiz: ruta hasta la carpeta del sitio (fotos).
+   enlaces: dirección de cada página vista desde esta. */
+const SITIO = {"pagina": "almuerzos", "raiz": "../", "enlaces": {"inicio": "../", "desayunos": "../desayunos/", "almuerzos": "./"}};
+
+/* ===================== DATOS DEL NEGOCIO (editar aquí) =====================
+   Verificado el 21/10/2026 con Google Maps (dirección, teléfono, horario). El usuario confirmó la sede (Cra 69 # 25-11)
+   y que el WhatsApp del negocio es el 311 502 5315. Desde el 23/10/2026 la carta solo informa: la compra se hace en la caja.
+   Precios: lista de la caja de la panadería que pasó John el 26/10/2026 (precios_caja_2026-10-26.csv). Los de Rappi son
+   otros (allá cuestan más) y ya no se usan en la carta.
+   horario: 0 = domingo … 6 = sábado, [apertura, cierre] en horas de 24 h (20.5 = 8:30 p. m.). */
+const NEGOCIO = {
+  nombre: "Pan Suizo",
+  sector: "Panadería · Ciudad Salitre",
+  whatsapp: "573115025315",
+  direccion: "Cra 69 # 25-11, Ciudad Salitre, Bogotá",
+  referencia: "A pasos de la Cámara de Comercio (sede Salitre) y del World Business Port",
+  mapa: "https://www.google.com/maps/search/?api=1&query=Pan%20Suizo%2C%20Ciudad%20Salitre&query_place_id=ChIJb1iRWQCbP44RD4lVdRRLDY8",
+  rappi: "https://www.rappi.com.co/restaurantes/900408872-pan-suizo",
+  horario: { 0: [6, 20.5], 1: [6, 21], 2: [6, 21], 3: [6, 21], 4: [6, 21], 5: [6, 21], 6: [6, 20.5] },
+  domicilio: "A domicilio por Rappi. Para otros domicilios y encargos, pregunta por WhatsApp",
+  pagos: ["Efectivo", "Pagos digitales: pregunta en la caja cuáles recibimos"],
+  fuentePrecios: "lista de precios de la caja, 26/10/2026",
+  /* true desde el 26/10/2026: son los precios de la panadería. Con true no sale el aviso de «precios de referencia» y
+     las páginas de la carta aparecen en Google. */
+  preciosDeTienda: true,
+};
+
+/* Club de clientes fieles: las reglas las dio la dueña el 23/10/2026 («si cumplen 20 almuerzos se le regala otro
+   almuerzo»; lo mismo con 20 desayunos). Deben coincidir con TARJETAS en club_caja.html. */
+const CLUB = {
+  tarjetas: [
+    { id: "desayunos", nombre: "Desayunos", icono: "taza", meta: 20, premio: "1 desayuno gratis" },
+    { id: "almuerzos", nombre: "Almuerzos", icono: "plato", meta: 20, premio: "1 almuerzo del día gratis" },
+  ],
+  privacidad: "Solo pedimos tu nombre y tu celular, con tu autorización, para llevar tus tarjetas y avisarte por WhatsApp de tus sellos y premios. Puedes pedir que borremos tus datos cuando quieras (Ley 1581 de 2012).",
+};
+
+/* Almuerzo de lunes a viernes (1 = lunes … 5 = viernes), según la dueña (23/10/2026). Misma lista que ALMUERZOS en
+   pedidos_proveedores.html: construir_sitio.py comprueba que sean iguales. Precios: lista de la caja (26/10/2026). */
+const ALMUERZO = {
+  precio: 16000,
+  opciones: [{ nombre: "Almuerzo del día", precio: 16000 }, { nombre: "Para llevar", precio: 16500 }, { nombre: "Almuerzo con huevo", precio: 18000 },
+    { nombre: "Bandeja", precio: 15000, nota: "Solo el plato: sin sopa, fruta ni huevo frito" }],
+  incluye: "Sopa, arroz, principio, carne y jugo. Cada día hay varios principios y carnes para escoger.",
+};
+const ALMUERZOS = {
+  1: { sopa: "Sopa del día", principios: ["Lentejas", "Frijoles", "Ahuyama"], carnes: ["Pechuga a la plancha", "Pollo en salsa de champiñones", "Carne a la plancha", "Chuleta de cerdo"], jugo: "Mora" },
+  2: { sopa: "Cuchuco de trigo", principios: ["Frijoles", "Garbanzos", "Verdura con mayonesa"], carnes: ["Pechuga a la plancha", "Pollo dorado", "Carne asada", "Chuleta de cerdo"], jugo: "Guayaba" },
+  3: { sopa: "Sopa de verduras", principios: ["Frijoles", "Espaguetis", "Acelgas"], carnes: ["Carne en bistec", "Pechuga a la plancha", "Pollo dorado", "Chuleta de cerdo"], jugo: null },
+  4: { especial: "Sudado de pollo con yuca, papa, arroz y plátano", sopa: "Sopa de pasta", principios: ["Frijoles", "Pepino", "Guiso"], carnes: ["Pechuga a la plancha", "Carne asada", "Chuleta de cerdo"], jugo: "Maracuyá" },
+  5: { sopa: "Sancocho", principios: ["Frijoles", "Zucchini", "Espaguetis"], carnes: ["Pechuga a la plancha", "Carne asada", "Chuleta de cerdo", "Pollo apanado"], jugo: "Limonada" },
+};
+
+/* Carta de Desayunos (todo lo que se vende en el día salvo el almuerzo). Precios de la lista de la caja (26/10/2026).
+   icono: dibujo de ICONOS. foto: nombre de la foto en img/fotos/ (grande «nombre.jpg» y miniatura «nombre-m.jpg»; de
+   dónde sale cada una: fotos/creditos.json). paraLlevar: precio para llevar si es distinto.
+   modelo3d: ruta de un modelo .glb escaneado del producto real (activa «Verlo en 3D y sobre tu mesa»).
+   combina: ids de productos que se sugieren con este. desc vacía = falta que la dueña cuente cómo es. */
+const CATEGORIAS = [
+  { id: "desayunos", nombre: "Desayunos", sub: "Calientes, de cuchara y de la casa", productos: [
+    { id: "changua", nombre: "Changua", foto: "changua", icono: "caldo", precio: 12000, etiqueta: "Bogotana",
+      desc: "La changua de siempre: caldo de leche, huevo y calado. Sencilla y reconfortante para arrancar el día.",
+      combina: ["almojabana", "tinto"] },
+    { id: "caldo-costilla", nombre: "Caldo de costilla", foto: "caldo-costilla", icono: "caldo", precio: 12000, paraLlevar: 13000,
+      desc: "Caldo de costilla con papa, servido hirviendo. El que levanta a cualquiera un sábado por la mañana.",
+      combina: ["pan", "tinto"] },
+    { id: "calentado", nombre: "Calentado de frijol", foto: "calentado", icono: "plato", precio: 12000,
+      desc: "Arroz y frijoles de la casa salteados juntos en el sartén, con un huevo frito encima. El calentado de toda la vida.",
+      combina: ["jugo-naranja", "chocolate"] },
+    { id: "calentado-pasta", nombre: "Calentado de pasta", foto: "calentado-pasta", icono: "plato", precio: 12000,
+      desc: "Pasta salteada con carne molida y arroz, con un huevo frito encima. El calentado para los que prefieren pasta.",
+      combina: ["jugo-naranja", "cafe"] },
+    { id: "tamal", nombre: "Tamal tolimense", foto: "tamal", icono: "tamal", precio: 9000, etiqueta: "Tradición",
+      desc: "Envuelto en hoja de plátano: masa de maíz suave, carne y verduras. Ábrelo en la mesa y deja salir el vapor. Con chocolate es como manda la tradición.",
+      combina: ["chocolate", "pan"] },
+    { id: "combo-tamal", nombre: "Combo de tamal", foto: "tamal", icono: "tamal", precio: 14500, unidad: "Combo",
+      desc: "Tamal tolimense, pan y chocolate, todo por un solo precio.", combina: ["jugo-naranja"] },
+    { id: "cazuela-huevos", nombre: "Cazuela de huevos", foto: "cazuela-huevos", icono: "huevo", grupo: "¿Cómo los quieres?", paraLlevar: 6000,
+      opciones: [{ nombre: "Pericos", precio: 5500 }, { nombre: "Revueltos", precio: 5500 }, { nombre: "Fritos", precio: 5500 }],
+      desc: "Pericos con tomate y cebolla, revueltos suaves o fritos al momento.",
+      combina: ["pan", "cafe"] },
+    { id: "huevos-con-arroz", nombre: "Huevos con arroz", foto: "huevos-con-arroz", icono: "huevo", grupo: "¿Cómo quieres los huevos?",
+      opciones: [{ nombre: "Pericos", precio: 10000 }, { nombre: "Revueltos", precio: 10000 }, { nombre: "Fritos", precio: 10000 }],
+      desc: "Huevos recién hechos en la preparación que más te guste, con arroz blanco al lado.",
+      combina: ["jugo-naranja", "cafe"] },
+    { id: "rancheros", nombre: "Huevos rancheros", foto: "rancheros", icono: "huevo", grupo: "¿Solos o con arroz?",
+      opciones: [{ nombre: "Solos", precio: 10000 }, { nombre: "Con arroz", precio: 12000 }],
+      desc: "Huevos con tomate y salchicha en trozos. Para los que llegan con hambre de verdad.",
+      combina: ["jugo-naranja", "pan"] },
+  ]},
+  { id: "sal", nombre: "Pasteles y empanadas", sub: "De sal, para acompañar el tinto o el jugo", productos: [
+    { id: "empanada", nombre: "Empanada", foto: "empanada", icono: "empanada", precio: 3500, desc: "" },
+    { id: "pastel-pollo", nombre: "Pastel de pollo", icono: "empanada", precio: 4500, desc: "" },
+    { id: "pastel-yuca", nombre: "Pastel de yuca", icono: "empanada", precio: 4000, desc: "" },
+    { id: "pan-salchicha", nombre: "Pan con salchicha", icono: "baguette", precio: 4000, desc: "" },
+  ]},
+  { id: "horno", nombre: "Del horno", sub: "Pan de la casa para el desayuno y las onces", productos: [
+    { id: "almojabana", nombre: "Almojábana", foto: "almojabana", icono: "bola", precio: 4500, etiqueta: "Favorita",
+      desc: "Redonda y dorada, de queso y harina de maíz, tierna por dentro. Pídela tibia y con chocolate.",
+      combina: ["chocolate", "cafe"] },
+    { id: "bunuelo", nombre: "Buñuelo", foto: "bunuelo", icono: "bola", precio: 4000,
+      desc: "Crujiente por fuera, suave y esponjoso por dentro. Frito el mismo día.",
+      combina: ["avena", "chocolate"] },
+    { id: "pan", nombre: "Pan de la casa", foto: "pan", icono: "pan", unidad: "c/u", grupo: "Escoge el pan",
+      opciones: [{ nombre: "Blandito", precio: 500 }, { nombre: "Rollito", precio: 500 }, { nombre: "Francés", precio: 500 }, { nombre: "Calentano", precio: 500 }, { nombre: "Hojaldrado", precio: 500 }, { nombre: "Mogolla integral", precio: 500 }],
+      desc: "Blandito, rollito, francés, calentano, hojaldrado o mogolla integral. Todos a $ 500, para mojar en el café con leche o en el chocolate.",
+      combina: ["cafe", "chocolate"] },
+    { id: "pan-dulce", nombre: "Pan dulce", icono: "bola", precio: 1000, unidad: "c/u", desc: "" },
+    { id: "liberal", nombre: "Liberal", icono: "pan", precio: 2000, desc: "" },
+    { id: "flauta", nombre: "Flauta", icono: "baguette", precio: 3000, desc: "" },
+    { id: "corazon", nombre: "Corazón", icono: "pan", precio: 3000, desc: "" },
+    { id: "croissant", nombre: "Croissant", foto: "croissant", icono: "pan", precio: 4500, desc: "", combina: ["cafe", "capuchino"] },
+    { id: "pan-grande", nombre: "Pan grande", icono: "pan", precio: 7000,
+      desc: "El pan para toda la familia: rinde el desayuno de la casa.", combina: ["chocolate", "cafe"] },
+    { id: "baguette", nombre: "Baguette", foto: "baguette", icono: "baguette", precio: 6000,
+      desc: "Grande, de corteza crujiente. Para sándwiches o para acompañar el caldo.", combina: ["caldo-costilla"] },
+  ]},
+  { id: "dulces", nombre: "Dulces y galletas", sub: "Para el antojo de la tarde", productos: [
+    { id: "mantecada", nombre: "Mantecada", foto: "mantecada", icono: "mantecada", precio: 4500,
+      desc: "Húmeda y esponjosa, en porción para ti solo.", combina: ["tinto", "cafe"] },
+    { id: "mantecada-jr", nombre: "Mantecada junior", foto: "mantecada-jr", icono: "mantecada", precio: 13000,
+      desc: "Mantecada mediana para compartir con el café de la tarde.", combina: ["tinto"] },
+    { id: "galleta-mariposa", nombre: "Galleta mariposa", foto: "mariposas", icono: "galleta", precio: 4500,
+      desc: "Bañada en chocolate y con chispas de colores. La que piden los niños.", combina: ["milo"] },
+    { id: "galleta-avena", nombre: "Galleta de avena", foto: "galleta-avena", icono: "galleta", precio: 4000, desc: "", combina: ["cafe"] },
+    { id: "galleta-doble", nombre: "Galleta doble", icono: "galleta", precio: 4000, desc: "" },
+    { id: "galleta-sencilla", nombre: "Galleta sencilla", icono: "galleta", precio: 3000, desc: "" },
+  ]},
+  { id: "calientes", nombre: "Bebidas calientes", sub: "Para acompañar el pan", productos: [
+    { id: "tinto", nombre: "Tinto", foto: "tinto", icono: "taza", grupo: "Tamaño",
+      opciones: [{ nombre: "Pequeño", precio: 2000 }, { nombre: "Normal", precio: 3000 }],
+      desc: "Tinto de la casa, recién colado.", combina: ["mantecada", "pan"] },
+    { id: "cafe", nombre: "Café con leche", foto: "cafe", icono: "taza", precio: 4500,
+      desc: "Café y leche caliente en su punto. Va con cualquier pan del horno.", combina: ["pan", "almojabana"] },
+    { id: "perico", nombre: "Perico", foto: "perico", icono: "taza", precio: 3500,
+      desc: "Tinto con un chorrito de leche.", combina: ["pan"] },
+    { id: "capuchino", nombre: "Capuchino", foto: "capuchino", icono: "taza", precio: 5000, desc: "", combina: ["croissant"] },
+    { id: "chocolate", nombre: "Chocolate", foto: "chocolate", icono: "taza", etiqueta: "De la casa", grupo: "¿En leche o en agua?",
+      opciones: [{ nombre: "En leche", precio: 5000 }, { nombre: "En agua", precio: 4500 }],
+      desc: "Chocolate de la casa, espumoso y caliente. Pídelo con almojábana o con tamal.", combina: ["almojabana", "tamal"] },
+    { id: "milo", nombre: "Milo", foto: "milo", icono: "taza", grupo: "¿Caliente o frío?",
+      opciones: [{ nombre: "Caliente", precio: 6000 }, { nombre: "Frío", precio: 6000 }],
+      desc: "Cremoso y caliente para las mañanas frías de Bogotá, o frío y bien batido.", combina: ["galleta-mariposa"] },
+    { id: "aromatica", nombre: "Aromática", foto: "aromatica", icono: "taza", precio: 3000, desc: "" },
+  ]},
+  { id: "jugos", nombre: "Jugos y bebidas de la casa", sub: "Frías, para el desayuno o el antojo", productos: [
+    { id: "jugo-naranja", nombre: "Jugo de naranja", foto: "jugo-naranja", icono: "vaso", precio: 5500,
+      desc: "Naranja exprimida en la casa.", combina: ["cazuela-huevos", "calentado"] },
+    { id: "avena", nombre: "Avena cubana", foto: "avena", icono: "vaso", precio: 6000,
+      desc: "Avena fría y cremosa con canela espolvoreada.", combina: ["bunuelo", "almojabana"] },
+    { id: "masato", nombre: "Masato", icono: "vaso", precio: 5000, desc: "" },
+  ]},
+];
+
+/* Precios sin foto ni detalle, en filas (lista de la caja, 26/10/2026). paginas: dónde sale cada lista o grupo. */
+const LISTAS = [
+  { id: "nevera", nombre: "De la nevera", sub: "Gaseosas, jugos, agua y lácteos", paginas: ["desayunos", "almuerzos"], grupos: [
+    { nombre: "Gaseosas y maltas", items: [["Coca-Cola mini", 3000], ["Coca-Cola 500 ml", 4500], ["Coca-Cola 1,5 litros", 8000], ["Coca-Cola 3 litros", 12000],
+      ["Gaseosa personal", 4000], ["Postobón 1,5 litros", 7000], ["Postobón 3 litros", 10000], ["Bretaña", 4500], ["Pony Malta personal", 4500], ["Pony Malta 1,5 litros", 7500]] },
+    { nombre: "Jugos, té y agua", items: [["Hit en caja", 2500], ["Hit personal", 4000], ["Hit 1 litro", 5000], ["Mr. Tea", 4000], ["Zen", 2500], ["Gatorade", 5000],
+      ["Agua personal", 2000], ["Agua con gas", 3000], ["Agua 1 litro", 3000]] },
+    { nombre: "Lácteos", paginas: ["desayunos"], items: [["Yogo Yogo", 3500], ["Kumis pequeño", 4500], ["Kumis grande", 6000], ["Yogur", 5500], ["Avena Alpina", 5500], ["Alpín", 6000], ["Leche", 7000]] },
+  ]},
+  { id: "casa", nombre: "Para la casa", sub: "Huevos, queso y salchicha", paginas: ["desayunos"], grupos: [
+    { nombre: "", items: [["Huevo (unidad)", 650], ["Cubeta de huevos", 19500], ["Queso de 125 g", 8000], ["Queso de 250 g", 11000], ["Salchicha ranchera × 3", 5800], ["Salchicha ranchera × 5", 7800]] },
+  ]},
+];
+
+/* Adiciones de la lista de la caja (26/10/2026): salen en el detalle de los desayunos y en la página de almuerzos. */
+const ADICIONES = [
+  { id: "huevo-adicional", nombre: "Huevo adicional", precio: 2000 },
+  { id: "porcion-arroz", nombre: "Porción de arroz", precio: 5000 },
+];
+const CON_ADICIONES = ["desayunos"];
+
+/* Productos de la carta anterior (sacados de Rappi) que NO están en la lista de la caja del 26/10/2026. John decidió el
+   26/10 no mostrarlos; se guardan solo como referencia. Para mostrar uno, pásalo a CATEGORIAS con el precio de la caja.
+   Los combos «plato + Hit» eran promociones de Rappi y no se venden así en el local. «Desayuno completo» y «Almuerzo Toto»
+   son de uso interno de la caja (la dueña, 26/10); el «Almuerzo» de $ 25.000 de la categoría de varios se supone interno. */
+const SIN_PRECIO = [
+  { id: "changua-especial", nombre: "Changua especial", categoria: "desayunos",
+    desc: "Caldo de leche bien caliente con huevo cocido en el caldo, calado de pan que se ablanda a cucharadas y queso que se derrite. Llega con almojábana al lado." },
+  { id: "rancheros-queso", nombre: "Rancheros con queso", categoria: "desayunos",
+    desc: "Los rancheros con salchicha y queso derretido encima. El desayuno más completo de la casa." },
+  { id: "pan-queso", nombre: "Pan de queso", categoria: "horno", desc: "Pan grande relleno de jamón y queso. Para compartir en la mesa (o no)." },
+  { id: "pan-alinado", nombre: "Pan aliñado", categoria: "horno", desc: "Pan aliñado hecho en casa, de miga suave. Para partir en la mesa." },
+  { id: "molde-integral", nombre: "Pan de molde integral", categoria: "horno", desc: "Tajado e integral, para las tostadas de la semana." },
+  { id: "roscon", nombre: "Roscón (arequipe o bocadillo)", categoria: "dulces", desc: "El roscón de toda la vida, relleno de arequipe o de bocadillo." },
+  { id: "galleta-ojona", nombre: "Galleta ojona", categoria: "dulces", desc: "Con su ojo de chocolate y mermelada y azúcar glas por encima." },
+  { id: "galleta-payaso", nombre: "Galleta payaso", categoria: "dulces", desc: "Con chispas de chocolate a la vista." },
+];
+
+/* Recomendado según la hora (página de desayunos). */
+const RECOMENDADOS = [
+  { desde: 0, hasta: 11, id: "changua", insignia: "Para empezar el día" },
+  { desde: 11, hasta: 15, id: "caldo-costilla", insignia: "Para el mediodía" },
+  { desde: 15, hasta: 20, id: "almojabana", insignia: "Para las onces", con: "chocolate" },
+  { desde: 20, hasta: 24, id: "tamal", insignia: "Encárgalo para mañana", con: "chocolate" },
+];
+/* ========================= fin de los datos ========================= */
+
+/* Dibujos de línea (trazo con el color del texto). */
+const ICONOS = {
+  taza: '<path d="M10 20h22v8a10 10 0 0 1-10 10h-2a10 10 0 0 1-10-10z"/><path d="M32 23h2.5a4 4 0 0 1 0 8H31"/><path d="M16 7c-2 3 2 5 0 8M22 6c-2 3 2 5 0 8M28 7c-2 3 2 5 0 8"/><path d="M7 42h30"/>',
+  vaso: '<path d="M13 9h22l-3 30.5a3 3 0 0 1-3 2.5H19a3 3 0 0 1-3-2.5z"/><path d="M14.4 19h19.2"/><path d="M28 3l-3 14"/>',
+  botella: '<path d="M20 4h8v6l3.5 5v25a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3V15l3.5-5z"/><path d="M16.5 22h15v10h-15z"/>',
+  huevo: '<path d="M23 8c7 0 9 5 14 8s6 12 0 16-9 9-16 8-13-4-15-11 2-10 5-14 5-7 12-7z"/><circle cx="22" cy="25" r="6"/><path d="M19.5 23a3 3 0 0 1 3-2.5"/>',
+  caldo: '<path d="M5 22h38c0 9-8.5 16-19 16S5 31 5 22z"/><path d="M17 41h14"/><path d="M17 7c-2 3 2 5 0 8M24 5c-2 3 2 5 0 8M31 7c-2 3 2 5 0 8"/>',
+  plato: '<circle cx="24" cy="25" r="18"/><circle cx="24" cy="25" r="12"/><path d="M19 22c3-4 9-3 10 1s-3 7-7 6-5-4-3-7z"/><circle cx="23.5" cy="25" r="2.5"/>',
+  tamal: '<path d="M8 17h32v19H8z"/><path d="M8 17l16 9 16-9"/><path d="M24 26v10"/><path d="M24 13c-5-6-11-3-6 1.5M24 13c5-6 11-3 6 1.5"/><path d="M24 13v4"/>',
+  pan: '<path d="M7 32c0-11 7.6-17 17-17s17 6 17 17v4H7z"/><path d="M15 23l4 5M22.5 21l4 5M30 23l4 5"/>',
+  baguette: '<path d="M9 38c-3-3-1.5-7.5 3-12L28 10c4.5-4.5 9-6 12-3s1.5 7.5-3 12L21 35c-4.5 4.5-9 6-12 3z"/><path d="M17 27l5.5 1M23 21l5.5 1M29 15l5.5 1"/>',
+  bola: '<path d="M8 34c0-10 7-18 16-18s16 8 16 18"/><path d="M6 34h36"/><path d="M17 23l3 3.5M26 20.5l-1.5 4M31 27l-3.5 1.5M21 30l1 2.5"/><path d="M13 39h22"/>',
+  empanada: '<path d="M5 31c0-9.4 8.5-17 19-17s19 7.6 19 17z"/><path d="M5 31q2.375 3 4.75 0q2.375 3 4.75 0q2.375 3 4.75 0q2.375 3 4.75 0q2.375 3 4.75 0q2.375 3 4.75 0q2.375 3 4.75 0q2.375 3 4.75 0"/><path d="M9 39h30"/>',
+  rosca: '<circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="6"/><path d="M12 17c3 1 4 4 7 4M36 17c-3 1-4 4-7 4M24 8v4"/>',
+  galleta: '<circle cx="24" cy="24" r="16"/><circle cx="18" cy="19" r="1.8"/><circle cx="28" cy="17" r="1.8"/><circle cx="30" cy="28" r="1.8"/><circle cx="19" cy="30" r="1.8"/><circle cx="24" cy="24" r="1.8"/>',
+  mantecada: '<path d="M8 22h32v17H8z"/><path d="M8 22c3-9 29-9 32 0"/><path d="M15 30h2M23 33h2M31 29h2"/>',
+  molde: '<path d="M10 17a7 7 0 0 1 7-7h14a7 7 0 0 1 7 7v1a3 3 0 0 1-2 2.8V39H12V20.8A3 3 0 0 1 10 18z"/><path d="M17 26h14M17 32h14"/>',
+  sello: '<path d="M12 25l8 8 16-17" stroke-width="4"/>',
+  estrella: '<path d="M24 7l5 10.5 11.5 1.5-8.5 8 2 11.5L24 33l-10 5.5 2-11.5-8.5-8L19 17.5z"/>',
+};
+function svgIcono(nombre, extra = "") {
+  return `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${ICONOS[nombre] || ICONOS.pan}</svg>`;
+}
+
+const $ = (s) => document.querySelector(s);
+const pesos = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
+const fmt = (n) => pesos.format(n).replace(/\s/g, " ");
+const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const mayus = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+const sinTildes = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const waNegocio = (texto) => `https://wa.me/${NEGOCIO.whatsapp}?text=${encodeURIComponent(texto)}`;
+const urlFoto = (nombre, grande) => `${SITIO.raiz}img/fotos/${nombre}${grande ? "" : "-m"}.jpg`;
+const enPagina = (x) => !x.paginas || x.paginas.includes(SITIO.pagina);
+
+const productos = {};
+CATEGORIAS.forEach((c) => c.productos.forEach((p) => { productos[p.id] = { ...p, categoria: c.id, catNombre: c.nombre }; }));
+const precioMin = (p) => (p.opciones ? Math.min(...p.opciones.map((o) => o.precio)) : p.precio);
+const variaPrecio = (p) => !!p.opciones && new Set(p.opciones.map((o) => o.precio)).size > 1;
+function filaPrecio(ul, nombre, precio, nota) {
+  const li = document.createElement("li"); li.className = "opcion";
+  const n = document.createElement("span"); n.textContent = nombre;
+  if (nota) { const s = document.createElement("small"); s.textContent = nota; n.append(s); }
+  const v = document.createElement("b"); v.textContent = precio;
+  li.append(n, v); ul.append(li);
+}
+
+/* ---------- cabecera y pie ---------- */
+const horaTxt = (x) => { const hh = Math.floor(x), mm = Math.round((x - hh) * 60); return `${((hh + 11) % 12) + 1}:${String(mm).padStart(2, "0")} ${hh < 12 ? "a. m." : "p. m."}`; };
+function abiertoAhora(d = new Date()) {
+  const h = NEGOCIO.horario[d.getDay()];
+  if (!h) return { abierto: false, txt: "Hoy cerrado" };
+  const ahora = d.getHours() + d.getMinutes() / 60;
+  if (ahora >= h[0] && ahora < h[1]) return { abierto: true, txt: `Abierto ahora · hasta las ${horaTxt(h[1])}` };
+  return { abierto: false, txt: ahora < h[0] ? `Cerrado · abrimos a las ${horaTxt(h[0])}` : "Cerrado · mañana horneamos de nuevo" };
+}
+function pintarCabecera() {
+  $("#nombre").textContent = NEGOCIO.nombre;
+  $("#sector").textContent = { desayunos: "Carta de desayunos", almuerzos: "Carta de almuerzos" }[SITIO.pagina] || NEGOCIO.sector;
+  $("#marca").href = SITIO.enlaces[SITIO.pagina];
+  $("#marca").setAttribute("aria-label", `${NEGOCIO.nombre}: volver al comienzo`);
+  const e = abiertoAhora();
+  $("#estado").className = "estado" + (e.abierto ? " abierto" : "");
+  $("#estado").textContent = e.txt;
+  const grupos = [];
+  [1, 2, 3, 4, 5, 6, 0].forEach((i) => { const k = JSON.stringify(NEGOCIO.horario[i]); const g = grupos[grupos.length - 1]; if (g && g.k === k) g.d.push(i); else grupos.push({ k, d: [i], h: NEGOCIO.horario[i] }); });
+  const nombreGrupo = (d) => d.length === 7 ? "todos los días" : d.length === 1 ? DIAS[d[0]] : d.length === 2 ? `${DIAS[d[0]]} y ${DIAS[d[1]]}` : `${DIAS[d[0]]} a ${DIAS[d[d.length - 1]]}`;
+  const horario = grupos.map((g) => `${mayus(nombreGrupo(g.d))}, ${g.h ? `${horaTxt(g.h[0])} a ${horaTxt(g.h[1])}` : "cerrado"}`).join(" · ");
+  const pie = $("#pie"); pie.innerHTML = "";
+  const linea = (b, t) => { const p = document.createElement("p"); p.style.margin = "0"; const s = document.createElement("b"); s.textContent = b + " "; p.append(s, document.createTextNode(t)); pie.append(p); return p; };
+  linea("Dónde:", `${NEGOCIO.direccion}. ${NEGOCIO.referencia}.`);
+  linea("Horario:", horario);
+  if (SITIO.pagina !== "desayunos") linea("Almuerzo:", `de lunes a viernes, ${fmt(ALMUERZO.precio)}.`);
+  linea("Domicilio:", `${NEGOCIO.domicilio}.`);
+  linea("Pagos:", NEGOCIO.pagos.join(" · "));
+  linea("WhatsApp:", `+57 ${NEGOCIO.whatsapp.slice(2, 5)} ${NEGOCIO.whatsapp.slice(5, 8)} ${NEGOCIO.whatsapp.slice(8)}`);
+  $("#aviso-precios").hidden = NEGOCIO.preciosDeTienda;
+  linea("Precios:", NEGOCIO.preciosDeTienda ? "en pesos colombianos, los de la panadería (en Rappi son otros). Si alguno cambió, vale el precio de la caja." : "en pesos colombianos, de referencia (los de Rappi). En la panadería vale el precio de la caja.");
+  const fotos = linea("Fotos:", "de referencia; el plato puede verse distinto. ");
+  const a = document.createElement("a"); a.className = "suave"; a.href = `${SITIO.raiz}fotos/`; a.textContent = "De dónde son las fotos"; fotos.append(a);
+  const enlaces = document.createElement("p"); enlaces.className = "enlaces-pie";
+  [["Cómo llegar en Google Maps", NEGOCIO.mapa], ["Escríbenos por WhatsApp", waNegocio(`Hola ${NEGOCIO.nombre}, quiero preguntar por `)], ["A domicilio en Rappi", NEGOCIO.rappi]].forEach(([t, u]) => {
+    const l = document.createElement("a"); l.href = u; l.target = "_blank"; l.rel = "noopener"; l.textContent = t; enlaces.append(l);
+  });
+  pie.append(enlaces);
+}
+
+/* ---------- portada (la página que abre el QR) ---------- */
+function pintarInicio() {
+  const ahora = new Date(), h = ahora.getHours(), m = ALMUERZOS[ahora.getDay()];
+  $("#img-desayunos").src = urlFoto("caldo-costilla", true);
+  $("#img-almuerzos").src = urlFoto("almuerzo", true);
+  $("#portal-desayunos").href = SITIO.enlaces.desayunos;
+  $("#portal-almuerzos").href = SITIO.enlaces.almuerzos;
+  $("#portal-almuerzos-sub").textContent = m
+    ? `Hoy: ${m.especial ? "sudado de pollo" : m.sopa.toLowerCase()} · ${fmt(ALMUERZO.precio)}`
+    : `De lunes a viernes · ${fmt(ALMUERZO.precio)}`;
+  const horaAlmuerzo = !!m && h >= 11 && h < 15, abierto = abiertoAhora().abierto;
+  $("#ahora-almuerzos").hidden = !(horaAlmuerzo && abierto);
+  $("#ahora-desayunos").hidden = horaAlmuerzo || !abierto;
+  $("#ir-club").addEventListener("click", () => { mostrarVista("club"); window.scrollTo({ top: 0 }); });
+}
+
+/* ---------- destacado (página de desayunos) ---------- */
+function ilusEstrella(p) {
+  return p.foto ? `<img class="ilus" src="${urlFoto(p.foto)}" alt="">` : svgIcono(p.icono, 'class="ilus"');
+}
+function pintarEstrella() {
+  const h = new Date().getHours();
+  const caja = $("#estrella"); caja.innerHTML = "";
+  const r = RECOMENDADOS.find((x) => h >= x.desde && h < x.hasta) || RECOMENDADOS[0];
+  const p = productos[r.id], con = r.con ? productos[r.con] : null;
+  const b = document.createElement("button"); b.type = "button"; b.className = "estrella";
+  b.innerHTML = `<span class="insignia"></span>${ilusEstrella(p)}<h2 class="cursiva"></h2><p class="d"></p><div class="pie-estrella"></div>`;
+  b.querySelector(".insignia").textContent = r.insignia;
+  b.querySelector("h2").textContent = con ? `${p.nombre} con ${con.nombre.toLowerCase()}` : p.nombre;
+  b.querySelector(".d").textContent = p.desc;
+  const pil = document.createElement("span"); pil.className = "pildora";
+  pil.innerHTML = `<span></span><b></b>`;
+  pil.querySelector("span").textContent = con ? (variaPrecio(con) ? "Los dos, desde" : "Los dos") : (variaPrecio(p) ? "Desde" : "Precio");
+  pil.querySelector("b").textContent = fmt(precioMin(p) + (con ? precioMin(con) : 0));
+  b.querySelector(".pie-estrella").append(pil);
+  b.setAttribute("aria-label", `Ver ${b.querySelector("h2").textContent}`);
+  b.addEventListener("click", () => abrirDetalle(p.id));
+  caja.append(b);
+}
+
+/* ---------- almuerzo del día (página de almuerzos) ---------- */
+function filasMenu(dl, m) {
+  dl.innerHTML = "";
+  const fila = (t, v) => { if (!v) return; const d = document.createElement("div"); const dt = document.createElement("dt"); dt.textContent = t; const dd = document.createElement("dd"); dd.textContent = v; d.append(dt, dd); dl.append(d); };
+  fila("Especial", m.especial);
+  fila("Sopa", m.sopa);
+  fila("Principios", m.principios.join(" · "));
+  fila("Carnes", m.carnes.join(" · "));
+  fila("Jugo", m.jugo || "Jugo del día");
+}
+function pintarAlmuerzos() {
+  const hoy = new Date().getDay(), hay = !!ALMUERZOS[hoy];
+  const m = ALMUERZOS[hay ? hoy : 1];   // sábado y domingo se muestra el del lunes
+  ["#cat-hoy", "#cat-precios", "#cat-semana"].forEach((s) => { $(s).hidden = false; });
+  $("#almuerzo-img").src = urlFoto("almuerzo", true);
+  $("#almuerzo-ceja").textContent = hay ? `Almuerzo de hoy, ${DIAS[hoy]}` : "Sábados y domingos no hay almuerzo del día";
+  $("#almuerzo-titulo").textContent = hay ? (m.especial ? "Sudado de pollo" : m.sopa) : `El lunes: ${m.sopa.toLowerCase()}`;
+  $("#almuerzo-valor").textContent = fmt(ALMUERZO.precio);
+  $("#almuerzo-incluye").textContent = ALMUERZO.incluye;
+  filasMenu($("#almuerzo-menu"), m);
+  const ul = $("#almuerzo-precios"); ul.innerHTML = "";
+  ALMUERZO.opciones.forEach((o) => filaPrecio(ul, o.nombre, fmt(o.precio), o.nota));
+  const ua = $("#almuerzo-adiciones"); ua.innerHTML = "";
+  ADICIONES.forEach((a) => filaPrecio(ua, a.nombre, "+ " + fmt(a.precio)));
+  const sem = $("#almuerzo-semana"); sem.innerHTML = "";
+  [1, 2, 3, 4, 5].forEach((i) => {
+    const w = document.createElement("div"); w.className = "dia-card" + (i === hoy ? " hoy" : "");
+    const b = document.createElement("b"); b.textContent = mayus(DIAS[i]) + (i === hoy ? " · hoy" : "");
+    const dl = document.createElement("dl"); dl.className = "menu-dia"; filasMenu(dl, ALMUERZOS[i]);
+    w.append(b, dl); sem.append(w);
+  });
+}
+
+/* ---------- carta (secciones, chips y listas) ---------- */
+function seccion(id, nombre, sub) {
+  const sec = document.createElement("section");
+  sec.className = "categoria"; sec.id = "cat-" + id; sec.setAttribute("aria-labelledby", "t-" + id);
+  sec.innerHTML = `<h2 class="cursiva" id="t-${id}"></h2><p class="sub"></p>`;
+  sec.querySelector("h2").textContent = nombre;
+  sec.querySelector(".sub").textContent = sub;
+  return sec;
+}
+function listaCompacta(l) {
+  const sec = seccion(l.id, l.nombre, l.sub);
+  const caja = document.createElement("div"); caja.className = "compacta";
+  l.grupos.filter(enPagina).forEach((g) => {
+    if (g.nombre) { const h = document.createElement("h3"); h.textContent = g.nombre; caja.append(h); }
+    const ul = document.createElement("ul");
+    g.items.forEach(([nombre, precio]) => {
+      const li = document.createElement("li"); li.className = "fila";
+      li.dataset.busqueda = sinTildes(`${nombre} ${g.nombre}`);
+      const n = document.createElement("span"); n.textContent = nombre;
+      const v = document.createElement("b"); v.textContent = fmt(precio);
+      li.append(n, v); ul.append(li);
+    });
+    caja.append(ul);
+  });
+  sec.append(caja);
+  return sec;
+}
+function pintarChips(secciones) {
+  const nav = $("#categorias"); nav.innerHTML = "";
+  secciones.forEach(({ id, nombre, n }, i) => {
+    const chip = document.createElement("button");
+    chip.type = "button"; chip.className = "chip"; chip.dataset.cat = id;
+    chip.innerHTML = `<span></span><small></small>`;
+    chip.querySelector("span").textContent = nombre;
+    chip.querySelector("small").textContent = n ? "· " + n : "";
+    chip.setAttribute("aria-current", i === 0 ? "true" : "false");
+    chip.addEventListener("click", () => document.getElementById("cat-" + id).scrollIntoView({ behavior: "smooth", block: "start" }));
+    nav.append(chip);
+  });
+  const obs = new IntersectionObserver((ents) => ents.forEach((en) => {
+    if (!en.isIntersecting) return;
+    nav.querySelectorAll(".chip").forEach((ch) => {
+      const activo = ch.dataset.cat === en.target.id.slice(4);
+      ch.setAttribute("aria-current", activo ? "true" : "false");
+      if (activo) ch.scrollIntoView({ block: "nearest", inline: "center" });
+    });
+  }), { rootMargin: "-35% 0px -60% 0px" });
+  secciones.forEach(({ id }) => obs.observe(document.getElementById("cat-" + id)));
+}
+function pintarCarta() {
+  const menu = $("#menu"); menu.innerHTML = "";
+  const chips = [];
+  if (SITIO.pagina === "desayunos") {
+    CATEGORIAS.forEach((c) => {
+      const sec = seccion(c.id, c.nombre, `${c.productos.length} productos · ${c.sub}`);
+      const lista = document.createElement("div"); lista.className = "lista";
+      c.productos.forEach((p) => lista.append(tarjeta(productos[p.id])));
+      sec.append(lista); menu.append(sec);
+      chips.push({ id: c.id, nombre: c.nombre, n: c.productos.length });
+    });
+  } else {
+    chips.push({ id: "hoy", nombre: "Hoy" }, { id: "precios", nombre: "Precios" }, { id: "semana", nombre: "La semana" });
+  }
+  LISTAS.filter(enPagina).forEach((l) => {
+    menu.append(listaCompacta(l));
+    chips.push({ id: l.id, nombre: SITIO.pagina === "almuerzos" ? "Bebidas" : l.nombre });
+  });
+  pintarChips(chips);
+}
+
+function ilustracion(p, grande) {
+  if (p.foto) { const img = document.createElement("img"); img.src = urlFoto(p.foto, grande); img.alt = ""; img.loading = "lazy"; img.decoding = "async"; return img; }
+  const t = document.createElement("template"); t.innerHTML = svgIcono(p.icono); return t.content.firstChild;
+}
+
+function tarjeta(p) {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "producto"; b.dataset.id = p.id;
+  b.dataset.busqueda = sinTildes(`${p.nombre} ${p.desc} ${(p.opciones || []).map((o) => o.nombre).join(" ")}`);
+  const mini = document.createElement("span"); mini.className = "miniatura"; mini.append(ilustracion(p));
+  const cuerpo = document.createElement("span"); cuerpo.className = "p-cuerpo";
+  const n = document.createElement("span"); n.className = "p-nombre cursiva"; n.textContent = p.nombre;
+  const d = document.createElement("span"); d.className = "p-desc"; d.textContent = p.desc || "";
+  const precios = document.createElement("span"); precios.className = "precios";
+  const pild = (etq, valor) => { const s = document.createElement("span"); s.className = "pildora"; const a = document.createElement("span"); a.textContent = etq; const v = document.createElement("b"); v.textContent = fmt(valor); s.append(a, v); precios.append(s); };
+  if (variaPrecio(p)) p.opciones.forEach((o) => pild(o.nombre, o.precio));
+  else pild(p.unidad || (p.opciones ? `${p.opciones.length} opciones` : (p.categoria === "desayunos" ? "Plato" : "Precio")), precioMin(p));
+  if (p.paraLlevar) pild("Para llevar", p.paraLlevar);
+  cuerpo.append(n, d, precios);
+  if (p.etiqueta) { const e = document.createElement("span"); e.className = "insignia"; e.style.justifySelf = "start"; e.textContent = p.etiqueta; cuerpo.prepend(e); }
+  b.append(mini, cuerpo);
+  b.setAttribute("aria-label", `${p.nombre}, ${variaPrecio(p) ? "desde " : ""}${fmt(precioMin(p))}. Ver detalle`);
+  b.addEventListener("click", () => abrirDetalle(p.id));
+  return b;
+}
+
+/* ---------- búsqueda (página de desayunos) ---------- */
+$("#btn-buscar").addEventListener("click", () => {
+  const caja = $("#buscador"), abrir = caja.hidden;
+  caja.hidden = !abrir; $("#btn-buscar").setAttribute("aria-expanded", String(abrir));
+  if (abrir) { mostrarVista("carta"); $("#q").focus(); } else { $("#q").value = ""; filtrar(); }
+});
+function filtrar() {
+  const q = sinTildes($("#q").value.trim());
+  let total = 0;
+  document.querySelectorAll("#menu .categoria").forEach((sec) => {
+    let n = 0;
+    sec.querySelectorAll(".producto, .fila").forEach((t) => { const ok = !q || t.dataset.busqueda.includes(q); t.hidden = !ok; if (ok) n++; });
+    sec.querySelectorAll(".compacta h3").forEach((h) => { const ul = h.nextElementSibling; h.hidden = ![...ul.children].some((li) => !li.hidden); });
+    sec.hidden = n === 0; total += n;
+  });
+  $("#destacado").hidden = !!q;
+  $("#sin-resultados").hidden = total > 0;
+}
+$("#q").addEventListener("input", filtrar);
+
+/* ---------- detalle de producto ---------- */
+let enDetalle = null, origenFoco = null;
+function abrirDetalle(id) {
+  const p = productos[id]; enDetalle = id;
+  if ($("#detalle").hidden) origenFoco = document.activeElement;
+  $("#det-cat").textContent = p.catNombre;
+  const ilus = $("#det-ilus"); ilus.innerHTML = ""; ilus.append(ilustracion(p, true));
+  if (p.foto) { const r = document.createElement("span"); r.className = "foto-ref"; r.textContent = "Foto de referencia"; ilus.append(r); }
+  $("#det-nombre").textContent = p.nombre;
+  const ins = $("#det-insignias"); ins.innerHTML = "";
+  if (p.etiqueta) { const e = document.createElement("span"); e.className = "insignia"; e.textContent = p.etiqueta; ins.append(e); }
+  if (p.unidad) { const e = document.createElement("span"); e.className = "pildora"; e.textContent = p.unidad; ins.append(e); }
+  $("#det-desc").textContent = p.desc || "";
+  $("#det-3d").hidden = !p.modelo3d; $("#det-visor").innerHTML = "";
+  const filas = p.opciones ? p.opciones.map((o) => [o.nombre, o.precio]) : [["Para comer aquí", p.precio]];
+  if (p.paraLlevar) filas.push(["Para llevar", p.paraLlevar]);
+  const fs = $("#det-opciones"), lista = $("#det-opciones-lista");
+  fs.hidden = filas.length < 2; lista.innerHTML = "";
+  $("#det-opciones-titulo").textContent = p.grupo || "Precios";
+  filas.forEach(([n, v]) => filaPrecio(lista, n, fmt(v)));
+  const conAds = CON_ADICIONES.includes(p.categoria);
+  $("#det-adiciones").hidden = !conAds;
+  const la = $("#det-adiciones-lista"); la.innerHTML = "";
+  if (conAds) ADICIONES.forEach((a) => filaPrecio(la, a.nombre, "+ " + fmt(a.precio)));
+  const comb = (p.combina || []).filter((x) => productos[x]);
+  $("#det-combina-zona").hidden = !comb.length;
+  const zona = $("#det-combina"); zona.innerHTML = "";
+  comb.forEach((cid) => {
+    const c = productos[cid];
+    const m = document.createElement("button"); m.type = "button"; m.className = "mini";
+    m.innerHTML = `<span class="cursiva"></span><small></small><span class="mas">Ver</span>`;
+    m.querySelector(".cursiva").textContent = c.nombre;
+    m.querySelector("small").textContent = (variaPrecio(c) ? "Desde " : "") + fmt(precioMin(c));
+    m.addEventListener("click", () => { abrirDetalle(cid); $("#detalle").scrollTop = 0; });
+    zona.append(m);
+  });
+  $("#det-preguntar").href = waNegocio(`Hola ${NEGOCIO.nombre}, quiero preguntar por: ${p.nombre}`);
+  abrirHojaDe("#detalle");
+}
+$("#det-3d").addEventListener("click", async () => {
+  const p = productos[enDetalle]; if (!p.modelo3d) return;
+  if (!customElements.get("model-viewer")) {
+    await new Promise((ok, mal) => { const s = document.createElement("script"); s.type = "module"; s.src = "https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"; s.onload = ok; s.onerror = mal; document.head.append(s); }).catch(() => null);
+  }
+  const v = document.createElement("model-viewer");
+  v.className = "visor3d"; v.setAttribute("src", p.modelo3d); v.setAttribute("alt", `Modelo 3D de ${p.nombre}`);
+  ["ar", "camera-controls", "auto-rotate"].forEach((a) => v.setAttribute(a, ""));
+  v.setAttribute("ar-modes", "webxr scene-viewer quick-look"); v.setAttribute("ar-scale", "fixed");
+  if (p.modelo3dIOS) v.setAttribute("ios-src", p.modelo3dIOS);
+  $("#det-visor").innerHTML = ""; $("#det-visor").append(v); $("#det-3d").hidden = true;
+});
+
+/* ---------- hojas ---------- */
+function abrirHojaDe(sel) {
+  $("#detalle").hidden = false;
+  $("#velo").hidden = false; document.body.style.overflow = "hidden";
+  const t = document.querySelector(sel + " h2"); t.setAttribute("tabindex", "-1"); t.focus({ preventScroll: true });
+}
+function cerrarHojas() {
+  $("#detalle").hidden = true; $("#velo").hidden = true; document.body.style.overflow = "";
+  if (origenFoco && document.contains(origenFoco)) origenFoco.focus({ preventScroll: true });
+}
+$("#velo").addEventListener("click", cerrarHojas);
+document.querySelectorAll("[data-cerrar]").forEach((b) => b.addEventListener("click", cerrarHojas));
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#velo").hidden === false) cerrarHojas(); });
+
+/* ---------- club (vista para clientes) ---------- */
+function pintarClub() {
+  $("#club-intro").textContent = "Tenemos dos tarjetas y puedes llevar las dos. Cada desayuno o almuerzo que compras suma un sello en su tarjeta.";
+  const cont = $("#tarjetas-club"); cont.innerHTML = "";
+  CLUB.tarjetas.forEach((t) => {
+    const art = document.createElement("div"); art.className = "tarjeta-tipo";
+    art.innerHTML = `${svgIcono(t.icono)}<b></b><p></p><div class="sellos" aria-hidden="true"></div>`;
+    art.querySelector("b").textContent = `Tarjeta de ${t.nombre.toLowerCase()}`;
+    art.querySelector("p").textContent = `Completa ${t.meta} ${t.nombre.toLowerCase()} y te llevas ${t.premio}.`;
+    const s = art.querySelector(".sellos");
+    for (let i = 0; i <= t.meta; i++) {
+      const c = document.createElement("span"); c.className = "sello" + (i === t.meta ? " premio" : "");
+      if (i === t.meta) c.innerHTML = svgIcono("estrella");
+      s.append(c);
+    }
+    art.setAttribute("aria-label", `Tarjeta de ${t.nombre.toLowerCase()}: ${t.meta} sellos y ${t.premio}`);
+    cont.append(art);
+  });
+  const pasos = [
+    ["Inscríbete en la caja", "Dile tu nombre y tu celular a quien te atiende. Es gratis y solo se hace una vez."],
+    ["Junta sellos", "Cada vez que compras un desayuno o un almuerzo, te ponemos un sello en esa tarjeta. Uno por día en cada tarjeta."],
+    ["El siguiente va por la casa", `Al completar ${CLUB.tarjetas[0].meta} sellos te damos tu premio ahí mismo y tu tarjeta vuelve a empezar.`],
+  ];
+  const ol = $("#pasos"); ol.innerHTML = "";
+  pasos.forEach(([t, d]) => { const li = document.createElement("li"); const w = document.createElement("div"); const b = document.createElement("b"); b.textContent = t; const sp = document.createElement("span"); sp.textContent = d; w.append(b, sp); li.append(w); ol.append(li); });
+  $("#club-datos").textContent = CLUB.privacidad;
+  $("#club-dudas").href = waNegocio(`Hola ${NEGOCIO.nombre}, tengo una pregunta sobre el Club ${NEGOCIO.nombre}: `);
+}
+
+/* ---------- vistas: la carta de esta página o el club ---------- */
+const vistaPrincipal = () => (SITIO.pagina === "inicio" ? "#vista-inicio" : "#vista-carta");
+function mostrarVista(v) {
+  const club = v === "club";
+  $(vistaPrincipal()).hidden = club; $("#vista-club").hidden = !club;
+  $("#tab-club").setAttribute("aria-pressed", String(club));
+  $("#tab-carta").setAttribute("aria-pressed", String(!club));
+}
+$("#tab-carta").addEventListener("click", () => { mostrarVista("carta"); window.scrollTo({ top: 0 }); });
+$("#tab-club").addEventListener("click", () => { mostrarVista("club"); window.scrollTo({ top: 0 }); });
+$("#club-volver").addEventListener("click", () => { mostrarVista("carta"); window.scrollTo({ top: 0 }); });
+
+function iniciar() {
+  const enCarta = SITIO.pagina !== "inicio";
+  $("#vistas").hidden = !enCarta;
+  $("#btn-buscar").hidden = SITIO.pagina !== "desayunos";
+  $("#destacado").hidden = SITIO.pagina !== "desayunos";
+  $("#club-volver").hidden = enCarta;
+  if (enCarta) {
+    $("#tab-carta-nombre").textContent = SITIO.pagina === "desayunos" ? "Desayunos" : "Almuerzos";
+    $("#tab-carta-sub").textContent = SITIO.pagina === "desayunos" ? "y pan del horno" : "lunes a viernes";
+  }
+  pintarCabecera(); pintarClub();
+  if (enCarta) {
+    if (SITIO.pagina === "desayunos") pintarEstrella(); else pintarAlmuerzos();
+    pintarCarta();
+  } else pintarInicio();
+  mostrarVista(location.hash === "#club" ? "club" : "carta");
+}
+iniciar();
+const medirCabecera = () => document.documentElement.style.setProperty("--alto-cab", document.querySelector(".cabecera").offsetHeight + "px");
+medirCabecera(); addEventListener("resize", medirCabecera);
+setInterval(() => { const e = abiertoAhora(); $("#estado").textContent = e.txt; $("#estado").className = "estado" + (e.abierto ? " abierto" : ""); }, 60000);
+</script>
+
+</body>
+</html>
