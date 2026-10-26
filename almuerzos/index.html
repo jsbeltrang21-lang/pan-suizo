@@ -231,8 +231,7 @@ a.estrella { color: inherit; text-decoration: none; }
 .almuerzo { border-radius: 22px; border: 1px solid var(--borde); overflow: hidden; display: grid; background:
   radial-gradient(110% 80% at 90% 0%, var(--resplandor), transparent 60%), var(--superficie); }
 .almuerzo-foto { position: relative; height: 200px; }
-.almuerzo-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 78%; display: block; }
-#img-almuerzos { object-position: 50% 78%; }
+.almuerzo-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .almuerzo-cuerpo { padding: 16px 18px 18px; display: grid; gap: 14px; }
 .almuerzo-cab { display: grid; gap: 4px; }
 .almuerzo-cab h2 { margin: 0; font-size: 34px; line-height: 1.02; text-wrap: balance; }
@@ -245,7 +244,9 @@ a.estrella { color: inherit; text-decoration: none; }
 .semana { display: grid; gap: 10px; }
 .dia-card { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--superficie); padding: 14px; display: grid; gap: 8px; }
 .dia-card.hoy { border-color: var(--oro); box-shadow: inset 0 0 0 1px var(--oro); }
-.dia-card > b { font-family: var(--f-display); font-style: italic; font-size: 24px; line-height: 1; }
+.dia-cab { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; }
+.dia-cab b { font-family: var(--f-display); font-style: italic; font-size: 24px; line-height: 1; }
+.dia-foto { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
 
 /* ---------- hojas (detalle de producto) ---------- */
 .velo { position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, .55); }
@@ -390,7 +391,7 @@ a.estrella { color: inherit; text-decoration: none; }
     </section>
     <section class="categoria" id="cat-semana" aria-labelledby="t-semana" hidden>
       <h2 class="cursiva" id="t-semana">El menú de la semana</h2>
-      <p class="sub">De lunes a viernes cambian la sopa, los principios, las carnes y el jugo.</p>
+      <p class="sub">De lunes a viernes cambian la sopa, los principios, las carnes y el jugo. Fotos de referencia.</p>
       <div class="semana" id="almuerzo-semana"></div>
     </section>
 
@@ -473,7 +474,8 @@ const NEGOCIO = {
   mapa: "https://www.google.com/maps/search/?api=1&query=Pan%20Suizo%2C%20Ciudad%20Salitre&query_place_id=ChIJb1iRWQCbP44RD4lVdRRLDY8",
   rappi: "https://www.rappi.com.co/restaurantes/900408872-pan-suizo",
   horario: { 0: [6, 20.5], 1: [6, 21], 2: [6, 21], 3: [6, 21], 4: [6, 21], 5: [6, 21], 6: [6, 20.5] },
-  domicilio: "A domicilio por Rappi. Para otros domicilios y encargos, pregunta por WhatsApp",
+  domicilio: "propio, por $ 1.000 (pídelo por WhatsApp y te confirmamos si llegamos a tu dirección). También estamos en Rappi",
+  /* $ 1.000: «DOMICILIO» de la lista de la caja, confirmado por John el 26/10/2026. */
   pagos: ["Efectivo", "Pagos digitales: pregunta en la caja cuáles recibimos"],
   fuentePrecios: "lista de precios de la caja, 26/10/2026",
   /* true desde el 26/10/2026: son los precios de la panadería. Con true no sale el aviso de «precios de referencia» y
@@ -499,6 +501,8 @@ const ALMUERZO = {
     { nombre: "Bandeja", precio: 15000, nota: "Solo el plato: sin sopa, fruta ni huevo frito" }],
   incluye: "Sopa, arroz, principio, carne y jugo. Cada día hay varios principios y carnes para escoger.",
 };
+/* Foto de referencia de la sopa de cada día (Unsplash; sin mazorca ni yuca, como se sirve aquí). */
+const FOTO_SOPA = { 1: "sopa-lunes", 2: "sopa-martes", 3: "sopa-miercoles", 4: "sopa-jueves", 5: "sopa-viernes" };
 const ALMUERZOS = {
   1: { sopa: "Sopa del día", principios: ["Lentejas", "Frijoles", "Ahuyama"], carnes: ["Pechuga a la plancha", "Pollo en salsa de champiñones", "Carne a la plancha", "Chuleta de cerdo"], jugo: "Mora" },
   2: { sopa: "Cuchuco de trigo", principios: ["Frijoles", "Garbanzos", "Verdura con mayonesa"], carnes: ["Pechuga a la plancha", "Pollo dorado", "Carne asada", "Chuleta de cerdo"], jugo: "Guayaba" },
@@ -514,8 +518,9 @@ const ALMUERZOS = {
    combina: ids de productos que se sugieren con este. desc vacía = falta que la dueña cuente cómo es. */
 const CATEGORIAS = [
   { id: "desayunos", nombre: "Desayunos", sub: "Calientes, de cuchara y de la casa", productos: [
-    { id: "changua", nombre: "Changua", foto: "changua", icono: "caldo", precio: 12000, etiqueta: "Bogotana",
-      desc: "La changua de siempre: caldo de leche, huevo y calado. Sencilla y reconfortante para arrancar el día.",
+    { id: "changua", nombre: "Changua", foto: "changua", icono: "caldo", etiqueta: "Bogotana", grupo: "¿Sencilla o especial?", paraLlevar: 13000,
+      opciones: [{ nombre: "Sencilla", precio: 12000 }, { nombre: "Especial", precio: 12000 }],
+      desc: "Caldo de leche bien caliente, huevo y calado de pan que se ablanda a cucharadas. La especial suma queso que se derrite y una almojábana al lado.",
       combina: ["almojabana", "tinto"] },
     { id: "caldo-costilla", nombre: "Caldo de costilla", foto: "caldo-costilla", icono: "caldo", precio: 12000, paraLlevar: 13000,
       desc: "Caldo de costilla con papa, servido hirviendo. El que levanta a cualquiera un sábado por la mañana.",
@@ -539,16 +544,20 @@ const CATEGORIAS = [
       opciones: [{ nombre: "Pericos", precio: 10000 }, { nombre: "Revueltos", precio: 10000 }, { nombre: "Fritos", precio: 10000 }],
       desc: "Huevos recién hechos en la preparación que más te guste, con arroz blanco al lado.",
       combina: ["jugo-naranja", "cafe"] },
-    { id: "rancheros", nombre: "Huevos rancheros", foto: "rancheros", icono: "huevo", grupo: "¿Solos o con arroz?",
-      opciones: [{ nombre: "Solos", precio: 10000 }, { nombre: "Con arroz", precio: 12000 }],
-      desc: "Huevos con tomate y salchicha en trozos. Para los que llegan con hambre de verdad.",
+    { id: "rancheros", nombre: "Huevos rancheros", foto: "rancheros", icono: "huevo", grupo: "¿Cómo los quieres?",
+      opciones: [{ nombre: "Solos", precio: 10000 }, { nombre: "Con queso", precio: 10000 }, { nombre: "Con arroz", precio: 12000 }],
+      desc: "Huevos con tomate y salchicha en trozos. Con queso derretido encima o con arroz al lado, para los que llegan con hambre de verdad.",
       combina: ["jugo-naranja", "pan"] },
   ]},
   { id: "sal", nombre: "Pasteles y empanadas", sub: "De sal, para acompañar el tinto o el jugo", productos: [
-    { id: "empanada", nombre: "Empanada", foto: "empanada", icono: "empanada", precio: 3500, desc: "" },
-    { id: "pastel-pollo", nombre: "Pastel de pollo", icono: "empanada", precio: 4500, desc: "" },
-    { id: "pastel-yuca", nombre: "Pastel de yuca", icono: "empanada", precio: 4000, desc: "" },
-    { id: "pan-salchicha", nombre: "Pan con salchicha", icono: "baguette", precio: 4000, desc: "" },
+    { id: "empanada", nombre: "Empanada", foto: "empanada", icono: "empanada", precio: 3500,
+      desc: "Dorada y crocante por fuera, jugosa por dentro. Se come caliente, en dos o tres mordiscos felices.", combina: ["jugo-naranja", "tinto"] },
+    { id: "pastel-pollo", nombre: "Pastel de pollo", foto: "pastel-pollo", icono: "empanada", precio: 4500,
+      desc: "Hojaldre que cruje al primer mordisco y guarda un relleno cremoso de pollo. A media mañana, con un tinto, no falla.", combina: ["tinto", "cafe"] },
+    { id: "pastel-yuca", nombre: "Pastel de yuca", foto: "pastel-yuca", icono: "empanada", precio: 4000,
+      desc: "Masa de yuca suave, frita hasta quedar dorada. Por fuera cruje; por dentro esconde un relleno que pide el siguiente bocado.", combina: ["jugo-naranja"] },
+    { id: "pan-salchicha", nombre: "Pan con salchicha", foto: "pan-salchicha", icono: "baguette", precio: 4000,
+      desc: "Pan suave que abraza una salchicha entera. Sabroso, práctico y fácil de llevar a la oficina.", combina: ["cafe"] },
   ]},
   { id: "horno", nombre: "Del horno", sub: "Pan de la casa para el desayuno y las onces", productos: [
     { id: "almojabana", nombre: "Almojábana", foto: "almojabana", icono: "bola", precio: 4500, etiqueta: "Favorita",
@@ -561,13 +570,24 @@ const CATEGORIAS = [
       opciones: [{ nombre: "Blandito", precio: 500 }, { nombre: "Rollito", precio: 500 }, { nombre: "Francés", precio: 500 }, { nombre: "Calentano", precio: 500 }, { nombre: "Hojaldrado", precio: 500 }, { nombre: "Mogolla integral", precio: 500 }],
       desc: "Blandito, rollito, francés, calentano, hojaldrado o mogolla integral. Todos a $ 500, para mojar en el café con leche o en el chocolate.",
       combina: ["cafe", "chocolate"] },
-    { id: "pan-dulce", nombre: "Pan dulce", icono: "bola", precio: 1000, unidad: "c/u", desc: "" },
-    { id: "liberal", nombre: "Liberal", icono: "pan", precio: 2000, desc: "" },
-    { id: "flauta", nombre: "Flauta", icono: "baguette", precio: 3000, desc: "" },
-    { id: "corazon", nombre: "Corazón", icono: "pan", precio: 3000, desc: "" },
-    { id: "croissant", nombre: "Croissant", foto: "croissant", icono: "pan", precio: 4500, desc: "", combina: ["cafe", "capuchino"] },
-    { id: "pan-grande", nombre: "Pan grande", icono: "pan", precio: 7000,
+    { id: "pan-dulce", nombre: "Pan dulce", foto: "pan-dulce", icono: "bola", precio: 1000, unidad: "c/u",
+      desc: "Miga esponjosa con un toque dulce. Acompaña sin pelear con nada, del café con leche a la avena.", combina: ["cafe", "avena"] },
+    { id: "liberal", nombre: "Liberal", foto: "liberal", icono: "pan", precio: 2000,
+      desc: "Un clásico de las panaderías bogotanas: suave, esponjoso y con su copete dulce por encima.", combina: ["cafe", "chocolate"] },
+    { id: "flauta", nombre: "Flauta", foto: "flauta", icono: "baguette", precio: 3000,
+      desc: "Larga y dorada, de hojaldre que se deshace en capas. El antojo perfecto para la media tarde.", combina: ["tinto"] },
+    { id: "corazon", nombre: "Corazón", foto: "corazon", icono: "pan", precio: 3000,
+      desc: "Hojaldre en forma de corazón, crocante y con su brillo de azúcar. Cada mordisco suelta hojitas doradas.", combina: ["tinto", "perico"] },
+    { id: "croissant", nombre: "Croissant", foto: "croissant", icono: "pan", precio: 4500,
+      desc: "Hojaldrado y dorado, crujiente por fuera y tierno por dentro. Con capuchino sabe a desayuno de domingo.", combina: ["cafe", "capuchino"] },
+    { id: "pan-grande", nombre: "Pan grande", foto: "pan-grande", icono: "pan", precio: 7000,
       desc: "El pan para toda la familia: rinde el desayuno de la casa.", combina: ["chocolate", "cafe"] },
+    { id: "pan-alinado", nombre: "Pan aliñado", foto: "pan-alinado", icono: "pan", precio: 7000,
+      desc: "Pan aliñado hecho en casa, de miga suave. Para partir en la mesa.", combina: ["chocolate"] },
+    { id: "pan-queso", nombre: "Pan de queso", foto: "pan-queso", icono: "pan", precio: 7000,
+      desc: "Pan grande relleno de jamón y queso. Para compartir en la mesa (o no).", combina: ["cafe", "chocolate"] },
+    { id: "molde-integral", nombre: "Pan de molde integral", foto: "molde-integral", icono: "molde", precio: 7000,
+      desc: "Tajado e integral, para las tostadas de la semana.", combina: ["cafe"] },
     { id: "baguette", nombre: "Baguette", foto: "baguette", icono: "baguette", precio: 6000,
       desc: "Grande, de corteza crujiente. Para sándwiches o para acompañar el caldo.", combina: ["caldo-costilla"] },
   ]},
@@ -578,9 +598,19 @@ const CATEGORIAS = [
       desc: "Mantecada mediana para compartir con el café de la tarde.", combina: ["tinto"] },
     { id: "galleta-mariposa", nombre: "Galleta mariposa", foto: "mariposas", icono: "galleta", precio: 4500,
       desc: "Bañada en chocolate y con chispas de colores. La que piden los niños.", combina: ["milo"] },
-    { id: "galleta-avena", nombre: "Galleta de avena", foto: "galleta-avena", icono: "galleta", precio: 4000, desc: "", combina: ["cafe"] },
-    { id: "galleta-doble", nombre: "Galleta doble", icono: "galleta", precio: 4000, desc: "" },
-    { id: "galleta-sencilla", nombre: "Galleta sencilla", icono: "galleta", precio: 3000, desc: "" },
+    { id: "roscon", nombre: "Roscón", foto: "roscon", icono: "rosca", grupo: "Elige el relleno", unidad: "c/u",
+      opciones: [{ nombre: "Arequipe", precio: 1000 }, { nombre: "Bocadillo", precio: 1000 }],
+      desc: "El roscón de toda la vida, relleno de arequipe o de bocadillo. Con un vaso de leche, perfecto.", combina: ["cafe", "milo"] },
+    { id: "galleta-ojona", nombre: "Galleta ojona", foto: "galleta-ojona", icono: "galleta", precio: 4000,
+      desc: "Con su ojo de chocolate y mermelada y azúcar glas por encima.", combina: ["cafe"] },
+    { id: "galleta-payaso", nombre: "Galleta payaso", foto: "galleta-payaso", icono: "galleta", precio: 3000,
+      desc: "Con chispas de chocolate a la vista.", combina: ["milo"] },
+    { id: "galleta-avena", nombre: "Galleta de avena", foto: "galleta-avena", icono: "galleta", precio: 4000,
+      desc: "Avena tostada, textura rústica y un dulzor que no empalaga. Pide un café al lado.", combina: ["cafe"] },
+    { id: "galleta-doble", nombre: "Galleta doble", foto: "galleta-doble", icono: "galleta", precio: 4000,
+      desc: "Doble de grande y doble de crocante. Dorada al punto, ideal para mojar en el café.", combina: ["cafe"] },
+    { id: "galleta-sencilla", nombre: "Galleta sencilla", foto: "galleta-sencilla", icono: "galleta", precio: 3000,
+      desc: "Crocante, dorada y sin complicaciones: la galleta de siempre para el tinto.", combina: ["tinto"] },
   ]},
   { id: "calientes", nombre: "Bebidas calientes", sub: "Para acompañar el pan", productos: [
     { id: "tinto", nombre: "Tinto", foto: "tinto", icono: "taza", grupo: "Tamaño",
@@ -590,21 +620,24 @@ const CATEGORIAS = [
       desc: "Café y leche caliente en su punto. Va con cualquier pan del horno.", combina: ["pan", "almojabana"] },
     { id: "perico", nombre: "Perico", foto: "perico", icono: "taza", precio: 3500,
       desc: "Tinto con un chorrito de leche.", combina: ["pan"] },
-    { id: "capuchino", nombre: "Capuchino", foto: "capuchino", icono: "taza", precio: 5000, desc: "", combina: ["croissant"] },
+    { id: "capuchino", nombre: "Capuchino", foto: "capuchino", icono: "taza", precio: 5000,
+      desc: "Café con leche espumada y su capa cremosa encima. Un pequeño lujo a cualquier hora.", combina: ["croissant"] },
     { id: "chocolate", nombre: "Chocolate", foto: "chocolate", icono: "taza", etiqueta: "De la casa", grupo: "¿En leche o en agua?",
       opciones: [{ nombre: "En leche", precio: 5000 }, { nombre: "En agua", precio: 4500 }],
       desc: "Chocolate de la casa, espumoso y caliente. Pídelo con almojábana o con tamal.", combina: ["almojabana", "tamal"] },
     { id: "milo", nombre: "Milo", foto: "milo", icono: "taza", grupo: "¿Caliente o frío?",
       opciones: [{ nombre: "Caliente", precio: 6000 }, { nombre: "Frío", precio: 6000 }],
       desc: "Cremoso y caliente para las mañanas frías de Bogotá, o frío y bien batido.", combina: ["galleta-mariposa"] },
-    { id: "aromatica", nombre: "Aromática", foto: "aromatica", icono: "taza", precio: 3000, desc: "" },
+    { id: "aromatica", nombre: "Aromática", foto: "aromatica", icono: "taza", precio: 3000,
+      desc: "Infusión caliente de hierbas, suave y reconfortante. Cae bien después de comer o en una tarde fría." },
   ]},
   { id: "jugos", nombre: "Jugos y bebidas de la casa", sub: "Frías, para el desayuno o el antojo", productos: [
     { id: "jugo-naranja", nombre: "Jugo de naranja", foto: "jugo-naranja", icono: "vaso", precio: 5500,
       desc: "Naranja exprimida en la casa.", combina: ["cazuela-huevos", "calentado"] },
     { id: "avena", nombre: "Avena cubana", foto: "avena", icono: "vaso", precio: 6000,
       desc: "Avena fría y cremosa con canela espolvoreada.", combina: ["bunuelo", "almojabana"] },
-    { id: "masato", nombre: "Masato", icono: "vaso", precio: 5000, desc: "" },
+    { id: "masato", nombre: "Masato", foto: "masato", icono: "vaso", precio: 5000,
+      desc: "Bebida tradicional, fresca y ligeramente dulce. Con pan del horno sabe a casa.", combina: ["pan", "almojabana"] },
   ]},
 ];
 
@@ -629,22 +662,10 @@ const ADICIONES = [
 ];
 const CON_ADICIONES = ["desayunos"];
 
-/* Productos de la carta anterior (sacados de Rappi) que NO están en la lista de la caja del 26/10/2026. John decidió el
-   26/10 no mostrarlos; se guardan solo como referencia. Para mostrar uno, pásalo a CATEGORIAS con el precio de la caja.
-   Los combos «plato + Hit» eran promociones de Rappi y no se venden así en el local. «Desayuno completo» y «Almuerzo Toto»
-   son de uso interno de la caja (la dueña, 26/10); el «Almuerzo» de $ 25.000 de la categoría de varios se supone interno. */
-const SIN_PRECIO = [
-  { id: "changua-especial", nombre: "Changua especial", categoria: "desayunos",
-    desc: "Caldo de leche bien caliente con huevo cocido en el caldo, calado de pan que se ablanda a cucharadas y queso que se derrite. Llega con almojábana al lado." },
-  { id: "rancheros-queso", nombre: "Rancheros con queso", categoria: "desayunos",
-    desc: "Los rancheros con salchicha y queso derretido encima. El desayuno más completo de la casa." },
-  { id: "pan-queso", nombre: "Pan de queso", categoria: "horno", desc: "Pan grande relleno de jamón y queso. Para compartir en la mesa (o no)." },
-  { id: "pan-alinado", nombre: "Pan aliñado", categoria: "horno", desc: "Pan aliñado hecho en casa, de miga suave. Para partir en la mesa." },
-  { id: "molde-integral", nombre: "Pan de molde integral", categoria: "horno", desc: "Tajado e integral, para las tostadas de la semana." },
-  { id: "roscon", nombre: "Roscón (arequipe o bocadillo)", categoria: "dulces", desc: "El roscón de toda la vida, relleno de arequipe o de bocadillo." },
-  { id: "galleta-ojona", nombre: "Galleta ojona", categoria: "dulces", desc: "Con su ojo de chocolate y mermelada y azúcar glas por encima." },
-  { id: "galleta-payaso", nombre: "Galleta payaso", categoria: "dulces", desc: "Con chispas de chocolate a la vista." },
-];
+/* Los combos «plato + Hit» eran promociones de Rappi y no se venden así en el local. «Desayuno completo» y «Almuerzo
+   Toto» son de uso interno de la caja (la dueña, 26/10/2026); el «Almuerzo» de $ 25.000 de la categoría de varios se supone
+   interno. Changua especial, rancheros con queso, pan aliñado, pan de molde integral, roscón y galletas ojona y payaso:
+   precios de John (26/10/2026). Pan de queso: mismo precio que el pan grande (supuesto, por confirmar). */
 
 /* Recomendado según la hora (página de desayunos). */
 const RECOMENDADOS = [
@@ -745,7 +766,7 @@ function pintarCabecera() {
 function pintarInicio() {
   const ahora = new Date(), h = ahora.getHours(), m = ALMUERZOS[ahora.getDay()];
   $("#img-desayunos").src = urlFoto("caldo-costilla", true);
-  $("#img-almuerzos").src = urlFoto("almuerzo", true);
+  $("#img-almuerzos").src = urlFoto(FOTO_SOPA[ahora.getDay()] || FOTO_SOPA[1], true);
   $("#portal-desayunos").href = SITIO.enlaces.desayunos;
   $("#portal-almuerzos").href = SITIO.enlaces.almuerzos;
   $("#portal-almuerzos-sub").textContent = m
@@ -795,7 +816,7 @@ function pintarAlmuerzos() {
   const hoy = new Date().getDay(), hay = !!ALMUERZOS[hoy];
   const m = ALMUERZOS[hay ? hoy : 1];   // sábado y domingo se muestra el del lunes
   ["#cat-hoy", "#cat-precios", "#cat-semana"].forEach((s) => { $(s).hidden = false; });
-  $("#almuerzo-img").src = urlFoto("almuerzo", true);
+  $("#almuerzo-img").src = urlFoto(FOTO_SOPA[hay ? hoy : 1], true);
   $("#almuerzo-ceja").textContent = hay ? `Almuerzo de hoy, ${DIAS[hoy]}` : "Sábados y domingos no hay almuerzo del día";
   $("#almuerzo-titulo").textContent = hay ? (m.especial ? "Sudado de pollo" : m.sopa) : `El lunes: ${m.sopa.toLowerCase()}`;
   $("#almuerzo-valor").textContent = fmt(ALMUERZO.precio);
@@ -808,9 +829,11 @@ function pintarAlmuerzos() {
   const sem = $("#almuerzo-semana"); sem.innerHTML = "";
   [1, 2, 3, 4, 5].forEach((i) => {
     const w = document.createElement("div"); w.className = "dia-card" + (i === hoy ? " hoy" : "");
+    const f = document.createElement("img"); f.className = "dia-foto"; f.src = urlFoto(FOTO_SOPA[i]); f.alt = ""; f.loading = "lazy";
     const b = document.createElement("b"); b.textContent = mayus(DIAS[i]) + (i === hoy ? " · hoy" : "");
     const dl = document.createElement("dl"); dl.className = "menu-dia"; filasMenu(dl, ALMUERZOS[i]);
-    w.append(b, dl); sem.append(w);
+    const cab = document.createElement("div"); cab.className = "dia-cab"; cab.append(f, b);
+    w.append(cab, dl); sem.append(w);
   });
 }
 
